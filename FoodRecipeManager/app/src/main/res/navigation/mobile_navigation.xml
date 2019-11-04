@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="martin.so.foodrecipemanager.ui.Recipes.RecipesFragment"
+        android:label="@string/title_recipes"
+        tools:layout="@layout/fragment_recipes" />
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="martin.so.foodrecipemanager.ui.tbd1.Tbd1Fragment"
+        android:label="@string/title_tbd1"
+        tools:layout="@layout/fragment_tbd1" />
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="martin.so.foodrecipemanager.ui.tbd2.Tbd2Fragment"
+        android:label="@string/title_tbd2"
+        tools:layout="@layout/fragment_tbd2" />
+</navigation>
