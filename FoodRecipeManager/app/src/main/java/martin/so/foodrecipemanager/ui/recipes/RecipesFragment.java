@@ -1,6 +1,8 @@
 package martin.so.foodrecipemanager.ui.recipes;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,29 +19,22 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import martin.so.foodrecipemanager.R;
-import martin.so.foodrecipemanager.model.Recipe;
+import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.RecipesAdapter;
 
 public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClickListener {
 
     private RecipesAdapter recipesAdapter;
 
-    private List<Recipe> recipeList;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
 
-        // Dummy.
-        recipeList = new ArrayList<>();
-        recipeList.add(new Recipe("One", "random"));
-        recipeList.add(new Recipe("Two", "random"));
-
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewRecipes);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recipesAdapter = new RecipesAdapter(getContext(), recipeList);
+        recipesAdapter = new RecipesAdapter(getContext(), RecipeManager.getInstance().getAllRecipes());
         recipesAdapter.setClickListener(this);
         recyclerView.setAdapter(recipesAdapter);
 
@@ -51,10 +46,9 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
         Toast.makeText(getContext(), "You clicked " + recipesAdapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 
-    // Temporary for testing purposes...
     private void addRecipe() {
-        recipeList.add(new Recipe("test", "test"));
-        recipesAdapter.notifyItemInserted(recipesAdapter.getItemCount());
+        Intent addRecipeActivity = new Intent(getActivity(), AddRecipeActivity.class);
+        startActivity(addRecipeActivity);
     }
 
     @Override
@@ -71,5 +65,12 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
             addRecipe();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("Test", "Resumed RecipeFragment");
+        recipesAdapter.notifyItemInserted(recipesAdapter.getItemCount());
     }
 }

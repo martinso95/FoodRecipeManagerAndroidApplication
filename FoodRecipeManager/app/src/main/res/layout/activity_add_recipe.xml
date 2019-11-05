@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    tools:context=".ui.recipes.AddRecipeActivity">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutRecipeNameAddRecipe"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="25dp"
+        android:textSize="15sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputLayoutEditRecipeNameAddRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/recipe_name_label" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutDescriptionAddRecipe"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@+id/textInputLayoutRecipeNameAddRecipe"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="25dp"
+        android:textSize="15sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputLayoutEditDescriptionAddRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/description_label"
+            android:gravity="top"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+</RelativeLayout>

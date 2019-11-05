@@ -3,4 +3,8 @@
     <string name="title_recipes">Recipes</string>
     <string name="title_tbd1">Tbd1</string>
     <string name="title_tbd2">Tbd2</string>
+
+    <string name="recipe_name_label">Recipe name</string>
+    <string name="description_label">Description</string>
+
 </resources>
