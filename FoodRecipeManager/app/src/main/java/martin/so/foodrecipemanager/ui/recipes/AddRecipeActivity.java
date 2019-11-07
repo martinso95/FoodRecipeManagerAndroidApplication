@@ -55,6 +55,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                 if (!duplicateFound) {
                     Recipe recipe = new Recipe(recipeName.getText().toString(), description.getText().toString());
                     RecipeManager.getInstance().addRecipe(recipe);
+                    RecipeManager.getInstance().saveChanges(getApplicationContext());
 
                     Toast.makeText(getApplicationContext(), "Recipe added: " + recipeName.getText().toString(),
                             Toast.LENGTH_LONG).show();
