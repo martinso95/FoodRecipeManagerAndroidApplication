@@ -28,6 +28,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        Log.d("Test", "Recipe Fragment start");
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
 
@@ -43,7 +44,9 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
 
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(getContext(), "You clicked " + recipesAdapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
+        Intent recipeDetailsActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
+        recipeDetailsActivity.putExtra("recipePosition", position);
+        startActivity(recipeDetailsActivity);
     }
 
     private void addRecipe() {
@@ -71,6 +74,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
     public void onResume() {
         super.onResume();
         Log.d("Test", "Resumed RecipeFragment");
-        recipesAdapter.notifyItemInserted(recipesAdapter.getItemCount());
+        recipesAdapter.notifyDataSetChanged();
     }
 }

@@ -2,11 +2,11 @@ package martin.so.foodrecipemanager.model;
 
 public class Recipe {
     private String name;
-    private String content;
+    private String description;
 
     public Recipe(String name, String content) {
         this.name = name;
-        this.content = content;
+        this.description = content;
     }
 
     public String getName() {
@@ -17,12 +17,12 @@ public class Recipe {
         this.name = name;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescription() {
+        return description;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }
