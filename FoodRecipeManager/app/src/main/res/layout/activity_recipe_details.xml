@@ -20,7 +20,7 @@
             android:id="@+id/textInputLayoutEditRecipeNameRecipeDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/recipe_name_label" />
+            android:hint="@string/add_recipe_recipe_name_label" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -36,7 +36,7 @@
             android:id="@+id/textInputLayoutEditDescriptionRecipeDetails"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/description_label"
+            android:hint="@string/add_recipe_recipe_description_label"
             android:gravity="top"/>
     </com.google.android.material.textfield.TextInputLayout>
 

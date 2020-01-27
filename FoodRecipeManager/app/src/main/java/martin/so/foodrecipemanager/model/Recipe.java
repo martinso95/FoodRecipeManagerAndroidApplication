@@ -3,10 +3,17 @@ package martin.so.foodrecipemanager.model;
 public class Recipe {
     private String name;
     private String description;
+    private String instructions;
+    private String type;
+    private String category;
 
-    public Recipe(String name, String content) {
+    public Recipe(String name, String content, String instructions, String type, String category) {
         this.name = name;
         this.description = content;
+        this.instructions = instructions;
+        this.type = type;
+        this.category = category;
+
     }
 
     public String getName() {
@@ -23,6 +30,30 @@ public class Recipe {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
 }
