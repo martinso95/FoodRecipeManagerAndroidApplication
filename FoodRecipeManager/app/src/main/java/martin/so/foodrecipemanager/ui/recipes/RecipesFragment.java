@@ -35,6 +35,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewRecipes);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        // TODO: Sort the list alphabetically based on recipe's name.
         recipesAdapter = new RecipesAdapter(getContext(), RecipeManager.getInstance().getAllRecipes());
         recipesAdapter.setClickListener(this);
         recyclerView.setAdapter(recipesAdapter);

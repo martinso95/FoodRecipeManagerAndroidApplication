@@ -28,7 +28,6 @@ public class AddRecipeActivity extends AppCompatActivity {
     private Spinner recipeType;
     private String selectedRecipeType = Utils.RECIPE_TYPE;
     private TextInputEditText recipeInstructions;
-    private Boolean recipeInstructionAdded = false;
 
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
     final String[] recipeTypes = {Utils.RECIPE_TYPE, Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
@@ -46,8 +45,8 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         recipeName = findViewById(R.id.textInputLayoutEditRecipeNameAddRecipe);
         recipeDescription = findViewById(R.id.textInputLayoutEditRecipeDescriptionAddRecipe);
-        recipeCategory = findViewById(R.id.spinnerRecipeCategory);
-        recipeType = findViewById(R.id.spinnerRecipeType);
+        recipeCategory = findViewById(R.id.spinnerRecipeCategoryAddRecipe);
+        recipeType = findViewById(R.id.spinnerRecipeTypeAddRecipe);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsAddRecipe);
 
         ArrayAdapter<String> recipeCategoryAdapter = new ArrayAdapter<String>(this,
