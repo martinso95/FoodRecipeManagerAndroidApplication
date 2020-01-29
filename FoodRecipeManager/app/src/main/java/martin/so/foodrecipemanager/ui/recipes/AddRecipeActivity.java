@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+/**
+ * Activity containing the "Add recipe"-view.
+ */
 public class AddRecipeActivity extends AppCompatActivity {
 
     private TextView temporaryPhotoPlaceholder;
@@ -83,12 +86,21 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates the menu item: "Add the recipe"-button.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_save_added_recipe, menu);
         return true;
     }
 
+    /**
+     * Handling the click of the menu item: "Confirm adding the recipe".
+     * If the recipe name that is wanted to be added already exists, the click will not go through.
+     * If any fields are empty and not configured, the click will not go through,
+     * and hints will be given based on what needs to be done.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -120,6 +132,10 @@ public class AddRecipeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Checks if the recipe property input fields are not empty.
+     * The reason is that none of these fields are allowed to be empty.
+     */
     private boolean checkFieldsAreNotEmpty() {
         boolean noEmpty = true;
         if (recipeName.getText().toString().isEmpty()) {

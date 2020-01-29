@@ -12,6 +12,9 @@ import martin.so.foodrecipemanager.R;
 
 import java.util.List;
 
+/**
+ * RecyclerView Adapter class. Handles the recipe card views.
+ */
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder> {
 
     private List<Recipe> recipes;
@@ -48,6 +51,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         return recipes.get(id).getName();
     }
 
+    /**
+     * This determines what data will be displayed on the cards in the RecyclerView.
+     */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView recipeName;
         TextView recipeCategory;
@@ -72,7 +78,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         this.recipeClickListener = recipeClickListener;
     }
 
-    // Parent will implement this method to respond to click events.
+    /**
+     * Parent will implement this method to respond to click events.
+     */
     public interface ItemClickListener {
         void onItemClick(View view, int position);
     }

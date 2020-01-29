@@ -18,6 +18,9 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+/**
+ * Activity containing the "Recipe details"-view.
+ */
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     private Recipe currentRecipe;
@@ -115,6 +118,15 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Handling the click of editing the recipe.
+     * This method toggles between two modes, display mode and edit mode.
+     * When edit mode is activated, all the fields will be editable.
+     * <p>
+     * If the new recipe name already exists, the click will not go through.
+     * If any fields are empty, the click will not go through,
+     * and hints will be given based on what needs to be done.
+     */
     private void editRecipe() {
         if (editActive) {
             if (checkFieldsAreNotEmpty()) {
@@ -175,6 +187,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the menu items: "Edit recipe"-button, "Delete recipe"-button, "Save changes"-button
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_recipe_details, menu);
@@ -182,6 +197,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handling the click of the menu items:
+     * "Edit recipe"-button, "Delete recipe"-button, "Save changes"-button
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -205,6 +224,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Checks if the recipe property input fields have changed.
+     */
     private boolean haveFieldsChanged() {
         boolean haveChanged = false;
         if (!(recipeName.getText().toString()).equals(currentRecipe.getName())) {
@@ -225,6 +247,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         return haveChanged;
     }
 
+    /**
+     * Checks if the recipe property input fields are not empty.
+     * The reason is that none of these fields are allowed to be empty.
+     */
     private boolean checkFieldsAreNotEmpty() {
         boolean noEmpty = true;
         if (recipeName.getText().toString().isEmpty()) {
@@ -242,6 +268,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         return noEmpty;
     }
 
+    /**
+     * Returns the position of the specified target in the spinner.
+     *
+     * @param spinnerValues The spinner array to be searched in.
+     * @param targetValue   The target to be searched for in the spinner array.
+     */
     private int getSpinnerPosition(String[] spinnerValues, String targetValue) {
         for (int i = 0; i < spinnerValues.length; i++) {
             if (spinnerValues[i].equals(targetValue)) {

@@ -1,5 +1,8 @@
 package martin.so.foodrecipemanager.model;
 
+/**
+ * A class representing a recipe, containing properties that a recipe should have.
+ */
 public class Recipe {
     private String name;
     private String description;
@@ -13,7 +16,6 @@ public class Recipe {
         this.instructions = instructions;
         this.type = type;
         this.category = category;
-
     }
 
     public String getName() {
