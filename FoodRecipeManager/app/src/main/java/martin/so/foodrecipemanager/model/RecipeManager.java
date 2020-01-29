@@ -8,6 +8,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -29,9 +31,16 @@ public class RecipeManager {
     public Recipe getRecipe(int index) {
         return recipeList.get(index);
     }
-
+    
     public void addRecipe(Recipe recipe) {
-        recipeList.add(recipe);
+        int index = Collections.binarySearch(recipeList, recipe,
+                (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
+
+        if (index < 0) {
+            index = (index * -1) - 1;
+        }
+
+        recipeList.add(index, recipe);
     }
 
     public ArrayList<Recipe> getAllRecipes() {

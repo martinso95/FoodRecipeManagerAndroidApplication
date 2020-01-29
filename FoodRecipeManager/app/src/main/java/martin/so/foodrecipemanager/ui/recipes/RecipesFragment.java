@@ -9,10 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -35,7 +31,6 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewRecipes);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        // TODO: Sort the list alphabetically based on recipe's name.
         recipesAdapter = new RecipesAdapter(getContext(), RecipeManager.getInstance().getAllRecipes());
         recipesAdapter.setClickListener(this);
         recyclerView.setAdapter(recipesAdapter);
