@@ -1,6 +1,7 @@
 package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.recipes = recipes;
+        Log.d("Test", "Recipe adapter constructor");
     }
 
     @Override

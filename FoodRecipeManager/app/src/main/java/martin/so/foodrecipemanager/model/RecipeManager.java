@@ -19,7 +19,11 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class RecipeManager {
 
-    private ArrayList<Recipe> recipeList;
+    private ArrayList<Recipe> allRecipesList;
+    private ArrayList<Recipe> breakfastRecipesList;
+    private ArrayList<Recipe> lightMealRecipesList;
+    private ArrayList<Recipe> heavyMealRecipesList;
+    private ArrayList<Recipe> dessertRecipesList;
 
     private static final RecipeManager recipeManagerInstance = new RecipeManager();
 
@@ -28,11 +32,31 @@ public class RecipeManager {
     }
 
     private RecipeManager() {
-        recipeList = new ArrayList<>();
+        allRecipesList = new ArrayList<>();
+        breakfastRecipesList = new ArrayList<>();
+        lightMealRecipesList = new ArrayList<>();
+        heavyMealRecipesList = new ArrayList<>();
+        dessertRecipesList = new ArrayList<>();
     }
 
-    public Recipe getRecipe(int index) {
-        return recipeList.get(index);
+    public ArrayList<Recipe> getAllRecipes() {
+        return allRecipesList;
+    }
+
+    public ArrayList<Recipe> getBreakfastRecipes() {
+        return breakfastRecipesList;
+    }
+
+    public ArrayList<Recipe> getLightMealRecipes() {
+        return lightMealRecipesList;
+    }
+
+    public ArrayList<Recipe> getHeavyMealRecipes() {
+        return heavyMealRecipesList;
+    }
+
+    public ArrayList<Recipe> getDessertRecipes() {
+        return dessertRecipesList;
     }
 
     /**
@@ -40,23 +64,68 @@ public class RecipeManager {
      *
      * @param recipe The recipe object.
      */
-    public void addRecipe(Recipe recipe) {
-        int index = Collections.binarySearch(recipeList, recipe,
+    public void addRecipe(Context context, Recipe recipe) {
+        List<Recipe> typeRecipesList = getRecipeTypeList(recipe.getType());
+
+        int index1 = Collections.binarySearch(typeRecipesList, recipe,
                 (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
 
-        if (index < 0) {
-            index = (index * -1) - 1;
+        if (index1 < 0) {
+            index1 = (index1 * -1) - 1;
+        }
+        typeRecipesList.add(index1, recipe);
+
+        int index2 = Collections.binarySearch(allRecipesList, recipe,
+                (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
+
+        if (index2 < 0) {
+            index2 = (index2 * -1) - 1;
         }
 
-        recipeList.add(index, recipe);
+        allRecipesList.add(index2, recipe);
+
+        saveChanges(context);
     }
 
-    public ArrayList<Recipe> getAllRecipes() {
-        return recipeList;
+    /**
+     * Edit the recipe based on parameters.
+     *
+     * @param context The application context.
+     * @param recipe  The recipe object to be edited.
+     */
+    public void editRecipe(Context context, Recipe recipe, String name, String description, String category, String type, String instructions) {
+        String previousRecipeType = recipe.getType();
+
+        recipe.setName(name);
+        recipe.setDescription(description);
+        recipe.setCategory(category);
+        recipe.setType(type);
+        recipe.setInstructions(instructions);
+
+        if (!previousRecipeType.equals(type)) {
+            List<Recipe> previousRecipeList = getRecipeTypeList(previousRecipeType);
+            List<Recipe> currentRecipeList = getRecipeTypeList(type);
+            previousRecipeList.remove(recipe);
+
+            int index1 = Collections.binarySearch(currentRecipeList, recipe,
+                    (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
+
+            if (index1 < 0) {
+                index1 = (index1 * -1) - 1;
+            }
+            currentRecipeList.add(index1, recipe);
+        }
+
+        saveChanges(context);
     }
 
-    public void removeRecipe(Recipe recipe) {
-        recipeList.remove(recipe);
+    public void removeRecipe(Context context, Recipe recipe) {
+        allRecipesList.remove(recipe);
+
+        List<Recipe> typeRecipesList = getRecipeTypeList(recipe.getType());
+        typeRecipesList.remove(recipe);
+
+        saveChanges(context);
     }
 
     /**
@@ -66,11 +135,11 @@ public class RecipeManager {
      *
      * @param context The application  context.
      */
-    public void saveChanges(Context context) {
+    private void saveChanges(Context context) {
         SharedPreferences.Editor editor = context.getSharedPreferences("FoodRecipeManager", MODE_PRIVATE).edit();
 
         Gson gson = new Gson();
-        String json = gson.toJson(recipeList);
+        String json = gson.toJson(allRecipesList);
 
         editor.putString("allRecipes", json);
         editor.apply();
@@ -92,7 +161,46 @@ public class RecipeManager {
         Type type = new TypeToken<List<Recipe>>() {
         }.getType();
         List<Recipe> recipes = gson.fromJson(string, type);
-        if (recipes != null) recipeList.addAll(recipes);
+        if (recipes != null) allRecipesList.addAll(recipes);
+
+        for (Recipe recipe : allRecipesList) {
+            switch (recipe.getType()) {
+                case Utils.RECIPE_TYPE_BREAKFAST:
+                    breakfastRecipesList.add(recipe);
+                    break;
+                case Utils.RECIPE_TYPE_LIGHT_MEAL:
+                    lightMealRecipesList.add(recipe);
+                    break;
+                case Utils.RECIPE_TYPE_HEAVY_MEAL:
+                    heavyMealRecipesList.add(recipe);
+                    break;
+                case Utils.RECIPE_TYPE_DESSERT:
+                    dessertRecipesList.add(recipe);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Returns the recipe list based on the recipe's type.
+     *
+     * @param recipe The recipe object.
+     */
+    private List<Recipe> getRecipeTypeList(String recipe) {
+        switch (recipe) {
+            case Utils.RECIPE_TYPE_ALL:
+                return allRecipesList;
+            case Utils.RECIPE_TYPE_BREAKFAST:
+                return breakfastRecipesList;
+            case Utils.RECIPE_TYPE_LIGHT_MEAL:
+                return lightMealRecipesList;
+            case Utils.RECIPE_TYPE_HEAVY_MEAL:
+                return heavyMealRecipesList;
+            case Utils.RECIPE_TYPE_DESSERT:
+                return dessertRecipesList;
+            default:
+                return null;
+        }
     }
 
 }

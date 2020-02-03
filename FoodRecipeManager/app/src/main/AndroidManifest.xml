@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.recipes.RecipeDetailsActivity"></activity>
+        <activity
+            android:name=".ui.recipes.RecipeDetailsActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.recipes.AddRecipeActivity"
             android:screenOrientation="portrait" />

@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.List;
+
 /**
  * Activity containing the "Recipe details"-view.
  */
@@ -41,6 +43,27 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
     final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
 
+    /**
+     * Returns the recipe list based on the recipe's type.
+     *
+     * @param recipe The recipe type as a String.
+     */
+    private List<Recipe> getRecipeTypeList(String recipe) {
+        switch (recipe) {
+            case Utils.RECIPE_TYPE_ALL:
+                return RecipeManager.getInstance().getAllRecipes();
+            case Utils.RECIPE_TYPE_BREAKFAST:
+                return RecipeManager.getInstance().getBreakfastRecipes();
+            case Utils.RECIPE_TYPE_LIGHT_MEAL:
+                return RecipeManager.getInstance().getLightMealRecipes();
+            case Utils.RECIPE_TYPE_HEAVY_MEAL:
+                return RecipeManager.getInstance().getHeavyMealRecipes();
+            case Utils.RECIPE_TYPE_DESSERT:
+                return RecipeManager.getInstance().getDessertRecipes();
+            default:
+                return null;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +72,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         Bundle data = getIntent().getExtras();
         int recipePosition = data.getInt("recipePosition");
-        currentRecipe = RecipeManager.getInstance().getAllRecipes().get(recipePosition);
+        String temporaryRecipeType = data.getString("recipeType");
+
+        currentRecipe = getRecipeTypeList(temporaryRecipeType).get(recipePosition);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -139,12 +164,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
                 if (!duplicateFound) {
                     if (haveFieldsChanged()) {
-                        currentRecipe.setName(recipeName.getText().toString());
-                        currentRecipe.setDescription(recipeDescription.getText().toString());
-                        currentRecipe.setCategory(selectedRecipeCategory);
-                        currentRecipe.setType(selectedRecipeType);
-                        currentRecipe.setInstructions(recipeInstructions.getText().toString());
-                        RecipeManager.getInstance().saveChanges(this);
+                        RecipeManager.getInstance().editRecipe(this, currentRecipe, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeInstructions.getText().toString());
                         getSupportActionBar().setTitle(currentRecipe.getName());
                         Toast.makeText(getApplicationContext(), "Recipe edited",
                                 Toast.LENGTH_LONG).show();
@@ -210,10 +230,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             return true;
 
         } else if (id == R.id.delete_recipe_button) {
-            RecipeManager.getInstance().removeRecipe(currentRecipe);
             Toast.makeText(getApplicationContext(), "Recipe " + recipeName.getText().toString() + " deleted",
                     Toast.LENGTH_LONG).show();
-            RecipeManager.getInstance().saveChanges(this);
+            RecipeManager.getInstance().removeRecipe(this, currentRecipe);
             finish();
             return true;
 

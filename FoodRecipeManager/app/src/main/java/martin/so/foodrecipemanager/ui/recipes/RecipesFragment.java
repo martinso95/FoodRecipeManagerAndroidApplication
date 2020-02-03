@@ -10,50 +10,54 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.tabs.TabLayout;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 import martin.so.foodrecipemanager.R;
-import martin.so.foodrecipemanager.model.RecipeManager;
-import martin.so.foodrecipemanager.model.RecipesAdapter;
+import martin.so.foodrecipemanager.model.Utils;
+
+import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
- * Fragment containing the recipes.
+ * Fragment containing the recipes in a Tab Layout.
  * The recipes are presented in a RecyclerView, vertical list.
  * Each item in the list is in a form of a card.
  */
-public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClickListener {
+public class RecipesFragment extends Fragment {
 
-    private RecipesAdapter recipesAdapter;
+    private View view = null;
+
+    private TabLayout tabLayout;
+    private ViewPager2 viewPager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d("Test", "Recipe Fragment start");
+        Log.d("Test", "MAIN Recipe Fragment START");
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_recipes, container, false);
+        view = inflater.inflate(R.layout.fragment_recipes, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewRecipes);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recipesAdapter = new RecipesAdapter(getContext(), RecipeManager.getInstance().getAllRecipes());
-        recipesAdapter.setClickListener(this);
-        recyclerView.setAdapter(recipesAdapter);
+        tabLayout = view.findViewById(R.id.tabLayoutRecipesFragment);
+
+        viewPager = view.findViewById(R.id.viewPagerRecipesFragment);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity());
+
+        viewPager.setAdapter(viewPagerAdapter);
+        new TabLayoutMediator(tabLayout, viewPager,
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        tab.setText("" + Utils.RECIPE_TYPES[position]);
+                    }
+                }).attach();
+
+        int limit = (viewPagerAdapter.getItemCount() > 1 ? viewPagerAdapter.getItemCount() - 1 : 1);
+
+        viewPager.setOffscreenPageLimit(limit);
+        Log.d("Test", "MAIN Recipe Fragment CREATED");
 
         return view;
-    }
-
-    /**
-     * Clicking on a list item, a new activity will start,
-     * that represents a detailed view of the recipe.
-     * The position of the item will be passed. The reason is to be able to identify the recipe,
-     * with the help of the index.
-     */
-    @Override
-    public void onItemClick(View view, int position) {
-        Intent recipeDetailsActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
-        recipeDetailsActivity.putExtra("recipePosition", position);
-        startActivity(recipeDetailsActivity);
     }
 
     /**
@@ -89,15 +93,10 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.ItemClic
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Every time the Fragment is getting focus (resumed),
-     * the recipe list will be updated, in case new recipes have been added,
-     * or anything has been deleted, from another view.
-     */
     @Override
     public void onResume() {
         super.onResume();
-        Log.d("Test", "Resumed RecipeFragment");
-        recipesAdapter.notifyDataSetChanged();
+        Log.d("Test", "MAIN Recipe Fragment RESUMED");
     }
+
 }
