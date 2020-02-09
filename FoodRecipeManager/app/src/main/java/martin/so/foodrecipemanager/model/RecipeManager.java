@@ -2,6 +2,7 @@ package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -92,32 +93,30 @@ public class RecipeManager {
     /**
      * Edit the recipe based on parameters.
      *
-     * @param context The application context.
-     * @param recipe  The recipe object to be edited.
+     * @param context   The application context.
+     * @param newRecipe The recipe object to be edited.
      */
-    public void editRecipe(Context context, Recipe recipe, String name, String description, String category, String type, String instructions) {
-        String previousRecipeType = recipe.getType();
+    public void editRecipe(Context context, Recipe newRecipe, String name, String description, String category, String type, String instructions) {
+        String previousName = newRecipe.getName();
+        String previousType = newRecipe.getType();
 
-        recipe.setName(name);
-        recipe.setDescription(description);
-        recipe.setCategory(category);
-        recipe.setType(type);
-        recipe.setInstructions(instructions);
+        newRecipe.setName(name);
+        newRecipe.setDescription(description);
+        newRecipe.setCategory(category);
+        newRecipe.setType(type);
+        newRecipe.setInstructions(instructions);
 
-        if (!previousRecipeType.equals(type)) {
-            List<Recipe> previousRecipeList = getRecipeTypeList(previousRecipeType);
-            List<Recipe> currentRecipeList = getRecipeTypeList(type);
-            previousRecipeList.remove(recipe);
+        List<Recipe> recipeListToBeEdited = getRecipeTypeList(previousType);
 
-            int index1 = Collections.binarySearch(currentRecipeList, recipe,
-                    (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
+        for (Recipe recipe : recipeListToBeEdited) {
+            if (recipe.getName().equals(previousName)) {
+                recipeListToBeEdited.remove(recipe);
+                allRecipesList.remove(recipe);
 
-            if (index1 < 0) {
-                index1 = (index1 * -1) - 1;
+                addRecipe(context, newRecipe);
+                break;
             }
-            currentRecipeList.add(index1, recipe);
         }
-
         saveChanges(context);
     }
 

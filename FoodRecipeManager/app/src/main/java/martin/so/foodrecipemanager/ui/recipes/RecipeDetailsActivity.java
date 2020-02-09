@@ -43,43 +43,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
     final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
 
-    /**
-     * Returns the recipe list based on the recipe's type.
-     *
-     * @param recipe The recipe type as a String.
-     */
-    private List<Recipe> getRecipeTypeList(String recipe) {
-        switch (recipe) {
-            case Utils.RECIPE_TYPE_ALL:
-                return RecipeManager.getInstance().getAllRecipes();
-            case Utils.RECIPE_TYPE_BREAKFAST:
-                return RecipeManager.getInstance().getBreakfastRecipes();
-            case Utils.RECIPE_TYPE_LIGHT_MEAL:
-                return RecipeManager.getInstance().getLightMealRecipes();
-            case Utils.RECIPE_TYPE_HEAVY_MEAL:
-                return RecipeManager.getInstance().getHeavyMealRecipes();
-            case Utils.RECIPE_TYPE_DESSERT:
-                return RecipeManager.getInstance().getDessertRecipes();
-            default:
-                return null;
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
-        Bundle data = getIntent().getExtras();
-        String temporaryRecipeName = data.getString("recipeName");
-        String temporaryRecipeType = data.getString("recipeType");
-
-
-        for (Recipe recipe : getRecipeTypeList(temporaryRecipeType)) {
-            if (recipe.getName().equals(temporaryRecipeName)) {
-                currentRecipe = recipe;
-            }
-        }
+        currentRecipe = (Recipe) getIntent().getSerializableExtra("recipeObject");
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -170,7 +139,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 if (!duplicateFound) {
                     if (haveFieldsChanged()) {
                         RecipeManager.getInstance().editRecipe(this, currentRecipe, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeInstructions.getText().toString());
-                        getSupportActionBar().setTitle(currentRecipe.getName());
+                        getSupportActionBar().setTitle(recipeName.getText().toString());
                         Toast.makeText(getApplicationContext(), "Recipe edited",
                                 Toast.LENGTH_LONG).show();
                     } else {

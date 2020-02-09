@@ -97,8 +97,7 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
     @Override
     public void onItemClick(View view, int position) {
         Intent recipeDetailsActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
-        recipeDetailsActivity.putExtra("recipeName", recipesAdapter.getItem(position).getName());
-        recipeDetailsActivity.putExtra("recipeType", Utils.RECIPE_TYPES[counter]);
+        recipeDetailsActivity.putExtra("recipeObject", recipesAdapter.getItem(position));
         startActivity(recipeDetailsActivity);
     }
 

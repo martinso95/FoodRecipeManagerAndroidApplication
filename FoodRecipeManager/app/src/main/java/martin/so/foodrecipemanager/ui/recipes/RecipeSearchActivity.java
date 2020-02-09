@@ -47,8 +47,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
     @Override
     public void onItemClick(View view, int position) {
         Intent recipeDetailsActivity = new Intent(this, RecipeDetailsActivity.class);
-        recipeDetailsActivity.putExtra("recipeName", recipesAdapter.getItem(position).getName());
-        recipeDetailsActivity.putExtra("recipeType", Utils.RECIPE_TYPE_ALL);
+        recipeDetailsActivity.putExtra("recipeObject", recipesAdapter.getItem(position));
         startActivity(recipeDetailsActivity);
     }
 

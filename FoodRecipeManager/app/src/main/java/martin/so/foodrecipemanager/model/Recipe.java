@@ -1,9 +1,11 @@
 package martin.so.foodrecipemanager.model;
 
+import java.io.Serializable;
+
 /**
  * A class representing a recipe, containing properties that a recipe should have.
  */
-public class Recipe {
+public class Recipe implements Serializable {
     private String name;
     private String description;
     private String instructions;
