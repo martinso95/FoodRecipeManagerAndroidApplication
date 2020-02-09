@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import martin.so.foodrecipemanager.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ import java.util.List;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder> {
 
     private List<Recipe> recipes;
+    List<Recipe> recipesCopy;
     private LayoutInflater inflater;
     private Context context;
     private ItemClickListener recipeClickListener;
@@ -27,6 +29,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.recipes = recipes;
+        recipesCopy = new ArrayList<>(recipes);
         Log.d("Test", "Recipe adapter constructor");
     }
 
@@ -49,8 +52,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         return recipes.size();
     }
 
-    public String getItem(int id) {
-        return recipes.get(id).getName();
+    public Recipe getItem(int id) {
+        return recipes.get(id);
     }
 
     /**
@@ -74,6 +77,27 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             if (recipeClickListener != null)
                 recipeClickListener.onItemClick(view, getAdapterPosition());
         }
+    }
+
+    /**
+     * Filter the recipe list based on the text parameter.
+     * Notifies that the recipe list has changed.
+     *
+     * @param text The text that is to be found in the recipes' names.
+     */
+    public void filter(String text) {
+        recipes.clear();
+        if (text.isEmpty()) {
+            recipes.addAll(recipesCopy);
+        } else {
+            text = text.toLowerCase();
+            for (Recipe recipe : recipesCopy) {
+                if (recipe.getName().toLowerCase().contains(text)) {
+                    recipes.add(recipe);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public void setClickListener(ItemClickListener recipeClickListener) {

@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/search_recipe_button"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title=""
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/add_recipe_button"
         android:icon="@drawable/ic_add_white_24dp"
         android:title=""

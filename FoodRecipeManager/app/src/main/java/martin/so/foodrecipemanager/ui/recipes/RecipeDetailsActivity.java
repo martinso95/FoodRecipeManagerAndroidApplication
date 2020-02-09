@@ -71,10 +71,15 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe_details);
 
         Bundle data = getIntent().getExtras();
-        int recipePosition = data.getInt("recipePosition");
+        String temporaryRecipeName = data.getString("recipeName");
         String temporaryRecipeType = data.getString("recipeType");
 
-        currentRecipe = getRecipeTypeList(temporaryRecipeType).get(recipePosition);
+
+        for (Recipe recipe : getRecipeTypeList(temporaryRecipeType)) {
+            if (recipe.getName().equals(temporaryRecipeName)) {
+                currentRecipe = recipe;
+            }
+        }
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

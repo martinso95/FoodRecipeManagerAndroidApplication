@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.recipes.RecipeSearchActivity"
+            android:label="@string/title_recipe_search"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ui.recipes.RecipeDetailsActivity"
             android:screenOrientation="portrait" />
         <activity

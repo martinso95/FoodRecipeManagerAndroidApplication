@@ -61,16 +61,6 @@ public class RecipesFragment extends Fragment {
     }
 
     /**
-     * A method for the "Add recipe"-button.
-     * Clicking on the "Add recipe"-button will start a new activity,
-     * where it is possible to add a new recipe with details.
-     */
-    private void addRecipe() {
-        Intent addRecipeActivity = new Intent(getActivity(), AddRecipeActivity.class);
-        startActivity(addRecipeActivity);
-    }
-
-    /**
      * Adds the "Add recipe"-button to the Fragment.
      * Position: Top right.
      */
@@ -81,14 +71,16 @@ public class RecipesFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    /**
-     * Clicking on the "Add recipe"-button will call addRecipe().
-     */
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.add_recipe_button) {
-            addRecipe();
+            Intent addRecipeActivity = new Intent(getActivity(), AddRecipeActivity.class);
+            startActivity(addRecipeActivity);
+        } else if (id == R.id.search_recipe_button) {
+            Intent searchRecipesActivity = new Intent(getActivity(), RecipeSearchActivity.class);
+            startActivity(searchRecipesActivity);
         }
         return super.onOptionsItemSelected(item);
     }

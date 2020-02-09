@@ -67,13 +67,15 @@ public class RecipeManager {
     public void addRecipe(Context context, Recipe recipe) {
         List<Recipe> typeRecipesList = getRecipeTypeList(recipe.getType());
 
-        int index1 = Collections.binarySearch(typeRecipesList, recipe,
-                (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
+        if (!recipe.getType().equals(Utils.RECIPE_TYPE_ALL)) {
+            int index1 = Collections.binarySearch(typeRecipesList, recipe,
+                    (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
 
-        if (index1 < 0) {
-            index1 = (index1 * -1) - 1;
+            if (index1 < 0) {
+                index1 = (index1 * -1) - 1;
+            }
+            typeRecipesList.add(index1, recipe);
         }
-        typeRecipesList.add(index1, recipe);
 
         int index2 = Collections.binarySearch(allRecipesList, recipe,
                 (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));

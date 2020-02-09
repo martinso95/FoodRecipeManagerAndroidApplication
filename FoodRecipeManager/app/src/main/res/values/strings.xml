@@ -3,6 +3,7 @@
     <string name="title_recipes">Recipes</string>
     <string name="title_tbd1">Tbd1</string>
     <string name="title_tbd2">Tbd2</string>
+    <string name="title_recipe_search">Search recipes</string>
 
     <!--    Card layout-->
     <string name="card_recipe_type_label">Type:</string>

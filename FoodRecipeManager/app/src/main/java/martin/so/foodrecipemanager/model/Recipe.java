@@ -10,9 +10,9 @@ public class Recipe {
     private String type;
     private String category;
 
-    public Recipe(String name, String content, String instructions, String type, String category) {
+    public Recipe(String name, String description, String instructions, String type, String category) {
         this.name = name;
-        this.description = content;
+        this.description = description;
         this.instructions = instructions;
         this.type = type;
         this.category = category;
