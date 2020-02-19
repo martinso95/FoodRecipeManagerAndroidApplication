@@ -121,10 +121,19 @@ public class RecipeManager {
     }
 
     public void removeRecipe(Context context, Recipe recipe) {
-        allRecipesList.remove(recipe);
+        List<Recipe> recipeListToBeEdited = getRecipeTypeList(recipe.getType());
+        for (Recipe r : recipeListToBeEdited) {
+            if (r.getName().equals(recipe.getName())) {
+                recipeListToBeEdited.remove(r);
+                allRecipesList.remove(r);
+                break;
+            }
+        }
 
-        List<Recipe> typeRecipesList = getRecipeTypeList(recipe.getType());
-        typeRecipesList.remove(recipe);
+        new ImageSaver(context).
+                setFileName(recipe.getName() + ".jpg").
+                setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
+                deleteFile();
 
         saveChanges(context);
     }

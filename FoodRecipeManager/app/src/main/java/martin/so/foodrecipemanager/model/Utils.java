@@ -2,6 +2,8 @@ package martin.so.foodrecipemanager.model;
 
 public class Utils {
 
+    public static final String PHOTO_STORAGE_DIRECTORY = "recipeStorageFolder";
+
     public static final String RECIPE_CATEGORY = "Category";
     public static final String RECIPE_CATEGORY_MEAT = "Meat";
     public static final String RECIPE_CATEGORY_VEGETARIAN = "Vegetarian";

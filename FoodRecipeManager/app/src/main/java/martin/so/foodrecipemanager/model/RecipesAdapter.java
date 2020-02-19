@@ -1,9 +1,12 @@
 package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +43,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Recipe recipe = recipes.get(position);
+
+        // Load the recipe photo from  internal storage.
+        Bitmap bitmapRecipePhoto = new ImageSaver(context).
+                setFileName(recipe.getName() + ".jpg").
+                setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
+                load();
+
+        if (bitmapRecipePhoto != null) holder.recipePhoto.setImageBitmap(bitmapRecipePhoto);
+
         holder.recipeName.setText(recipe.getName());
         holder.recipeCategory.setText(recipe.getCategory());
         holder.recipeType.setText(recipe.getType());
@@ -58,12 +70,14 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
      * This determines what data will be displayed on the cards in the RecyclerView.
      */
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView recipePhoto;
         TextView recipeName;
         TextView recipeCategory;
         TextView recipeType;
 
         ViewHolder(View itemView) {
             super(itemView);
+            recipePhoto = itemView.findViewById(R.id.imageViewThumbnailCard);
             recipeName = itemView.findViewById(R.id.textViewRecipeNameCard);
             recipeCategory = itemView.findViewById(R.id.textViewRecipeCategoryCard);
             recipeType = itemView.findViewById(R.id.textViewRecipeTypeCard);
