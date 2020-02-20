@@ -2,16 +2,23 @@ package martin.so.foodrecipemanager.ui.recipes;
 
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
+import martin.so.foodrecipemanager.model.ImageSaver;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +30,8 @@ import com.google.android.material.textfield.TextInputEditText;
  */
 public class AddRecipeActivity extends AppCompatActivity {
 
-    private TextView temporaryPhotoPlaceholder;
+    private ImageButton recipePhoto;
+    private String recipePhotoFilePath;
     private TextInputEditText recipeName;
     private TextInputEditText recipeDescription;
     private Spinner recipeCategory;
@@ -35,6 +43,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
     final String[] recipeTypes = {Utils.RECIPE_TYPE, Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
 
+    private static final int PICK_IMAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +55,23 @@ public class AddRecipeActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Add Recipe");
         }
 
+        recipePhoto = findViewById(R.id.imageButtonRecipePhotoAddRecipe);
         recipeName = findViewById(R.id.textInputLayoutEditRecipeNameAddRecipe);
         recipeDescription = findViewById(R.id.textInputLayoutEditRecipeDescriptionAddRecipe);
         recipeCategory = findViewById(R.id.spinnerRecipeCategoryAddRecipe);
         recipeType = findViewById(R.id.spinnerRecipeTypeAddRecipe);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsAddRecipe);
+
+        recipePhoto.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            // Sets the type as image/*. This ensures only components of type image are selected
+            intent.setType("image/*");
+            // Pass an extra array with the accepted mime types.
+            // This will ensure that only components with these MIME types are targeted.
+            String[] mimeTypes = {"image/jpeg", "image/png"};
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            startActivityForResult(intent, PICK_IMAGE);
+        });
 
         ArrayAdapter<String> recipeCategoryAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipeCategories);
@@ -116,6 +137,10 @@ public class AddRecipeActivity extends AppCompatActivity {
                 }
                 if (!duplicateFound) {
                     Recipe recipe = new Recipe(recipeName.getText().toString(), recipeDescription.getText().toString(), recipeInstructions.getText().toString(), selectedRecipeType, selectedRecipeCategory);
+                    new ImageSaver(this).
+                            setFileName(recipeName.getText().toString() + ".jpg").
+                            setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
+                            save(BitmapFactory.decodeFile(recipePhotoFilePath));
                     RecipeManager.getInstance().addRecipe(getApplicationContext(), recipe);
 
                     Toast.makeText(getApplicationContext(), "Recipe added: " + recipeName.getText().toString(),
@@ -160,5 +185,25 @@ public class AddRecipeActivity extends AppCompatActivity {
             noEmpty = false;
         }
         return noEmpty;
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            recipePhotoFilePath = picturePath;
+            recipePhoto.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        }
     }
 }

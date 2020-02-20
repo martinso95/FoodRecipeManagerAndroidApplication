@@ -87,8 +87,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             startActivityForResult(intent, PICK_IMAGE);
         });
 
-//        recipePhoto.setFocusable(false);
-//        recipePhoto.setEnabled(false);
+        recipePhoto.setFocusable(false);
+        recipePhoto.setEnabled(false);
 
         recipeName.setFocusable(false);
         recipeName.setEnabled(false);

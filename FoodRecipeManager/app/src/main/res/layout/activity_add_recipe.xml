@@ -11,20 +11,19 @@
         android:paddingRight="10dp"
         tools:context=".ui.recipes.AddRecipeActivity">
 
-        <ImageView
-            android:id="@+id/imageViewRecipePhotoAddRecipe"
+        <ImageButton
+            android:id="@+id/imageButtonRecipePhotoAddRecipe"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:contentDescription="placeholder"
-            android:src="@drawable/ic_cake_black_24dp" />
+            android:background="@drawable/ic_camera_black_24dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeNameAddRecipe"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@id/imageViewRecipePhotoAddRecipe"
+            android:layout_below="@id/imageButtonRecipePhotoAddRecipe"
             android:layout_marginBottom="20dp"
             android:textSize="15sp">
 
