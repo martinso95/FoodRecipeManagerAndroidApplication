@@ -22,7 +22,7 @@ import java.util.List;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHolder> {
 
     private List<Recipe> recipes;
-    List<Recipe> recipesCopy;
+    private List<Recipe> recipesCopy;
     private LayoutInflater inflater;
     private Context context;
     private ItemClickListener recipeClickListener;
@@ -60,6 +60,16 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     @Override
     public int getItemCount() {
         return recipes.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     public Recipe getItem(int id) {
