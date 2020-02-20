@@ -2,25 +2,19 @@ package martin.so.foodrecipemanager;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
-import martin.so.foodrecipemanager.model.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
 //        SharedPreferences.Editor editor = getSharedPreferences("FoodRecipeManager", MODE_PRIVATE).edit();
 //        editor.clear();

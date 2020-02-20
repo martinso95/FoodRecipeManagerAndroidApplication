@@ -44,6 +44,19 @@ public class ImageSaver {
         return file.delete();
     }
 
+    public boolean editFile(String fileName, String newFileName) {
+        File directory = context.getDir(directoryName, Context.MODE_PRIVATE);
+        File[] files = directory.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].getName().equals(fileName)) {
+                File newFile = new File(directory, newFileName);
+                files[i].renameTo(newFile);
+                return true;
+            }
+        }
+        return false;
+    }
+
     @NonNull
     private File createFile() {
         File directory;

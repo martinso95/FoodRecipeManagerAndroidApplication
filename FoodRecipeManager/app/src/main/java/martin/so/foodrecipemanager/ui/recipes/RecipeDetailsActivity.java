@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     boolean editActive = false;
 
     private ImageButton recipePhoto;
+    private String recipePhotoFilePath;
     private boolean recipePhotoChanged = false;
     private TextInputEditText recipeName;
     private TextInputEditText recipeDescription;
@@ -171,7 +173,18 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
                 if (!duplicateFound) {
                     if (haveFieldsChanged()) {
-                        RecipeManager.getInstance().editRecipe(this, currentRecipe, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeInstructions.getText().toString());
+                        String newRecipeName = recipeName.getText().toString();
+
+                        // If recipe name is change, the image file name needs to be changed too.
+                        // If there was no previous image set, then a new image file will be created,
+                        // otherwise, the image file name will be changed.
+                        ImageSaver imageSaver = new ImageSaver(this);
+                        if (!imageSaver.editFile(currentRecipe.getName() + ".jpg", newRecipeName + ".jpg")) {
+                            imageSaver.setFileName(newRecipeName + ".jpg").setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).save(BitmapFactory.decodeFile(recipePhotoFilePath));
+                        }
+
+                        RecipeManager.getInstance().editRecipe(this, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeInstructions.getText().toString());
+
                         getSupportActionBar().setTitle(recipeName.getText().toString());
                         Toast.makeText(getApplicationContext(), "Recipe edited",
                                 Toast.LENGTH_LONG).show();
@@ -274,7 +287,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         if (!selectedRecipeType.equals(currentRecipe.getType())) {
             haveChanged = true;
         }
-        if (!(recipeInstructions.getText().toString()).equals(currentRecipe.getDescription())) {
+        if (!(recipeInstructions.getText().toString()).equals(currentRecipe.getInstructions())) {
             haveChanged = true;
         }
         return haveChanged;
@@ -331,13 +344,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            new ImageSaver(this).
-                    setFileName(recipeName.getText().toString() + ".jpg").
-                    setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
-                    save(BitmapFactory.decodeFile(picturePath));
-
             recipePhoto.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             recipePhotoChanged = true;
+            recipePhotoFilePath = picturePath;
         }
     }
 
