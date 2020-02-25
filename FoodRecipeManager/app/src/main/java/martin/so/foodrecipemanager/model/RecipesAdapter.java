@@ -2,7 +2,6 @@ package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
                 setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
                 load();
 
-        if (bitmapRecipePhoto != null) holder.recipePhoto.setImageBitmap(bitmapRecipePhoto);
+        if (bitmapRecipePhoto != null) {
+            holder.recipePhoto.setImageBitmap(bitmapRecipePhoto);
+        } else {
+            holder.recipePhoto.setImageResource(R.drawable.placeholder_recipe_photo);
+        }
 
         holder.recipeName.setText(recipe.getName());
         holder.recipeCategory.setText(recipe.getCategory());

@@ -14,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
-
 
 /**
  * Activity containing the "Recipe details"-view.
@@ -149,7 +147,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         selectedRecipeType = currentRecipe.getType();
 
         recipeInstructions.setText(currentRecipe.getInstructions());
-
     }
 
     /**
@@ -349,5 +346,4 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipePhotoFilePath = picturePath;
         }
     }
-
 }

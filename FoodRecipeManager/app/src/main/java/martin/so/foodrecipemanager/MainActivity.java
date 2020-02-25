@@ -2,6 +2,7 @@ package martin.so.foodrecipemanager;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +15,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
+import martin.so.foodrecipemanager.model.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
 //        SharedPreferences.Editor editor = getSharedPreferences("FoodRecipeManager", MODE_PRIVATE).edit();
 //        editor.clear();
 //        editor.apply();
-
-        // Add dummy recipes:
+//
+////         Add dummy recipes:
 //        RecipeManager.getInstance().addRecipe(this, new Recipe("Bacon sandwich", "Test", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_MEAT));
 //        RecipeManager.getInstance().addRecipe(this, new Recipe("Sausage", "Test", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_MEAT));
 //        RecipeManager.getInstance().addRecipe(this, new Recipe("Ribeye", "Test", "Test", Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_CATEGORY_MEAT));
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 //        RecipeManager.getInstance().addRecipe(this, new Recipe("Beans", "Test", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN));
 //        RecipeManager.getInstance().addRecipe(this, new Recipe("Vegetarian pizza", "Test", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_VEGETARIAN));
 //        RecipeManager.getInstance().addRecipe(this, new Recipe("Plant burger", "Test", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe( "Apple pie", "Test", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGETARIAN));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Apple pie", "Test", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGETARIAN));
 
         RecipeManager.getInstance().loadRecipes(this);
         setContentView(R.layout.activity_main);
