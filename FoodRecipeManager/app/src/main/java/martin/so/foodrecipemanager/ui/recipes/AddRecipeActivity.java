@@ -2,7 +2,7 @@ package martin.so.foodrecipemanager.ui.recipes;
 
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
-import martin.so.foodrecipemanager.model.ImageSaver;
+import martin.so.foodrecipemanager.model.ImageHandler;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
@@ -136,10 +136,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                 }
                 if (!duplicateFound) {
                     Recipe recipe = new Recipe(recipeName.getText().toString(), recipeDescription.getText().toString(), recipeInstructions.getText().toString(), selectedRecipeType, selectedRecipeCategory);
-                    new ImageSaver(this).
-                            setFileName(recipeName.getText().toString() + ".jpg").
-                            setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
-                            save(BitmapFactory.decodeFile(recipePhotoFilePath));
+                    new ImageHandler(this).createImageFile(recipeName.getText().toString(), recipePhotoFilePath);
                     RecipeManager.getInstance().addRecipe(getApplicationContext(), recipe);
 
                     Toast.makeText(getApplicationContext(), "Recipe added: " + recipeName.getText().toString(),

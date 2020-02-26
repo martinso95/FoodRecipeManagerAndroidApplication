@@ -2,7 +2,7 @@ package martin.so.foodrecipemanager.ui.recipes;
 
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
-import martin.so.foodrecipemanager.model.ImageSaver;
+import martin.so.foodrecipemanager.model.ImageHandler;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
@@ -98,10 +98,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeInstructions.setEnabled(false);
 
         // Load the recipe photo from  internal storage.
-        Bitmap bitmapRecipePhoto = new ImageSaver(this).
-                setFileName(currentRecipe.getName() + ".jpg").
-                setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
-                load();
+        Bitmap bitmapRecipePhoto = new ImageHandler(this).loadImageFile(currentRecipe.getName());
         if (bitmapRecipePhoto != null) recipePhoto.setImageBitmap(bitmapRecipePhoto);
 
         recipeName.setText(currentRecipe.getName());
@@ -175,9 +172,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                         // If recipe name is change, the image file name needs to be changed too.
                         // If there was no previous image set, then a new image file will be created,
                         // otherwise, the image file name will be changed.
-                        ImageSaver imageSaver = new ImageSaver(this);
-                        if (!imageSaver.editFile(currentRecipe.getName() + ".jpg", newRecipeName + ".jpg")) {
-                            imageSaver.setFileName(newRecipeName + ".jpg").setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).save(BitmapFactory.decodeFile(recipePhotoFilePath));
+                        ImageHandler imageHandler = new ImageHandler(this);
+                        if (!imageHandler.editImageFileName(currentRecipe.getName(), newRecipeName)) {
+                            imageHandler.createImageFile(newRecipeName, recipePhotoFilePath);
                         }
 
                         RecipeManager.getInstance().editRecipe(this, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeInstructions.getText().toString());

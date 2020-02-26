@@ -44,10 +44,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         Recipe recipe = recipes.get(position);
 
         // Load the recipe photo from  internal storage.
-        Bitmap bitmapRecipePhoto = new ImageSaver(context).
-                setFileName(recipe.getName() + ".jpg").
-                setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
-                load();
+        Bitmap bitmapRecipePhoto = new ImageHandler(context).loadImageFile(recipe.getName());
 
         if (bitmapRecipePhoto != null) {
             holder.recipePhoto.setImageBitmap(bitmapRecipePhoto);

@@ -128,11 +128,7 @@ public class RecipeManager {
                 break;
             }
         }
-
-        new ImageSaver(context).
-                setFileName(recipe.getName() + ".jpg").
-                setDirectoryName(Utils.PHOTO_STORAGE_DIRECTORY).
-                deleteFile();
+        new ImageHandler(context).deleteImageFile(recipe.getName());
 
         saveChanges(context);
     }
