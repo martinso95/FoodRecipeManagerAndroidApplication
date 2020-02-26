@@ -31,18 +31,17 @@ public class RecipesFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.d("Test", "MAIN Recipe Fragment START");
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_recipes, container, false);
 
         tabLayout = view.findViewById(R.id.tabLayoutRecipesFragment);
 
         viewPager = view.findViewById(R.id.viewPagerRecipesFragment);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity());
-
+        viewPagerAdapter = new ViewPagerAdapter(getActivity());
         viewPager.setAdapter(viewPagerAdapter);
         new TabLayoutMediator(tabLayout, viewPager,
                 new TabLayoutMediator.TabConfigurationStrategy() {
@@ -51,12 +50,10 @@ public class RecipesFragment extends Fragment {
                         tab.setText("" + Utils.RECIPE_TYPES[position]);
                     }
                 }).attach();
-
         int limit = (viewPagerAdapter.getItemCount() > 1 ? viewPagerAdapter.getItemCount() - 1 : 1);
-
         viewPager.setOffscreenPageLimit(limit);
-        Log.d("Test", "MAIN Recipe Fragment CREATED");
 
+        Log.d("Test", "MAIN Recipe Fragment CREATED");
         return view;
     }
 

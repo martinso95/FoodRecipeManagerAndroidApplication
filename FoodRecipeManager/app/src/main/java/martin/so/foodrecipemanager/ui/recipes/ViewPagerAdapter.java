@@ -12,10 +12,15 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
-    @NonNull @Override public Fragment createFragment(int position) {
+
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
         return PageRecipesFragment.newInstance(position);
     }
-    @Override public int getItemCount() {
+
+    @Override
+    public int getItemCount() {
         return PAGE_ITEM_SIZE;
     }
 }

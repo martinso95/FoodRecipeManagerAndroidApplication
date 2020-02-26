@@ -11,9 +11,13 @@ import martin.so.foodrecipemanager.R;
 
 public class Tbd1Fragment extends Fragment {
 
+    private View view = null;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_tbd1, container, false);
-        return root;
+        if (view == null) {
+            view = inflater.inflate(R.layout.fragment_tbd1, container, false);
+        }
+        return view;
     }
 }

@@ -36,6 +36,7 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
     }
 
     public static PageRecipesFragment newInstance(Integer counter) {
+
         PageRecipesFragment fragment = new PageRecipesFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COUNT, counter);
@@ -55,7 +56,7 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_page_recipes, container, false);
-        Log.d("Test", "PAGE " + counter + " Recipe Fragment START");
+        Log.d("Test", "PAGE " + counter + " Recipe Fragment CREATED");
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewPageRecipes);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
