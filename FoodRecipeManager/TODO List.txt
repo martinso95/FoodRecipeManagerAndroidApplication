@@ -1,0 +1,38 @@
+TODO: (numbered prioritization within items)
+
+
+Individual recipe:
+1. Add more properties in a recipe: time, ingredients.
+2. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally. 
+   Also possibility to alter the amount of one ingredient, and the rest should change to be proportional.
+3. Possibility to remove picture.
+4. Improve how instructions are being added and visualized. Introduce steps. 
+   Each step is one box of information, and so on.
+5. Make it Favorite option. OR rating?
+
+
+Recipe menu:
+1. Add favorite tab. OR rating?
+2. Add filter functionality.
+
+
+Performance improvement:
+1. Look into: "I/Choreographer: Skipped 62 frames!  The application may be doing too much work on its main thread."
+2. Handle loading all tabs at start better.
+
+
+Firebase:
+1. Storage purposes.
+2. Profile and sync.
+
+
+Design:
+- Everything needs to be better looking...
+
+
+Other sections of the app:
+Tbd1 and Tbd2
+- Todo list?
+- Shopping list? What you have at home list?
+- Available ingredients at home, and recommend recipes for you?
+
