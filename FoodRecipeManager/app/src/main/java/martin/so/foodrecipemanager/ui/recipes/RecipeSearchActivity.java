@@ -7,7 +7,6 @@ import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.RecipesAdapter;
-import martin.so.foodrecipemanager.model.Utils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +23,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
 
     private RecipesAdapter recipesAdapter;
     private List<Recipe> allRecipesList;
+    private String textToFilter = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
      */
     @Override
     public boolean onQueryTextChange(String newText) {
+        textToFilter = newText;
         recipesAdapter.filter(newText);
         return false;
     }
@@ -80,6 +81,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
      */
     @Override
     public boolean onQueryTextSubmit(String query) {
+        textToFilter = query;
         recipesAdapter.filter(query);
         return false;
     }
@@ -103,6 +105,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
     public void onResume() {
         super.onResume();
         Log.d("Test", "Recipe Search Activity RESUMED");
-        recipesAdapter.notifyDataSetChanged();
+        recipesAdapter.setList(new ArrayList<>(RecipeManager.getInstance().getAllRecipes()));
+        recipesAdapter.filter(textToFilter);
     }
 }

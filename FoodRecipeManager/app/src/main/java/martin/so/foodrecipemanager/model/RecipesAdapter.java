@@ -43,7 +43,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Recipe recipe = recipes.get(position);
 
-        // Load the recipe photo from  internal storage.
+        // Load the recipe photo from internal storage.
         Bitmap bitmapRecipePhoto = new ImageHandler(context).loadImageFile(recipe.getName());
 
         if (bitmapRecipePhoto != null) {
@@ -101,6 +101,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         }
     }
 
+
     /**
      * Filter the recipe list based on the text parameter.
      * Notifies that the recipe list has changed.
@@ -120,6 +121,11 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             }
         }
         notifyDataSetChanged();
+    }
+
+    public void setList(List<Recipe> newRecipes) {
+        recipes = newRecipes;
+        recipesCopy = new ArrayList<>(recipes);
     }
 
     public void setClickListener(ItemClickListener recipeClickListener) {
