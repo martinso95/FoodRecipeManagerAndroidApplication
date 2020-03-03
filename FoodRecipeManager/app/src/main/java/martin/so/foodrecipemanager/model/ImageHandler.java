@@ -34,7 +34,7 @@ public class ImageHandler {
      * @param filePath The file path of the image that comes from the phone's photo storage.
      */
     public boolean createImageFile(String fileName, String filePath) {
-        boolean failedToCreateImageFile;
+        boolean createImageFileCreated;
         File directory = getImageDirectory();
 
         FileOutputStream fileOutputStream = null;
@@ -42,10 +42,10 @@ public class ImageHandler {
             fileOutputStream = new FileOutputStream(new File(directory, fileName + imageFileFormat));
             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream);
-            failedToCreateImageFile = true;
+            createImageFileCreated = true;
         } catch (Exception e) {
             e.printStackTrace();
-            failedToCreateImageFile = false;
+            createImageFileCreated = false;
         } finally {
             try {
                 if (fileOutputStream != null) {
@@ -55,7 +55,7 @@ public class ImageHandler {
                 e.printStackTrace();
             }
         }
-        return failedToCreateImageFile;
+        return createImageFileCreated;
     }
 
     /**
