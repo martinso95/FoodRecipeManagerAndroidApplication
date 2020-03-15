@@ -1,6 +1,8 @@
 package martin.so.foodrecipemanager.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class representing a recipe, containing properties that a recipe should have.
@@ -8,16 +10,18 @@ import java.io.Serializable;
 public class Recipe implements Serializable {
     private String name;
     private String description;
-    private String instructions;
     private String type;
     private String category;
+    private List<Ingredient> ingredients;
+    private String instructions;
 
-    public Recipe(String name, String description, String instructions, String type, String category) {
+    public Recipe(String name, String description, String type, String category, List<Ingredient> ingredients, String instructions) {
         this.name = name;
         this.description = description;
-        this.instructions = instructions;
         this.type = type;
         this.category = category;
+        this.ingredients = ingredients;
+        this.instructions = instructions;
     }
 
     public String getName() {
@@ -36,14 +40,6 @@ public class Recipe implements Serializable {
         this.description = description;
     }
 
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
     public String getType() {
         return type;
     }
@@ -58,6 +54,22 @@ public class Recipe implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = new ArrayList<>(ingredients);
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
 }

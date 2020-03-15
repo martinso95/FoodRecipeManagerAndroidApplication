@@ -12,11 +12,14 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import martin.so.foodrecipemanager.model.Ingredient;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
@@ -68,22 +71,26 @@ public class MainActivity extends AppCompatActivity {
 //        SharedPreferences.Editor editor = getSharedPreferences("FoodRecipeManager", MODE_PRIVATE).edit();
 //        editor.clear();
 //        editor.apply();
+
+//         Add dummy recipes:
+//        List<Ingredient> ingredients = new ArrayList<>();
+//        ingredients.add(new Ingredient("Salt"));
+//        ingredients.add(new Ingredient("Pepper"));
+//        ingredients.add(new Ingredient("Meat"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Bacon sandwich", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Sausage", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Ribeye", "Test", Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Meat pie", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
 //
-////         Add dummy recipes:
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Bacon sandwich", "Test", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_MEAT));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Sausage", "Test", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_MEAT));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Ribeye", "Test", "Test", Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_CATEGORY_MEAT));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Meat pie", "Test", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_MEAT));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Sallad", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Pasta", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Falafel", "Test", Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Donut", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
 //
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Sallad", "Test", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGAN));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Pasta", "Test", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_VEGAN));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Falafel", "Test", "Test", Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_CATEGORY_VEGAN));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Donut", "Test", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGAN));
-//
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Beans", "Test", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Vegetarian pizza", "Test", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_VEGETARIAN));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Plant burger", "Test", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Apple pie", "Test", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGETARIAN));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Beans", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Vegetarian pizza", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Plant burger", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
+//        RecipeManager.getInstance().addRecipe(this, new Recipe("Apple pie", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
 
         RecipeManager.getInstance().loadRecipes(this);
 

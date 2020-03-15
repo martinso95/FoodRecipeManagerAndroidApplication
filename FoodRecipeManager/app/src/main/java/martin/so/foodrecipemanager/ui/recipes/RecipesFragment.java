@@ -64,7 +64,7 @@ public class RecipesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu items for use in the action bar.
-        inflater.inflate(R.menu.fragment_recipe_menu, menu);
+        inflater.inflate(R.menu.menu_recipe_fragment, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

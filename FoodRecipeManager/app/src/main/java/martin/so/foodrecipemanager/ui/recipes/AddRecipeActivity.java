@@ -3,6 +3,8 @@ package martin.so.foodrecipemanager.ui.recipes;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.ImageHandler;
+import martin.so.foodrecipemanager.model.Ingredient;
+import martin.so.foodrecipemanager.model.IngredientsAdapter;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
@@ -13,16 +15,24 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity containing the "Add recipe"-view.
@@ -37,6 +47,11 @@ public class AddRecipeActivity extends AppCompatActivity {
     private String selectedRecipeCategory = Utils.RECIPE_CATEGORY;
     private Spinner recipeType;
     private String selectedRecipeType = Utils.RECIPE_TYPE;
+    private TextInputEditText recipeIngredientInput;
+    private ImageButton recipeAddIngredient;
+    private ListView recipeIngredientsList;
+    private List<Ingredient> recipeIngredients;
+    IngredientsAdapter ingredientsAdapter;
     private TextInputEditText recipeInstructions;
 
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
@@ -47,7 +62,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_recipe);
+        setContentView(R.layout.activity_recipe_add);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -59,6 +74,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeDescription = findViewById(R.id.textInputLayoutEditRecipeDescriptionAddRecipe);
         recipeCategory = findViewById(R.id.spinnerRecipeCategoryAddRecipe);
         recipeType = findViewById(R.id.spinnerRecipeTypeAddRecipe);
+        recipeIngredientInput = findViewById(R.id.textInputLayoutEditRecipeAddIngredientAddRecipe);
+        recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonAddRecipe);
+        recipeIngredientsList = findViewById(R.id.listViewIngredientsAddRecipe);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsAddRecipe);
 
         recipePhoto.setOnClickListener(v -> {
@@ -104,6 +122,21 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         });
 
+        recipeIngredients = new ArrayList<>();
+        ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, true);
+        recipeIngredientsList.setAdapter(ingredientsAdapter);
+
+        recipeAddIngredient.setOnClickListener(v -> {
+            String input = recipeIngredientInput.getText().toString();
+            if (!input.isEmpty()) {
+                recipeIngredients.add(new Ingredient(input));
+                recipeIngredientInput.getText().clear();
+                recipeIngredientInput.clearFocus();
+                ingredientsAdapter.notifyDataSetChanged();
+                Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+            }
+        });
+
     }
 
     /**
@@ -111,7 +144,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_save_added_recipe, menu);
+        getMenuInflater().inflate(R.menu.menu_recipe_add, menu);
         return true;
     }
 
@@ -135,7 +168,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                     }
                 }
                 if (!duplicateFound) {
-                    Recipe recipe = new Recipe(recipeName.getText().toString(), recipeDescription.getText().toString(), recipeInstructions.getText().toString(), selectedRecipeType, selectedRecipeCategory);
+                    Recipe recipe = new Recipe(recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
                     new ImageHandler(this).createImageFile(recipeName.getText().toString(), recipePhotoFilePath);
                     RecipeManager.getInstance().addRecipe(getApplicationContext(), recipe);
 
@@ -166,10 +199,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             recipeDescription.setError("Please enter Description");
             noEmpty = false;
         }
-        if (recipeInstructions.getText().toString().isEmpty()) {
-            recipeInstructions.setError("Please enter Instructions");
-            noEmpty = false;
-        }
+
         if (selectedRecipeCategory.equals(Utils.RECIPE_CATEGORY)) {
             Toast.makeText(getApplicationContext(), "Select Recipe Category and Type",
                     Toast.LENGTH_LONG).show();
@@ -178,6 +208,17 @@ public class AddRecipeActivity extends AppCompatActivity {
         if (selectedRecipeType.equals(Utils.RECIPE_TYPE)) {
             Toast.makeText(getApplicationContext(), "Select Recipe Category and Type",
                     Toast.LENGTH_LONG).show();
+            noEmpty = false;
+        }
+
+        if (recipeIngredients.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Add ingredients",
+                    Toast.LENGTH_LONG).show();
+            noEmpty = false;
+        }
+
+        if (recipeInstructions.getText().toString().isEmpty()) {
+            recipeInstructions.setError("Please enter Instructions");
             noEmpty = false;
         }
         return noEmpty;

@@ -4,7 +4,7 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/edit_recipe_button"
-        android:icon="@drawable/ic_edit_black_24dp"
+        android:icon="@drawable/ic_edit_recipe_black_24dp"
         android:orderInCategory="100"
         android:title=""
         app:showAsAction="always" />

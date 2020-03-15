@@ -9,11 +9,13 @@
     <string name="card_recipe_type_label">Type:</string>
     <string name="card_recipe_category_label">Category:</string>
 
-    <!--    Add recipe layout-->
-    <string name="add_recipe_recipe_name_label">Recipe name</string>
-    <string name="add_recipe_recipe_description_label">Description</string>
-    <string name="add_recipe_recipe_category_label">Category</string>
-    <string name="add_recipe_recipe_type_label">Type</string>
-    <string name="add_recipe_recipe_instructions_input_label">Input instructions</string>
+    <!--    Recipe layout-->
+    <string name="recipe_name_label">Recipe name</string>
+    <string name="recipe_description_label">Description</string>
+    <string name="recipe_category_label">Category</string>
+    <string name="recipe_type_label">Type</string>
+    <string name="recipe_ingredients_label">Ingredients</string>
+    <string name="recipe_add_ingredients_hint_label">Add ingredients</string>
+    <string name="recipe_instructions_label">Instructions</string>
 
 </resources>

@@ -3,12 +3,15 @@ package martin.so.foodrecipemanager.ui.recipes;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.ImageHandler;
+import martin.so.foodrecipemanager.model.Ingredient;
+import martin.so.foodrecipemanager.model.IngredientsAdapter;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -20,11 +23,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Activity containing the "Recipe details"-view.
@@ -48,6 +56,15 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private TextView recipeType;
     private Spinner recipeTypeSpinner;
     private String selectedRecipeType;
+    private boolean recipeIngredientsChanged = false;
+    private ListView recipeIngredientsList;
+    private RelativeLayout recipeIngredientEditModeLayout;
+    private TextInputEditText recipeIngredientInput;
+    private ImageButton recipeAddIngredient;
+    private ListView recipeIngredientsListEditMode;
+    private List<Ingredient> recipeIngredients;
+    IngredientsAdapter ingredientsAdapter;
+    IngredientsAdapter ingredientsAdapterEditMode;
     private TextInputEditText recipeInstructions;
 
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
@@ -74,6 +91,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeCategorySpinner = findViewById(R.id.spinnerRecipeCategoryRecipeDetails);
         recipeType = findViewById(R.id.textViewRecipeTypeRecipeDetails);
         recipeTypeSpinner = findViewById(R.id.spinnerRecipeTypeRecipeDetails);
+        recipeIngredientsList = findViewById(R.id.listViewIngredientsRecipeDetails);
+        recipeIngredientEditModeLayout = findViewById(R.id.relativeLayoutIngredientsEditModeRecipeDetails);
+        recipeIngredientInput = findViewById(R.id.textInputLayoutEditRecipeAddIngredientRecipeDetails);
+        recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonRecipeDetails);
+        recipeIngredientsListEditMode = findViewById(R.id.listViewIngredientsEditModeRecipeDetails);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
 
         recipePhoto.setOnClickListener(v -> {
@@ -143,6 +165,34 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         selectedRecipeCategory = currentRecipe.getCategory();
         selectedRecipeType = currentRecipe.getType();
 
+        recipeIngredients = new ArrayList<>(currentRecipe.getIngredients());
+        ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, false);
+        ingredientsAdapterEditMode = new IngredientsAdapter(this, recipeIngredients, true);
+        recipeIngredientsList.setAdapter(ingredientsAdapter);
+        recipeIngredientsListEditMode.setAdapter(ingredientsAdapterEditMode);
+        Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
+        Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+        ingredientsAdapterEditMode.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
+                Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+                recipeIngredientsChanged = true;
+            }
+        });
+
+        recipeAddIngredient.setOnClickListener(v -> {
+            String input = recipeIngredientInput.getText().toString();
+            if (!input.isEmpty()) {
+                recipeIngredients.add(new Ingredient(input));
+                recipeIngredientInput.getText().clear();
+                recipeIngredientInput.clearFocus();
+                ingredientsAdapterEditMode.notifyDataSetChanged();
+                ingredientsAdapter.notifyDataSetChanged();
+                recipeIngredientsChanged = true;
+            }
+        });
+
         recipeInstructions.setText(currentRecipe.getInstructions());
     }
 
@@ -179,7 +229,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                             }
                         }
 
-                        RecipeManager.getInstance().editRecipe(this, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeInstructions.getText().toString());
+                        RecipeManager.getInstance().editRecipe(this, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
 
                         getSupportActionBar().setTitle(recipeName.getText().toString());
                         Toast.makeText(getApplicationContext(), "Recipe edited",
@@ -189,7 +239,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     }
                     editActive = false;
-                    actionbarMenu.findItem(R.id.edit_recipe_button).setIcon(R.drawable.ic_edit_black_24dp);
+                    actionbarMenu.findItem(R.id.edit_recipe_button).setIcon(R.drawable.ic_edit_recipe_black_24dp);
                     recipePhoto.setFocusable(false);
                     recipePhoto.setEnabled(false);
                     recipeName.setFocusable(false);
@@ -202,6 +252,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     recipeTypeSpinner.setVisibility(View.INVISIBLE);
                     recipeType.setVisibility(View.VISIBLE);
                     recipeType.setText(selectedRecipeType);
+                    recipeIngredientEditModeLayout.setVisibility(View.GONE);
+                    recipeIngredientsList.setVisibility(View.VISIBLE);
                     recipeInstructions.setFocusable(false);
                     recipeInstructions.setEnabled(false);
                 }
@@ -221,6 +273,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipeCategory.setVisibility(View.INVISIBLE);
             recipeTypeSpinner.setVisibility(View.VISIBLE);
             recipeType.setVisibility(View.INVISIBLE);
+            recipeIngredientEditModeLayout.setVisibility(View.VISIBLE);
+            recipeIngredientsList.setVisibility(View.GONE);
             recipeInstructions.setFocusable(true);
             recipeInstructions.setEnabled(true);
             recipeInstructions.setFocusableInTouchMode(true);
@@ -283,6 +337,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         if (!selectedRecipeType.equals(currentRecipe.getType())) {
             haveChanged = true;
         }
+        if (recipeIngredientsChanged) {
+            haveChanged = true;
+        }
         if (!(recipeInstructions.getText().toString()).equals(currentRecipe.getInstructions())) {
             haveChanged = true;
         }
@@ -301,6 +358,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
         if (recipeDescription.getText().toString().isEmpty()) {
             recipeDescription.setError("Please enter Description");
+            noEmpty = false;
+        }
+        if (recipeIngredients.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Add ingredients",
+                    Toast.LENGTH_LONG).show();
             noEmpty = false;
         }
         if (recipeInstructions.getText().toString().isEmpty()) {

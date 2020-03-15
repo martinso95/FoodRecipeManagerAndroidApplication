@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -31,7 +32,7 @@
                 android:id="@+id/textInputLayoutEditRecipeNameAddRecipe"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/add_recipe_recipe_name_label" />
+                android:hint="@string/recipe_name_label" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -47,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:hint="@string/add_recipe_recipe_description_label" />
+                android:hint="@string/recipe_description_label" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -57,7 +58,7 @@
             android:layout_below="@id/textInputLayoutRecipeDescriptionAddRecipe"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
-            android:text="@string/add_recipe_recipe_category_label" />
+            android:text="@string/recipe_category_label" />
 
         <Spinner
             android:id="@+id/spinnerRecipeCategoryAddRecipe"
@@ -74,7 +75,7 @@
             android:layout_below="@id/textInputLayoutRecipeDescriptionAddRecipe"
             android:layout_marginBottom="5dp"
             android:layout_toEndOf="@id/textViewRecipeCategoryAddRecipe"
-            android:text="@string/add_recipe_recipe_type_label" />
+            android:text="@string/recipe_type_label" />
 
         <Spinner
             android:id="@+id/spinnerRecipeTypeAddRecipe"
@@ -83,11 +84,53 @@
             android:layout_below="@id/textViewRecipeTypeAddRecipe"
             android:layout_toEndOf="@id/spinnerRecipeCategoryAddRecipe" />
 
+        <TextView
+            android:id="@+id/textViewRecipeIngredientsAddRecipe"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/spinnerRecipeCategoryAddRecipe"
+            android:layout_marginBottom="5dp"
+            android:text="@string/recipe_ingredients_label" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutRecipeAddIngredientsAddRecipe"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/textViewRecipeIngredientsAddRecipe"
+            android:layout_marginBottom="20dp"
+            android:textSize="12sp"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputLayoutEditRecipeAddIngredientAddRecipe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/recipe_add_ingredients_hint_label" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/imageButtonAddIngredientButtonAddRecipe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewRecipeIngredientsAddRecipe"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/textInputLayoutRecipeAddIngredientsAddRecipe"
+            android:background="@drawable/ic_add_black_24dp" />
+
+        <ListView
+            android:id="@+id/listViewIngredientsAddRecipe"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            android:layout_marginBottom="20dp"
+            android:layout_below="@+id/textInputLayoutRecipeAddIngredientsAddRecipe"
+            android:drawSelectorOnTop="false" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeInstructionsAddRecipe"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_below="@+id/spinnerRecipeCategoryAddRecipe"
+            android:layout_below="@+id/listViewIngredientsAddRecipe"
             android:layout_marginBottom="20dp"
             android:textSize="15sp">
 
@@ -96,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:hint="@string/add_recipe_recipe_instructions_input_label" />
+                android:hint="@string/recipe_instructions_label" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>

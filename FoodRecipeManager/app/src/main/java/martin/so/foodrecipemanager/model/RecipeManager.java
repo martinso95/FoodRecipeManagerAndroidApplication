@@ -95,7 +95,7 @@ public class RecipeManager {
      * @param context   The application context.
      * @param newRecipe The recipe object to be edited.
      */
-    public void editRecipe(Context context, Recipe newRecipe, String name, String description, String category, String type, String instructions) {
+    public void editRecipe(Context context, Recipe newRecipe, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
         String previousName = newRecipe.getName();
         String previousType = newRecipe.getType();
 
@@ -103,6 +103,7 @@ public class RecipeManager {
         newRecipe.setDescription(description);
         newRecipe.setCategory(category);
         newRecipe.setType(type);
+        newRecipe.setIngredients(ingredients);
         newRecipe.setInstructions(instructions);
 
         List<Recipe> recipeListToBeEdited = getRecipeTypeList(previousType);
