@@ -1,12 +1,14 @@
 package martin.so.foodrecipemanager.model;
 
-import java.io.Serializable;
-
 /**
  * A class representing an ingredient, containing properties that an ingredient should have.
  */
-public class Ingredient implements Serializable {
+public class Ingredient {
     private String description;
+
+    public Ingredient() {
+        // Empty constructor in order for Firebase realtime database to work.
+    }
 
     public Ingredient(String description) {
         this.description = description;

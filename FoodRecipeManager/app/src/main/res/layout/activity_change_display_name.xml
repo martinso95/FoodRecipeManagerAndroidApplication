@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutNewDisplayNameChangeDisplayName"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:textSize="16sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputLayoutEditNewDisplayNameChangeDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/profile_change_display_name_new_display_name_label"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutSaveChangesChangeDisplayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textInputLayoutNewDisplayNameChangeDisplayName">
+
+        <Button
+            android:id="@+id/buttonSaveChangeDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary"
+            android:text="@string/profile_save_label"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBarSaveChangeDisplayName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textViewChangedLabelChangeDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/text_view_border"
+            android:gravity="center"
+            android:text="@string/changed_label"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -5,9 +5,9 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-public class Utils {
+import com.google.firebase.auth.FirebaseAuth;
 
-    public static final String PHOTO_STORAGE_DIRECTORY = "recipeStorageFolder";
+public class Utils {
 
     public static final String RECIPE_CATEGORY = "Category";
     public static final String RECIPE_CATEGORY_MEAT = "Meat";
@@ -37,4 +37,7 @@ public class Utils {
         listView.requestLayout();
     }
 
+    // Firebase:
+    public static final String FIREBASE_RECIPES_PATH = "recipes";
+    public static final String FIREBASE_IMAGES_PATH = "images";
 }

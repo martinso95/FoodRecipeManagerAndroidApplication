@@ -1,23 +1,28 @@
 package martin.so.foodrecipemanager.model;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
-
 /**
  * A class for handling the recipes and provide global access to the recipe objects.
- * Provides data saving by using SharedPreferences.
+ * Provides data saving/loading by using Firebase realtime databse.
  */
 public class RecipeManager {
+
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference fireBaseDatabaseReference;
 
     private ArrayList<Recipe> allRecipesList;
     private ArrayList<Recipe> breakfastRecipesList;
@@ -25,13 +30,22 @@ public class RecipeManager {
     private ArrayList<Recipe> heavyMealRecipesList;
     private ArrayList<Recipe> dessertRecipesList;
 
-    private static final RecipeManager recipeManagerInstance = new RecipeManager();
+    private static RecipeManager recipeManagerInstance = new RecipeManager();
 
     public static RecipeManager getInstance() {
         return recipeManagerInstance;
     }
 
     private RecipeManager() {
+    }
+
+    /**
+     * Initialized the RecipeManager with a new FirebaseAuth and FirebaseDatabase Reference instances.
+     * Needs to be re-initialized whenever a new user signs in so that the data gets refreshed.
+     */
+    public void initializeRecipeManager() {
+        firebaseAuth = FirebaseAuth.getInstance();
+        fireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference(Utils.FIREBASE_RECIPES_PATH).child(firebaseAuth.getUid());
         allRecipesList = new ArrayList<>();
         breakfastRecipesList = new ArrayList<>();
         lightMealRecipesList = new ArrayList<>();
@@ -64,7 +78,7 @@ public class RecipeManager {
      *
      * @param recipe The recipe object.
      */
-    public void addRecipe(Context context, Recipe recipe) {
+    public void addRecipe(Recipe recipe) {
         List<Recipe> typeRecipesList = getRecipeTypeList(recipe.getType());
 
         if (!recipe.getType().equals(Utils.RECIPE_TYPE_ALL)) {
@@ -86,105 +100,81 @@ public class RecipeManager {
 
         allRecipesList.add(index2, recipe);
 
-        saveChanges(context);
+        saveChanges();
     }
 
     /**
      * Edit the recipe based on parameters.
-     *
-     * @param context   The application context.
-     * @param newRecipe The recipe object to be edited.
      */
-    public void editRecipe(Context context, Recipe newRecipe, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
-        String previousName = newRecipe.getName();
-        String previousType = newRecipe.getType();
-
-        newRecipe.setName(name);
-        newRecipe.setDescription(description);
-        newRecipe.setCategory(category);
-        newRecipe.setType(type);
-        newRecipe.setIngredients(ingredients);
-        newRecipe.setInstructions(instructions);
-
-        List<Recipe> recipeListToBeEdited = getRecipeTypeList(previousType);
-
-        for (Recipe recipe : recipeListToBeEdited) {
-            if (recipe.getName().equals(previousName)) {
-                recipeListToBeEdited.remove(recipe);
-                allRecipesList.remove(recipe);
-
-                addRecipe(context, newRecipe);
-                break;
-            }
-        }
-        saveChanges(context);
+    public void editRecipe(String photoPath, Recipe recipe, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
+        recipe.setPhotoPath(photoPath);
+        recipe.setName(name);
+        recipe.setDescription(description);
+        recipe.setCategory(category);
+        recipe.setType(type);
+        recipe.setIngredients(ingredients);
+        recipe.setInstructions(instructions);
+        saveChanges();
     }
 
-    public void removeRecipe(Context context, Recipe recipe) {
-        List<Recipe> recipeListToBeEdited = getRecipeTypeList(recipe.getType());
-        for (Recipe r : recipeListToBeEdited) {
-            if (r.getName().equals(recipe.getName())) {
-                recipeListToBeEdited.remove(r);
-                allRecipesList.remove(r);
-                break;
-            }
+    public void removeRecipe(Recipe recipe) {
+        if (recipe.getPhotoPath() != null) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(Utils.FIREBASE_IMAGES_PATH).child(firebaseAuth.getUid()).child(recipe.getPhotoPath());
+            storageReference.delete();
         }
-        new ImageHandler(context).deleteImageFile(recipe.getName());
 
-        saveChanges(context);
+        List<Recipe> recipeListToBeEdited = getRecipeTypeList(recipe.getType());
+        recipeListToBeEdited.remove(recipe);
+        allRecipesList.remove(recipe);
+
+        saveChanges();
     }
 
     /**
      * Save changes that has been made to the recipe list.
-     * Uses SharedPreferences and gson json for conversions.
-     * The recipe list is saved as a String, in the form of a json.
-     *
-     * @param context The application  context.
+     * Saves the entire list in Firebase realtime database.
      */
-    private void saveChanges(Context context) {
-        SharedPreferences.Editor editor = context.getSharedPreferences("FoodRecipeManager", MODE_PRIVATE).edit();
-
-        Gson gson = new Gson();
-        String json = gson.toJson(allRecipesList);
-
-        editor.putString("allRecipes", json);
-        editor.apply();
+    private void saveChanges() {
+        fireBaseDatabaseReference.setValue(allRecipesList);
     }
 
     /**
-     * Load the current saved recipe list from SharedPreferences.
-     * Loads it into the active recipe list.
-     * Uses SharedPreferences and gson json for conversions.
-     *
-     * @param context The application  context.
+     * Load the entire recipe list in Firebase realtime database, into the current recipe list.
      */
-    public void loadRecipes(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("FoodRecipeManager", MODE_PRIVATE);
-        Gson gson = new Gson();
-
-        String string = prefs.getString("allRecipes", null);
-
-        Type type = new TypeToken<List<Recipe>>() {
-        }.getType();
-        List<Recipe> recipes = gson.fromJson(string, type);
-        if (recipes != null) allRecipesList.addAll(recipes);
-
-        for (Recipe recipe : allRecipesList) {
-            switch (recipe.getType()) {
-                case Utils.RECIPE_TYPE_BREAKFAST:
-                    breakfastRecipesList.add(recipe);
-                    break;
-                case Utils.RECIPE_TYPE_LIGHT_MEAL:
-                    lightMealRecipesList.add(recipe);
-                    break;
-                case Utils.RECIPE_TYPE_HEAVY_MEAL:
-                    heavyMealRecipesList.add(recipe);
-                    break;
-                case Utils.RECIPE_TYPE_DESSERT:
-                    dessertRecipesList.add(recipe);
-                    break;
+    public void loadRecipes() {
+        fireBaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    allRecipesList.clear();
+                    for (DataSnapshot dss : dataSnapshot.getChildren()) {
+                        Recipe recipe = dss.getValue(Recipe.class);
+                        allRecipesList.add(recipe);
+                        switch (recipe.getType()) {
+                            case Utils.RECIPE_TYPE_BREAKFAST:
+                                breakfastRecipesList.add(recipe);
+                                break;
+                            case Utils.RECIPE_TYPE_LIGHT_MEAL:
+                                lightMealRecipesList.add(recipe);
+                                break;
+                            case Utils.RECIPE_TYPE_HEAVY_MEAL:
+                                heavyMealRecipesList.add(recipe);
+                                break;
+                            case Utils.RECIPE_TYPE_DESSERT:
+                                dessertRecipesList.add(recipe);
+                                break;
+                        }
+                    }
+                }
             }
-        }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.d("Test", "Failed to read the recipe list from Firebase.");
+                // TODO: Handle failure of loading the recipe list from Firebase.
+                // Ex. show "Something went wrong, reload please..." in the Recipe list view.
+            }
+        });
     }
 
     /**

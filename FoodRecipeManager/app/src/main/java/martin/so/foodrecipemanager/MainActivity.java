@@ -1,9 +1,7 @@
 package martin.so.foodrecipemanager;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,29 +9,20 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import martin.so.foodrecipemanager.model.Ingredient;
-import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
-import martin.so.foodrecipemanager.model.Utils;
 import martin.so.foodrecipemanager.ui.recipes.RecipesFragment;
 import martin.so.foodrecipemanager.ui.tbd1.Tbd1Fragment;
-import martin.so.foodrecipemanager.ui.tbd2.Tbd2Fragment;
+import martin.so.foodrecipemanager.ui.profile.ProfileFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getName();
-
     private Fragment recipesFragment;
     private Fragment tbd1Fragment;
-    private Fragment tbd2Fragment;
+    private Fragment profileFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -49,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = tbd1Fragment;
                     break;
                 case R.id.navigation_tbd2:
-                    fragment = tbd2Fragment;
+                    fragment = profileFragment;
                     break;
             }
             return loadFragment(fragment);
@@ -67,38 +56,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Test", "MAIN ACTIVITY CREATED");
+        RecipeManager.getInstance().initializeRecipeManager();
 
-//        SharedPreferences.Editor editor = getSharedPreferences("FoodRecipeManager", MODE_PRIVATE).edit();
-//        editor.clear();
-//        editor.apply();
-
-//         Add dummy recipes:
-//        List<Ingredient> ingredients = new ArrayList<>();
-//        ingredients.add(new Ingredient("Salt"));
-//        ingredients.add(new Ingredient("Pepper"));
-//        ingredients.add(new Ingredient("Meat"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Bacon sandwich", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Sausage", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Ribeye", "Test", Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Meat pie", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_MEAT, ingredients, "Test"));
-//
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Sallad", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Pasta", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Falafel", "Test", Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Donut", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGAN, ingredients, "Test"));
-//
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Beans", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Vegetarian pizza", "Test", Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Plant burger", "Test", Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
-//        RecipeManager.getInstance().addRecipe(this, new Recipe("Apple pie", "Test", Utils.RECIPE_TYPE_DESSERT, Utils.RECIPE_CATEGORY_VEGETARIAN, ingredients, "Test"));
-
-        RecipeManager.getInstance().loadRecipes(this);
+        RecipeManager.getInstance().loadRecipes();
 
         setContentView(R.layout.activity_main);
 
         recipesFragment = new RecipesFragment();
         tbd1Fragment = new Tbd1Fragment();
-        tbd2Fragment = new Tbd2Fragment();
+        profileFragment = new ProfileFragment();
 
         loadFragment(recipesFragment);
 

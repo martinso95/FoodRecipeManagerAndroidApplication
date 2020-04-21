@@ -1,12 +1,20 @@
 package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,13 +51,22 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Recipe recipe = recipes.get(position);
 
-        // Load the recipe photo from internal storage.
-        Bitmap bitmapRecipePhoto = new ImageHandler(context).loadImageFile(recipe.getName());
-
-        if (bitmapRecipePhoto != null) {
-            holder.recipePhoto.setImageBitmap(bitmapRecipePhoto);
+        if (recipe.getPhotoPath() != null) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipe.getPhotoPath());
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Glide.with(context).load(uri.toString()).into(holder.recipePhoto);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.d("Test", "Recipe photo in adapter could not be loaded.");
+                    holder.recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_100dp);
+                }
+            });
         } else {
-            holder.recipePhoto.setImageResource(R.drawable.placeholder_recipe_photo);
+            holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_100dp);
         }
 
         holder.recipeName.setText(recipe.getName());
@@ -100,7 +117,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
                 recipeClickListener.onItemClick(view, getAdapterPosition());
         }
     }
-
 
     /**
      * Filter the recipe list based on the text parameter.

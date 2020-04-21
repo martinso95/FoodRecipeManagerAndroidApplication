@@ -7,6 +7,7 @@ import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.RecipesAdapter;
+import martin.so.foodrecipemanager.model.Utils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,7 +48,8 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
     @Override
     public void onItemClick(View view, int position) {
         Intent recipeDetailsActivity = new Intent(this, RecipeDetailsActivity.class);
-        recipeDetailsActivity.putExtra("recipeObject", recipesAdapter.getItem(position));
+        recipeDetailsActivity.putExtra("recipeAdapterPosition", position);
+        recipeDetailsActivity.putExtra("recipeType", Utils.RECIPE_TYPE_ALL);
         startActivity(recipeDetailsActivity);
     }
 

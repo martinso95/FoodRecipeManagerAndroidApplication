@@ -19,10 +19,9 @@
                 android:id="@+id/imageViewThumbnailCard"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_margin="5dp"
                 android:layout_centerVertical="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/placeholder_recipe_photo" />
+                android:layout_margin="5dp"
+                android:background="@android:color/white" />
 
             <TextView
                 android:id="@+id/textViewRecipeNameCard"

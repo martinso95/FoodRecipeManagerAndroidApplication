@@ -3,15 +3,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="martin.so.foodrecipemanager">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
     <application
+        android:name=".model.FirebaseHandler"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".model.user.ForgotPasswordActivity"
+            android:label="@string/title_forgot_password"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.profile.DeleteAccountActivity"
+            android:label="@string/title_profile_delete_account"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.profile.ChangePasswordActivity"
+            android:label="@string/title_profile_change_password"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.profile.ChangeEmailActivity"
+            android:label="@string/title_profile_change_email"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".ui.profile.ChangeDisplayNameActivity"
+            android:label="@string/title_profile_change_display_name"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".model.user.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.recipes.RecipeSearchActivity"
             android:label="@string/title_recipe_search"
@@ -23,12 +57,13 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.recipes.AddRecipeActivity"
+            android:label="@string/title_recipe_add"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:name=".model.user.SignInActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,5 +72,7 @@
             </intent-filter>
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

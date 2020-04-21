@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/navigation_tbd2"
-        android:icon="@drawable/ic_tbd_black_24dp"
-        android:title="@string/title_tbd2" />
+        android:icon="@drawable/ic_profile_black_24dp"
+        android:title="@string/title_profile" />
 
 </menu>

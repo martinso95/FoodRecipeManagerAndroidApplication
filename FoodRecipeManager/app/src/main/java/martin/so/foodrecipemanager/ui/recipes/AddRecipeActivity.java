@@ -1,17 +1,18 @@
 package martin.so.foodrecipemanager.ui.recipes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
-import martin.so.foodrecipemanager.model.ImageHandler;
+import martin.so.foodrecipemanager.model.InformationDialog;
 import martin.so.foodrecipemanager.model.Ingredient;
 import martin.so.foodrecipemanager.model.IngredientsAdapter;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,20 +20,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Activity containing the "Add recipe"-view.
@@ -40,7 +46,8 @@ import java.util.List;
 public class AddRecipeActivity extends AppCompatActivity {
 
     private ImageButton recipePhoto;
-    private String recipePhotoFilePath;
+    private boolean recipePhotoAdded = false;
+    private Uri recipePhotoLocalFilePath;
     private TextInputEditText recipeName;
     private TextInputEditText recipeDescription;
     private Spinner recipeCategory;
@@ -66,7 +73,6 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Add Recipe");
         }
 
         recipePhoto = findViewById(R.id.imageButtonRecipePhotoAddRecipe);
@@ -81,7 +87,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         recipePhoto.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
-            // Sets the type as image/*. This ensures only components of type image are selected
+            // Sets the type as image/*. This ensures only components of type image are selected.
             intent.setType("image/*");
             // Pass an extra array with the accepted mime types.
             // This will ensure that only components with these MIME types are targeted.
@@ -136,7 +142,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                 Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
             }
         });
-
     }
 
     /**
@@ -157,7 +162,6 @@ public class AddRecipeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.save_added_recipe_button) {
             if (checkFieldsAreNotEmpty()) {
                 boolean duplicateFound = false;
@@ -168,13 +172,39 @@ public class AddRecipeActivity extends AppCompatActivity {
                     }
                 }
                 if (!duplicateFound) {
-                    Recipe recipe = new Recipe(recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
-                    new ImageHandler(this).createImageFile(recipeName.getText().toString(), recipePhotoFilePath);
-                    RecipeManager.getInstance().addRecipe(getApplicationContext(), recipe);
+                    if (recipePhotoAdded) {
+                        ProgressDialog progressDialog = new ProgressDialog(this);
+                        progressDialog.setTitle("Loading...");
+                        progressDialog.show();
 
-                    Toast.makeText(getApplicationContext(), "Recipe added: " + recipeName.getText().toString(),
-                            Toast.LENGTH_LONG).show();
-                    finish();
+                        String recipePhotoPath = UUID.randomUUID().toString();
+                        StorageReference ref = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
+
+                        ref.putFile(recipePhotoLocalFilePath)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Log.d("Test", "Recipe and image added.");
+                                        progressDialog.dismiss();
+                                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
+                                        RecipeManager.getInstance().addRecipe(recipe);
+                                        finish();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        progressDialog.dismiss();
+                                        Log.d("Test", "Failed to upload image.");
+                                        InformationDialog informationDialog = new InformationDialog();
+                                        informationDialog.showDialog(AddRecipeActivity.this, null, false, getString(R.string.recipe_photo_upload_fail_dialog));
+                                    }
+                                });
+                    } else {
+                        Recipe recipe = new Recipe(null, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
+                        RecipeManager.getInstance().addRecipe(recipe);
+                        finish();
+                    }
                 }
             }
             return true;
@@ -224,23 +254,21 @@ public class AddRecipeActivity extends AppCompatActivity {
         return noEmpty;
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE && data != null) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            recipePhotoFilePath = picturePath;
-            recipePhoto.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            recipePhotoLocalFilePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), recipePhotoLocalFilePath);
+                recipePhoto.setImageBitmap(bitmap);
+                recipePhotoAdded = true;
+            } catch (IOException e) {
+                Log.d("Test", "Failed to read image file path.");
+                InformationDialog informationDialog = new InformationDialog();
+                informationDialog.showDialog(AddRecipeActivity.this, null, false, getString(R.string.recipe_photo_add_fail_dialog));
+                e.printStackTrace();
+            }
         }
     }
 }

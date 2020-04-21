@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <TextView
+        android:id="@+id/textViewSignUpTitleSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/user_sign_up_label"
+        android:textColor="#000000"
+        android:textSize="26sp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutNameEditSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/textViewSignUpTitleSignUp"
+        android:layout_marginBottom="20dp"
+        android:textSize="16sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputLayoutEditNameEditSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/user_name_label"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEmailEditSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/textInputLayoutNameEditSignUp"
+        android:layout_marginBottom="20dp"
+        android:textSize="16sp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputLayoutEditEmailEditSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/user_email_label"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutPasswordEditSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/textInputLayoutEmailEditSignUp"
+        android:layout_marginBottom="20dp"
+        android:textSize="16sp"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/textInputLayoutEditPasswordEditSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/user_password_label"
+            android:inputType="textPassword"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutSignUpButtonProgressSignUp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textInputLayoutPasswordEditSignUp"
+        android:layout_marginBottom="20dp">
+
+        <Button
+            android:id="@+id/buttonSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary"
+            android:text="@string/user_sign_up_label"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+        <ProgressBar
+            android:id="@+id/progressBarSignUpProgressSignUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textViewAlreadySignedUpSignUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/relativeLayoutSignUpButtonProgressSignUp"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/user_already_signed_up_label"
+        android:textColor="@color/colorPrimary"
+        android:textSize="16sp" />
+
+</RelativeLayout>

@@ -2,8 +2,78 @@
     <string name="app_name">FoodRecipeManager</string>
     <string name="title_recipes">Recipes</string>
     <string name="title_tbd1">Tbd1</string>
-    <string name="title_tbd2">Tbd2</string>
+    <string name="title_profile">Profile</string>
     <string name="title_recipe_search">Search recipes</string>
+    <string name="title_recipe_add">Add recipe</string>
+    <string name="title_profile_change_display_name">Change name</string>
+    <string name="title_profile_change_email">Change email</string>
+    <string name="title_profile_change_password">Change password</string>
+    <string name="title_profile_delete_account">Delete account</string>
+    <string name="title_forgot_password">Reset password</string>
+
+    <!--    Common labels-->
+    <string name="ok_label">OK</string>
+    <string name="changed_label">Changed</string>
+
+    <!--    User sign in layout-->
+    <string name="user_sign_in_label">Sign in</string>
+    <string name="user_sign_up_label">Sign up</string>
+    <string name="user_forgot_password_label">Forgot password?</string>
+    <string name="user_name_label">Name</string>
+    <string name="user_email_label">Email</string>
+    <string name="user_password_label">Password</string>
+    <string name="user_incorrect_password_label">Incorrect password</string>
+    <string name="user_already_signed_up_label">Already signed up?</string>
+    <string name="user_sign_out_label">Sign out</string>
+
+    <!--    User sign up layout-->
+    <string name="user_sign_up_success_dialog_description">Sign up success! \n Please verify your email and continue to sign in.</string>
+    <string name="user_sign_up_success_name_set_failed_dialog_description">Sign up success! \n But name could not be set. \n Please set your name in your profile after signing in.</string>
+    <string name="user_sign_up_failed_dialog_description">Sign up failed! \n Please try again later.</string>
+
+    <!--    Forgot password layout-->
+    <string name="forgot_password_description">Please enter your email so that \n we can send you a password reset email</string>
+    <string name="forgot_password_email_sent_dialog_description">A password reset email has been sent to your email address. \n Please check your email and reset your password. </string>
+    <string name="forgot_password_email_sent_dialog_failed_description">A password reset email could not be sent. \n Please try again later.</string>
+    <string name="forgot_password_email_label">Email</string>
+    <string name="forgot_password_send_label">Send</string>
+
+    <!--    Profile layout-->
+    <string name="profile_display_name_label">Name</string>
+    <string name="profile_email_label">Email</string>
+    <string name="profile_password_label">Password</string>
+    <string name="profile_password_placeholder">*********</string>
+    <string name="profile_delete_account_label">Delete account</string>
+    <string name="profile_delete_account_confirm_label">Confirm</string>
+    <string name="profile_delete_account_cancel_label">Cancel</string>
+    <string name="profile_email_not_verified_label">Your email is not verified</string>
+    <string name="profile_re_send_email_verification_label">Re-send email verification</string>
+    <string name="profile_email_verification_sent_label">Email verification sent</string>
+    <string name="profile_save_label">Save</string>
+
+    <!--    Profile change display name layout-->
+    <string name="profile_change_display_name_new_display_name_label">New name</string>
+    <string name="profile_change_display_name_failed_dialog_description">Your name could not be changed. \n Please try again later.</string>
+
+    <!--    Profile change email layout-->
+    <string name="profile_change_email_current_email_label">Current email</string>
+    <string name="profile_change_email_current_password_label">Current password</string>
+    <string name="profile_change_email_new_email_label">New email</string>
+    <string name="profile_change_email_success_dialog_description">Your email has been changed. \n We have also sent you an email to verify your new email. \n Please verify it as soon as possible.</string>
+    <string name="profile_change_email_failed_dialog_description">Your email could not be changed. \n Please try again later.</string>
+
+    <!--    Profile change password layout-->
+    <string name="profile_change_password_current_email_label">Current email</string>
+    <string name="profile_change_password_current_password_label">Current password</string>
+    <string name="profile_change_password_new_password_label">New password</string>
+    <string name="profile_change_password_failed_dialog_description">Your password could not be changed. \n Please try again later.</string>
+
+    <!--    Profile delete account layout-->
+    <string name="profile_delete_account_current_email_label">Current email</string>
+    <string name="profile_delete_account_current_password_label">Current password</string>
+    <string name="profile_delete_account_delete_label">Delete account</string>
+    <string name="profile_delete_account_dialog_description">Your account has been deleted.</string>
+    <string name="profile_delete_account_failed_dialog_description">Your account could not be deleted. \n Please try again later.</string>
 
     <!--    Card layout-->
     <string name="card_recipe_type_label">Type:</string>
@@ -16,6 +86,9 @@
     <string name="recipe_type_label">Type</string>
     <string name="recipe_ingredients_label">Ingredients</string>
     <string name="recipe_add_ingredients_hint_label">Add ingredients</string>
+    <string name="recipe_photo_upload_fail_dialog">Something went wrong with uploading your photo. \n Please try again.</string>
+    <string name="recipe_photo_add_fail_dialog">Something went wrong with adding your photo. \n Please try again.</string>
     <string name="recipe_instructions_label">Instructions</string>
+    <string name="recipe_photo_content_description">Photo of the recipe</string>
 
 </resources>

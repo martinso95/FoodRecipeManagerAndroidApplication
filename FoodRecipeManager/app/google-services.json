@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "868868305830",
+    "firebase_url": "https://foodrecipemanager.firebaseio.com",
+    "project_id": "foodrecipemanager",
+    "storage_bucket": "foodrecipemanager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868868305830:android:17d613b47bc25a07541567",
+        "android_client_info": {
+          "package_name": "martin.so.foodrecipemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868868305830-19m785h2ivs45mg6j8r1alrgqqnj2ps8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRtNJqHQABtC9b9QWOlUGHIW0PuvLOeQ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868868305830-19m785h2ivs45mg6j8r1alrgqqnj2ps8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

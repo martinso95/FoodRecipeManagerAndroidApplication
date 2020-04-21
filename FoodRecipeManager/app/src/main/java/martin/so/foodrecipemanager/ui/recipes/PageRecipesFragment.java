@@ -32,11 +32,10 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
     private RecipesAdapter recipesAdapter;
 
     public PageRecipesFragment() {
-        // Required empty public constructor
+        // Required empty public constructor.
     }
 
     public static PageRecipesFragment newInstance(Integer counter) {
-
         PageRecipesFragment fragment = new PageRecipesFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COUNT, counter);
@@ -60,7 +59,6 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewPageRecipes);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
         recipesAdapter = new RecipesAdapter(getContext(), getRecipeTypeList(Utils.RECIPE_TYPES[counter]));
         recipesAdapter.setClickListener(this);
         recyclerView.setAdapter(recipesAdapter);
@@ -98,7 +96,8 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
     @Override
     public void onItemClick(View view, int position) {
         Intent recipeDetailsActivity = new Intent(getActivity(), RecipeDetailsActivity.class);
-        recipeDetailsActivity.putExtra("recipeObject", recipesAdapter.getItem(position));
+        recipeDetailsActivity.putExtra("recipeAdapterPosition", position);
+        recipeDetailsActivity.putExtra("recipeType", Utils.RECIPE_TYPES[counter]);
         startActivity(recipeDetailsActivity);
     }
 
