@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Test", "MAIN ACTIVITY CREATED");
         RecipeManager.getInstance().initializeRecipeManager();
 
-        RecipeManager.getInstance().loadRecipes();
+        RecipeManager.getInstance().loadRecipes(this);
 
         setContentView(R.layout.activity_main);
 

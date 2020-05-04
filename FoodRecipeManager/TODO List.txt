@@ -25,10 +25,7 @@ WARNING text color:
 
 TODO:
 Individual recipe:
-0. When adding/editing a recipe with a photo and save, then it will start to show a pop-up loader,
-   which will stop when the photo is uploaded to Firebase.
-   This is a bad solution, because what if it loads forever? Have a cancel button?
-   Or hide the loader in the background?
+0. implement splash screen for loading firebase data and images.
 
 1. Add more properties in a recipe: Time.
 2. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally. 

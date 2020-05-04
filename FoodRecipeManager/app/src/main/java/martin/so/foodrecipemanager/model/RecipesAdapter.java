@@ -51,22 +51,10 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Recipe recipe = recipes.get(position);
 
-        if (recipe.getPhotoPath() != null) {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipe.getPhotoPath());
-            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Glide.with(context).load(uri.toString()).into(holder.recipePhoto);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.d("Test", "Recipe photo in adapter could not be loaded.");
-                    holder.recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_100dp);
-                }
-            });
+        if (recipe.getTemporaryLocalPhoto() != null) {
+            holder.recipePhoto.setImageBitmap(recipe.getTemporaryLocalPhoto());
         } else {
-            holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_100dp);
+            holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
         }
 
         holder.recipeName.setText(recipe.getName());

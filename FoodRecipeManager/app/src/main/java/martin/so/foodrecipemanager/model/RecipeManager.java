@@ -1,7 +1,15 @@
 package martin.so.foodrecipemanager.model;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -14,6 +22,9 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * A class for handling the recipes and provide global access to the recipe objects.
@@ -141,7 +152,7 @@ public class RecipeManager {
     /**
      * Load the entire recipe list in Firebase realtime database, into the current recipe list.
      */
-    public void loadRecipes() {
+    public void loadRecipes(Context context) {
         fireBaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -149,6 +160,25 @@ public class RecipeManager {
                     allRecipesList.clear();
                     for (DataSnapshot dss : dataSnapshot.getChildren()) {
                         Recipe recipe = dss.getValue(Recipe.class);
+
+                        // Load the images locally for preventing the need of constant Firebase fetching.
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipe.getPhotoPath());
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Glide.with(context).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                        recipe.setTemporaryLocalPhoto(resource);
+                                    }
+
+                                    @Override
+                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                                    }
+                                });
+                            }
+                        });
+
                         allRecipesList.add(recipe);
                         switch (recipe.getType()) {
                             case Utils.RECIPE_TYPE_BREAKFAST:

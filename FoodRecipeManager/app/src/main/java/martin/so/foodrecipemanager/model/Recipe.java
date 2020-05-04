@@ -1,5 +1,9 @@
 package martin.so.foodrecipemanager.model;
 
+import android.graphics.Bitmap;
+
+import com.google.firebase.database.Exclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +12,8 @@ import java.util.List;
  */
 public class Recipe {
     private String photoPath = null;
+    @Exclude
+    private Bitmap temporaryLocalPhoto = null;
     private String name;
     private String description;
     private String type;
@@ -47,6 +53,16 @@ public class Recipe {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    @Exclude
+    public Bitmap getTemporaryLocalPhoto() {
+        return temporaryLocalPhoto;
+    }
+
+    @Exclude
+    public void setTemporaryLocalPhoto(Bitmap temporaryLocalPhoto) {
+        this.temporaryLocalPhoto = temporaryLocalPhoto;
     }
 
     public String getName() {
