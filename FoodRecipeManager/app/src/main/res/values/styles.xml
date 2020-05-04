@@ -19,4 +19,9 @@
         <item name="android:background">@android:color/darker_gray</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+
 </resources>

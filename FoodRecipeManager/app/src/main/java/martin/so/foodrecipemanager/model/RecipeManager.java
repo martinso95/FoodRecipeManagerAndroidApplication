@@ -170,6 +170,7 @@ public class RecipeManager {
                                     @Override
                                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                         recipe.setTemporaryLocalPhoto(resource);
+                                        Log.d("Test", "image loaded: " + recipe.getName());
                                     }
 
                                     @Override

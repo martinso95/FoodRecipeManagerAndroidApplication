@@ -39,6 +39,7 @@ public class SignInActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         firebaseAuth = FirebaseAuth.getInstance();
 
         checkIfSignedIn();

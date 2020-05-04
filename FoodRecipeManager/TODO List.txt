@@ -25,7 +25,7 @@ WARNING text color:
 
 TODO:
 Individual recipe:
-0. implement splash screen for loading firebase data and images.
+0. fix preloading firebase data and images.
 
 1. Add more properties in a recipe: Time.
 2. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally. 
