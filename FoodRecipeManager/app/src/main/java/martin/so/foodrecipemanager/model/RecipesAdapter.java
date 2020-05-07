@@ -1,6 +1,8 @@
 package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -33,12 +39,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     private LayoutInflater inflater;
     private Context context;
     private ItemClickListener recipeClickListener;
+    private RequestOptions glideRequestOptions;
 
     public RecipesAdapter(Context context, List<Recipe> recipes) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.recipes = recipes;
         recipesCopy = new ArrayList<>(recipes);
+        glideRequestOptions = new RequestOptions();
+        glideRequestOptions.centerCrop();
     }
 
     @Override
@@ -51,10 +60,37 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Recipe recipe = recipes.get(position);
 
+//        If the recipe photo is not loaded from firebase, then load it,
+//        otherwise load the local (already loaded from firebase) version.
         if (recipe.getTemporaryLocalPhoto() != null) {
-            holder.recipePhoto.setImageBitmap(recipe.getTemporaryLocalPhoto());
+            Glide.with(context).load(recipe.getTemporaryLocalPhoto()).apply(glideRequestOptions).into(holder.recipePhoto);
         } else {
-            holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
+            if (recipe.getPhotoPath() != null) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipe.getPhotoPath());
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(context).load(uri.toString()).apply(glideRequestOptions).into(holder.recipePhoto);
+                        Glide.with(context).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @com.google.firebase.database.annotations.Nullable Transition<? super Bitmap> transition) {
+                                recipe.setTemporaryLocalPhoto(resource);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        holder.recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_100dp);
+                    }
+                });
+            } else {
+                holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_100dp);
+            }
         }
 
         holder.recipeName.setText(recipe.getName());

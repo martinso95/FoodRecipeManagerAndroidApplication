@@ -152,7 +152,7 @@ public class RecipeManager {
     /**
      * Load the entire recipe list in Firebase realtime database, into the current recipe list.
      */
-    public void loadRecipes(Context context) {
+    public void loadRecipes() {
         fireBaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -160,25 +160,6 @@ public class RecipeManager {
                     allRecipesList.clear();
                     for (DataSnapshot dss : dataSnapshot.getChildren()) {
                         Recipe recipe = dss.getValue(Recipe.class);
-
-                        // Load the images locally for preventing the need of constant Firebase fetching.
-                        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipe.getPhotoPath());
-                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                Glide.with(context).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        recipe.setTemporaryLocalPhoto(resource);
-                                        Log.d("Test", "image loaded: " + recipe.getName());
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                                    }
-                                });
-                            }
-                        });
 
                         allRecipesList.add(recipe);
                         switch (recipe.getType()) {

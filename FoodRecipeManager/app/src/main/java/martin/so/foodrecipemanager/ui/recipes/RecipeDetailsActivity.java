@@ -1,5 +1,6 @@
 package martin.so.foodrecipemanager.ui.recipes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.InformationDialog;
@@ -12,6 +13,7 @@ import martin.so.foodrecipemanager.model.Utils;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,8 +30,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -70,6 +79,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     IngredientsAdapter ingredientsAdapter;
     IngredientsAdapter ingredientsAdapterEditMode;
     private TextInputEditText recipeInstructions;
+    private RequestOptions glideRequestOptions;
 
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
     final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
@@ -146,12 +156,42 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeInstructions.setFocusable(false);
         recipeInstructions.setEnabled(false);
 
-        // Load the recipe picture.
+//        If the recipe photo is not loaded from firebase, then load it,
+//        otherwise load the local (already loaded from firebase) version.
+//        If no photo exists, show the add-photo placeholder image.
+        glideRequestOptions = new RequestOptions();
+        glideRequestOptions.centerCrop();
         if (currentRecipe.getTemporaryLocalPhoto() != null) {
-            recipePhoto.setImageBitmap(currentRecipe.getTemporaryLocalPhoto());
+            Glide.with(getApplicationContext()).load(currentRecipe.getTemporaryLocalPhoto()).apply(glideRequestOptions).into(recipePhoto);
         } else {
-            recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
+            if (currentRecipe.getPhotoPath() != null) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(currentRecipe.getPhotoPath());
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Glide.with(getApplicationContext()).load(uri.toString()).apply(glideRequestOptions).into(recipePhoto);
+                        Glide.with(getApplicationContext()).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                currentRecipe.setTemporaryLocalPhoto(resource);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_100dp);
+                    }
+                });
+            } else {
+                recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
+            }
         }
+
 
         recipeName.setText(currentRecipe.getName());
         recipeDescription.setText(currentRecipe.getDescription());

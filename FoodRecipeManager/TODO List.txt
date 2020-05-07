@@ -24,9 +24,12 @@ WARNING text color:
 
 
 TODO:
-Individual recipe:
-0. fix preloading firebase data and images.
+Priority:
+1. photo not being saved if a new recipe is added when offline.
+   photo not being deleted in firebase if a recipe is deleted when offline.
 
+
+Individual recipe:
 1. Add more properties in a recipe: Time.
 2. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally. 
    Also possibility to alter the amount of one ingredient, and the rest should change to be proportional.

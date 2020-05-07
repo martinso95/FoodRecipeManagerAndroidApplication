@@ -25,6 +25,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -56,6 +58,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     private List<Ingredient> recipeIngredients;
     IngredientsAdapter ingredientsAdapter;
     private TextInputEditText recipeInstructions;
+    private RequestOptions glideRequestOptions;
 
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
     final String[] recipeTypes = {Utils.RECIPE_TYPE, Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
@@ -138,6 +141,9 @@ public class AddRecipeActivity extends AppCompatActivity {
                 Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
             }
         });
+
+        glideRequestOptions = new RequestOptions();
+        glideRequestOptions.centerCrop();
     }
 
     /**
@@ -238,7 +244,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             recipePhotoLocalFilePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), recipePhotoLocalFilePath);
-                recipePhoto.setImageBitmap(bitmap);
+                Glide.with(getApplicationContext()).load(bitmap).apply(glideRequestOptions).into(recipePhoto);
                 recipePhotoBitmap = bitmap;
                 recipePhotoAdded = true;
             } catch (IOException e) {
