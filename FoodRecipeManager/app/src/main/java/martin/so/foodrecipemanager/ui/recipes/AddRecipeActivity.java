@@ -1,5 +1,6 @@
 package martin.so.foodrecipemanager.ui.recipes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.InformationDialog;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -60,8 +62,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     private TextInputEditText recipeInstructions;
     private RequestOptions glideRequestOptions;
 
-    final String[] recipeCategories = {Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
-    final String[] recipeTypes = {Utils.RECIPE_TYPE, Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
+    final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
+    final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
 
     private static final int PICK_IMAGE = 1;
 
@@ -131,6 +133,16 @@ public class AddRecipeActivity extends AppCompatActivity {
         ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, true);
         recipeIngredientsList.setAdapter(ingredientsAdapter);
 
+
+        // placeholder for quicker testing...
+        recipeIngredients.add(new Ingredient("abc"));
+        recipeIngredientInput.getText().clear();
+        recipeIngredientInput.clearFocus();
+        ingredientsAdapter.notifyDataSetChanged();
+        Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+
+
+
         recipeAddIngredient.setOnClickListener(v -> {
             String input = recipeIngredientInput.getText().toString();
             if (!input.isEmpty()) {
@@ -177,7 +189,12 @@ public class AddRecipeActivity extends AppCompatActivity {
                     if (recipePhotoAdded) {
                         String recipePhotoPath = UUID.randomUUID().toString();
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
-                        storageReference.putFile(recipePhotoLocalFilePath);
+                        storageReference.putFile(recipePhotoLocalFilePath).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("Test", "AddActivity - Image failed to upload...");
+                            }
+                        });
                         Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
                         recipe.setTemporaryLocalPhoto(recipePhotoBitmap);
                         RecipeManager.getInstance().addRecipe(recipe);
