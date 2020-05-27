@@ -96,19 +96,19 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         switch (currentRecipeType) {
             case Utils.RECIPE_TYPE_ALL:
-                currentRecipeTypeList = new ArrayList<>(RecipeManager.getInstance().getAllRecipes());
+                currentRecipeTypeList = RecipeManager.getInstance().getAllRecipes();
                 break;
             case Utils.RECIPE_TYPE_BREAKFAST:
-                currentRecipeTypeList = new ArrayList<>(RecipeManager.getInstance().getBreakfastRecipes());
+                currentRecipeTypeList = RecipeManager.getInstance().getBreakfastRecipes();
                 break;
             case Utils.RECIPE_TYPE_LIGHT_MEAL:
-                currentRecipeTypeList = new ArrayList<>(RecipeManager.getInstance().getLightMealRecipes());
+                currentRecipeTypeList = RecipeManager.getInstance().getLightMealRecipes();
                 break;
             case Utils.RECIPE_TYPE_HEAVY_MEAL:
-                currentRecipeTypeList = new ArrayList<>(RecipeManager.getInstance().getHeavyMealRecipes());
+                currentRecipeTypeList = RecipeManager.getInstance().getHeavyMealRecipes();
                 break;
             case Utils.RECIPE_TYPE_DESSERT:
-                currentRecipeTypeList = new ArrayList<>(RecipeManager.getInstance().getDessertRecipes());
+                currentRecipeTypeList = RecipeManager.getInstance().getDessertRecipes();
                 break;
         }
 
@@ -307,7 +307,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                     public void onFailure(@NonNull Exception e) {
                                         Log.d("Test", "DetailsActivity - Image failed to delete...");
                                     }
-                                });;
+                                });
+                                ;
                             }
                             recipePhotoChanged = false;
 

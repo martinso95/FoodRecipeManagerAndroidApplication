@@ -77,15 +77,14 @@ public class RecipeManager {
     public void addRecipe(Recipe recipe) {
         List<Recipe> typeRecipesList = getRecipeTypeList(recipe.getType());
 
-        if (!recipe.getType().equals(Utils.RECIPE_TYPE_ALL)) {
-            int index1 = Collections.binarySearch(typeRecipesList, recipe,
-                    (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
+        int index1 = Collections.binarySearch(typeRecipesList, recipe,
+                (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
 
-            if (index1 < 0) {
-                index1 = (index1 * -1) - 1;
-            }
-            typeRecipesList.add(index1, recipe);
+        if (index1 < 0) {
+            index1 = (index1 * -1) - 1;
         }
+        typeRecipesList.add(index1, recipe);
+
 
         int index2 = Collections.binarySearch(allRecipesList, recipe,
                 (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
@@ -103,6 +102,16 @@ public class RecipeManager {
      * Edit the recipe based on parameters.
      */
     public void editRecipe(String photoPath, Recipe recipe, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
+        String oldType = recipe.getType();
+
+        // Remove old recipe from the main list.
+        for (Recipe oldRecipe : allRecipesList) {
+            if (oldRecipe.getName().equals(recipe.getName())) {
+                allRecipesList.remove(oldRecipe);
+                break;
+            }
+        }
+
         recipe.setPhotoPath(photoPath);
         recipe.setName(name);
         recipe.setDescription(description);
@@ -110,6 +119,17 @@ public class RecipeManager {
         recipe.setType(type);
         recipe.setIngredients(ingredients);
         recipe.setInstructions(instructions);
+
+        // Change the recipe's recipe type list, if recipe type changed.
+        if (!oldType.equals(type)) {
+            List<Recipe> recipeListToBeDeletedFrom = getRecipeTypeList(oldType);
+            recipeListToBeDeletedFrom.remove(recipe);
+            List<Recipe> recipeListToBeAddedTo = getRecipeTypeList(type);
+            recipeListToBeAddedTo.add(recipe);
+        }
+
+        // Add newly edited recipe to the main list.
+        allRecipesList.add(recipe);
         saveChanges();
     }
 
