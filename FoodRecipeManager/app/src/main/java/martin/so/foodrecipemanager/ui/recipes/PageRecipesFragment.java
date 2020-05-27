@@ -10,6 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +36,10 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
 
     private static final String ARG_COUNT = "param1";
     private Integer counter;
+
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference fireBaseDatabaseReference;
+    private List<Recipe> recipeList;
 
     private RecipesAdapter recipesAdapter;
 
@@ -59,7 +71,10 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewPageRecipes);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recipesAdapter = new RecipesAdapter(getContext(), getRecipeTypeList(Utils.RECIPE_TYPES[counter]));
+
+        recipeList = getRecipeTypeList(Utils.RECIPE_TYPES[counter]);
+        recipesAdapter = new RecipesAdapter(getContext(), recipeList);
+        loadRecipes(recipeList);
         recipesAdapter.setClickListener(this);
         recyclerView.setAdapter(recipesAdapter);
         return view;
@@ -99,6 +114,39 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
         recipeDetailsActivity.putExtra("recipeAdapterPosition", position);
         recipeDetailsActivity.putExtra("recipeType", Utils.RECIPE_TYPES[counter]);
         startActivity(recipeDetailsActivity);
+    }
+
+    /**
+     * Load the recipes from Firebase realtime database.
+     */
+    public void loadRecipes(List<Recipe> recipeList) {
+        firebaseAuth = FirebaseAuth.getInstance();
+        Query fireBaseDatabaseReference = FirebaseDatabase.getInstance().getReference(Utils.FIREBASE_RECIPES_PATH).child(firebaseAuth.getUid());
+        if (!Utils.RECIPE_TYPES[counter].equals(Utils.RECIPE_TYPE_ALL)) {
+            fireBaseDatabaseReference = fireBaseDatabaseReference.orderByChild("type").equalTo(Utils.RECIPE_TYPES[counter]);
+        }
+
+        fireBaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    recipeList.clear();
+                    for (DataSnapshot dss : dataSnapshot.getChildren()) {
+                        Recipe recipe = dss.getValue(Recipe.class);
+                        recipeList.add(recipe);
+                    }
+                    Log.d("Test", "added for: " + Utils.RECIPE_TYPES[counter]);
+                    recipesAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.d("Test", "Failed to read the recipe list from Firebase.");
+                // TODO: Handle failure of loading the recipe list from Firebase.
+                // Ex. show "Something went wrong, reload please..." in the Recipe list view.
+            }
+        });
     }
 
     /**

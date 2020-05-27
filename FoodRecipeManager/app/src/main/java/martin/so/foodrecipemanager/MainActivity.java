@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("Test", "MAIN ACTIVITY CREATED");
         RecipeManager.getInstance().initializeRecipeManager();
 
-        RecipeManager.getInstance().loadRecipes();
-
         setContentView(R.layout.activity_main);
 
         recipesFragment = new RecipesFragment();

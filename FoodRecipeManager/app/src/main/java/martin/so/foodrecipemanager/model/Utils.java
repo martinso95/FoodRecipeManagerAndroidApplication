@@ -5,8 +5,6 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 public class Utils {
 
     public static final String RECIPE_CATEGORY = "Category";

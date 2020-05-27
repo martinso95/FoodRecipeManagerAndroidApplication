@@ -1,30 +1,14 @@
 package martin.so.foodrecipemanager.model;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.util.Log;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * A class for handling the recipes and provide global access to the recipe objects.
@@ -75,6 +59,7 @@ public class RecipeManager {
     public ArrayList<Recipe> getLightMealRecipes() {
         return lightMealRecipesList;
     }
+
 
     public ArrayList<Recipe> getHeavyMealRecipes() {
         return heavyMealRecipesList;
@@ -147,46 +132,6 @@ public class RecipeManager {
      */
     private void saveChanges() {
         fireBaseDatabaseReference.setValue(allRecipesList);
-    }
-
-    /**
-     * Load the entire recipe list in Firebase realtime database, into the current recipe list.
-     */
-    public void loadRecipes() {
-        fireBaseDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    allRecipesList.clear();
-                    for (DataSnapshot dss : dataSnapshot.getChildren()) {
-                        Recipe recipe = dss.getValue(Recipe.class);
-
-                        allRecipesList.add(recipe);
-                        switch (recipe.getType()) {
-                            case Utils.RECIPE_TYPE_BREAKFAST:
-                                breakfastRecipesList.add(recipe);
-                                break;
-                            case Utils.RECIPE_TYPE_LIGHT_MEAL:
-                                lightMealRecipesList.add(recipe);
-                                break;
-                            case Utils.RECIPE_TYPE_HEAVY_MEAL:
-                                heavyMealRecipesList.add(recipe);
-                                break;
-                            case Utils.RECIPE_TYPE_DESSERT:
-                                dessertRecipesList.add(recipe);
-                                break;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.d("Test", "Failed to read the recipe list from Firebase.");
-                // TODO: Handle failure of loading the recipe list from Firebase.
-                // Ex. show "Something went wrong, reload please..." in the Recipe list view.
-            }
-        });
     }
 
     /**
