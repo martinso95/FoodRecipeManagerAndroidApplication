@@ -45,7 +45,6 @@ import com.google.firebase.storage.StorageReference;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Activity containing the "Recipe details"-view.
@@ -161,6 +160,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 //        If no photo exists, show the add-photo placeholder image.
         glideRequestOptions = new RequestOptions();
         glideRequestOptions.centerCrop();
+
         if (currentRecipe.getTemporaryLocalPhoto() != null) {
             Glide.with(getApplicationContext()).load(currentRecipe.getTemporaryLocalPhoto()).apply(glideRequestOptions).into(recipePhoto);
         } else {
@@ -289,21 +289,31 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     if (haveFieldsChanged()) {
                         String newRecipeName = recipeName.getText().toString();
                         if (recipePhotoChanged) {
-                            String newRecipePhotoPath = UUID.randomUUID().toString();
-                            StorageReference newPhotoRef = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(newRecipePhotoPath);
-                            newPhotoRef.putFile(recipePhotoLocalFilePath);
-                            recipePhotoChanged = false;
                             // If the recipe had a photo before changing to a new photo, the old photo will be deleted.
                             if (recipePhotoPath != null) {
-                                StorageReference oldPhotoRef = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
-                                oldPhotoRef.delete();
-                                Log.d("Test", "Old recipe photo deleted.");
+                                StorageReference photoRef = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
+                                photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        photoRef.putFile(recipePhotoLocalFilePath).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d("Test", "DetailsActivity - Image failed to upload...");
+                                            }
+                                        });
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d("Test", "DetailsActivity - Image failed to delete...");
+                                    }
+                                });;
                             }
-                            // Update current local photo path with the new generated photo path for the new photo.
-                            recipePhotoPath = newRecipePhotoPath;
+                            recipePhotoChanged = false;
+
                             // Update the local image of the edited recipe.
                             currentRecipe.setTemporaryLocalPhoto(recipePhotoBitmap);
-                            RecipeManager.getInstance().editRecipe(newRecipePhotoPath, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(recipePhotoPath, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
 
                         } else {
