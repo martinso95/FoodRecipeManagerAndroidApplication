@@ -22,44 +22,49 @@ TextEditLayout:
 WARNING text color:
     android:textColor="@android:color/holo_red_light"
 
+==========================================================================================
 
 TODO:
-Priority:
-1. photo not being saved if a new recipe is added when offline.
-   photo not being deleted in firebase if a recipe is deleted when offline.
+Prioritized fixes needed:
+1. Issues with photos not being saved/deleted in Firebase Storage when offline, see scenarios:
+   Photo is saved if: Online/Offline -> Offline -> Save recipe -> Online
+   Photo is not saved if: Online/Offline -> Offline -> Save recipe -> Kill app -> Start App -> Online/Offline
+
+   Photo is deleted if: Online/Offline -> Offline -> Delete recipe -> Online
+   Photo is not deleted if: Online/Offline -> Offline -> Delete recipe -> Kill app -> Start App -> Online/Offline
+
+   Will also be issues with changing a photo for a recipe when offline, for example:
+   Photo not changed in Firebase Storage if: Online/Offline -> Offline -> Change photo -> Kill app - Start app in Online/Offline
 
 
-Individual recipe:
-1. Add more properties in a recipe: Time.
-2. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally. 
+Functionality to add:
+X. Add more properties in a recipe, such as: Time.
+X. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally.
    Also possibility to alter the amount of one ingredient, and the rest should change to be proportional.
-3. Possibility to remove picture.
-4. Improve how instructions are being added and visualized. Introduce steps. 
+X. Possibility to remove picture.
+X. Improve how instructions are being added and visualized. Introduce steps.
    Each step is one box of information, and so on.
-5. Implement Favorite. OR rating?
+X. Implement Favorite. OR rating?
    Involves implementing a Favorite tab. Or Filter functionality.
-
-Recipe menu:
-1. Add favorite tab. OR rating?
-2. Add filter functionality.
+X. Add favorites tab. OR rating? Mark recipe as favorite.
+X. Add filter functionality.
 
 Performance improvement:
-1. Look into: "I/Choreographer: Skipped 62 frames!  The application may be doing too much work on its main thread."
-2. Handle loading all tabs at start better.
+X. Look into: "I/Choreographer: Skipped 62 frames!  The application may be doing too much work on its main thread."
+X. Handle loading all tabs at start better.
 
-Firebase:
-1. Try testing it offline. Going from online to offline and vice versa...
-2. Require double password entry for cases like change password, and sign up.
-3. Implement profile picture.
-4. Improve how recipes are saved. Currently, the entire list is saved/loaded for every save/load.
+Firebase improvements:
+X. Require double password entry for cases like change password, and sign up.
+X. Implement profile picture.
+X. Improve how recipes are saved. Currently, the entire list is saved/loaded for every save/load.
    Only the saved/loaded recipe should be involved in a save/load.
 
-Design:
-- Everything needs to be better looking...
 
-Other sections of the app:
-Tbd1
-- Todo list?
+Design:
+X Everything needs to be better looking...
+
+
+Other sections of the app, Tbd1:
 - Shopping list? What you have at home list?
 - Available ingredients at home, and recommend recipes for you?
 

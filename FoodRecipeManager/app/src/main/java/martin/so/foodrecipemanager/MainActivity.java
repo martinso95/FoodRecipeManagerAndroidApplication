@@ -69,14 +69,6 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setOnNavigationItemReselectedListener(onNavigationItemReselectedListener);
-
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            Log.d("Test", "Permission is granted");
-        } else {
-            Log.d("Test", "Permission is revoked");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
     }
 
     private boolean loadFragment(Fragment fragment) {
