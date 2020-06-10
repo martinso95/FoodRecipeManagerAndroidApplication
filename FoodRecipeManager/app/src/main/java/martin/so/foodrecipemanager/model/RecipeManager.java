@@ -1,5 +1,6 @@
 package martin.so.foodrecipemanager.model;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -100,6 +101,7 @@ public class RecipeManager {
 
     /**
      * Edit the recipe based on parameters.
+     * TODO: Editing a recipe puts it last in the list and ignores alphabetical order...
      */
     public void editRecipe(String photoPath, Recipe recipe, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
         String oldType = recipe.getType();
@@ -133,10 +135,24 @@ public class RecipeManager {
         saveChanges();
     }
 
+    // TODO: Removing from the all-list will not remove from other lists...
     public void removeRecipe(Recipe recipe) {
         if (recipe.getPhotoPath() != null) {
+            // If the file to be removed already exists locally, it means that it has not been uploaded to Firebase yet.
+            // Therefore, the local file should be deleted, instead of trying to delete non existing file in Firebase.
+            // If the local file does not exist, then delete in Firebase, because the file was already uploaded.
+            if (FirebaseStorageOfflineHandler.getInstance().fileExists(recipe.getPhotoPath())) {
+                FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipe.getPhotoPath());
+            } else {
+                FirebaseStorageOfflineHandler.getInstance().addFileForDeletionInFirebaseStorage(recipe.getPhotoPath());
+            }
             StorageReference storageReference = FirebaseStorage.getInstance().getReference(Utils.FIREBASE_IMAGES_PATH).child(firebaseAuth.getUid()).child(recipe.getPhotoPath());
-            storageReference.delete();
+            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    FirebaseStorageOfflineHandler.getInstance().removeFileForDeletionInFirebaseStorage(recipe.getPhotoPath());
+                }
+            });
         }
 
         List<Recipe> recipeListToBeEdited = getRecipeTypeList(recipe.getType());

@@ -1,8 +1,8 @@
 package martin.so.foodrecipemanager.ui.recipes;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
+import martin.so.foodrecipemanager.model.FirebaseStorageOfflineHandler;
 import martin.so.foodrecipemanager.model.InformationDialog;
 import martin.so.foodrecipemanager.model.Ingredient;
 import martin.so.foodrecipemanager.model.IngredientsAdapter;
@@ -15,7 +15,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,11 +27,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -142,7 +142,6 @@ public class AddRecipeActivity extends AppCompatActivity {
         Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
 
 
-
         recipeAddIngredient.setOnClickListener(v -> {
             String input = recipeIngredientInput.getText().toString();
             if (!input.isEmpty()) {
@@ -188,11 +187,12 @@ public class AddRecipeActivity extends AppCompatActivity {
                 if (!duplicateFound) {
                     if (recipePhotoAdded) {
                         String recipePhotoPath = UUID.randomUUID().toString();
+                        FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
-                        storageReference.putFile(recipePhotoLocalFilePath).addOnFailureListener(new OnFailureListener() {
+                        storageReference.putFile(recipePhotoLocalFilePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("Test", "AddActivity - Image failed to upload...");
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipePhotoPath);
                             }
                         });
                         Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
@@ -265,7 +265,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                 recipePhotoBitmap = bitmap;
                 recipePhotoAdded = true;
             } catch (IOException e) {
-                Log.d("Test", "Failed to read image file path.");
                 recipePhotoAdded = false;
                 recipePhotoBitmap = null;
                 InformationDialog informationDialog = new InformationDialog();

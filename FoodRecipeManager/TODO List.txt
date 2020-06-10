@@ -26,15 +26,8 @@ WARNING text color:
 
 TODO:
 Prioritized fixes needed:
-1. Issues with photos not being saved/deleted in Firebase Storage when offline, see scenarios:
-   Photo is saved if: Online/Offline -> Offline -> Save recipe -> Online
-   Photo is not saved if: Online/Offline -> Offline -> Save recipe -> Kill app -> Start App -> Online/Offline
-
-   Photo is deleted if: Online/Offline -> Offline -> Delete recipe -> Online
-   Photo is not deleted if: Online/Offline -> Offline -> Delete recipe -> Kill app -> Start App -> Online/Offline
-
-   Will also be issues with changing a photo for a recipe when offline, for example:
-   Photo not changed in Firebase Storage if: Online/Offline -> Offline -> Change photo -> Kill app - Start app in Online/Offline
+1. Recipe photos not showing when going offline.
+   Look into Glide caching.
 
 
 Functionality to add:

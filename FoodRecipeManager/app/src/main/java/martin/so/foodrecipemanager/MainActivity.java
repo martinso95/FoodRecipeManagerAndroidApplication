@@ -1,8 +1,6 @@
 package martin.so.foodrecipemanager;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -11,8 +9,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import martin.so.foodrecipemanager.model.FirebaseStorageOfflineHandler;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.ui.recipes.RecipesFragment;
 import martin.so.foodrecipemanager.ui.tbd1.Tbd1Fragment;
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("Test", "MAIN ACTIVITY CREATED");
+
         RecipeManager.getInstance().initializeRecipeManager();
 
         setContentView(R.layout.activity_main);
@@ -69,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.nav_view);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         navigation.setOnNavigationItemReselectedListener(onNavigationItemReselectedListener);
+
+        FirebaseStorageOfflineHandler.getInstance().initializeFirebaseStorageOfflineHandler(this);
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -80,14 +81,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d("Test", "Permission: " + permissions[0] + "was " + grantResults[0]);
-        }
     }
 
     @Override

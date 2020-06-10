@@ -1,6 +1,7 @@
 package martin.so.foodrecipemanager.ui.recipes;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -22,6 +23,7 @@ import java.util.List;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import martin.so.foodrecipemanager.R;
+import martin.so.foodrecipemanager.model.FirebaseStorageOfflineHandler;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.RecipesAdapter;
@@ -131,6 +133,10 @@ public class PageRecipesFragment extends Fragment implements RecipesAdapter.Item
                     recipeList.clear();
                     for (DataSnapshot dss : dataSnapshot.getChildren()) {
                         Recipe recipe = dss.getValue(Recipe.class);
+                        Bitmap bitmap = FirebaseStorageOfflineHandler.getInstance().getLocalRecipeBitmap(recipe.getPhotoPath());
+                        if (bitmap != null) {
+                            recipe.setTemporaryLocalPhoto(bitmap);
+                        }
                         recipeList.add(recipe);
                     }
                     recipesAdapter.notifyDataSetChanged();
