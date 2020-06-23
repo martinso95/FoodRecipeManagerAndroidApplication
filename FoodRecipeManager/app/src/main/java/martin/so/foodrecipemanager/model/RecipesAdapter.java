@@ -1,10 +1,7 @@
 package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +10,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -60,27 +54,26 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Recipe recipe = recipes.get(position);
 
-//        If the recipe photo is not loaded from firebase, then load it,
-//        otherwise load the local (already loaded from firebase) version.
-        if (recipe.getTemporaryLocalPhoto() != null) {
-            Glide.with(context).load(recipe.getTemporaryLocalPhoto()).apply(glideRequestOptions).into(holder.recipePhoto);
-        } else {
-            if (recipe.getPhotoPath() != null) {
+        // Load the recipe photo from Firebase Storage.
+        // If not available, then load placeholder in the form of the temporary local photo (if it exists),
+        // or a plain static drawable image.
+        if (recipe.getPhotoPath() != null) {
+            if (recipe.getPhotoDownloadUri() != null) {
+                // Load photo with Glide, which supports caching.
+                Glide.with(context).load(recipe.getPhotoDownloadUri()).placeholder(R.drawable.ic_food_placeholder_black_100dp).apply(glideRequestOptions).into(holder.recipePhoto);
+            } else if (recipe.getTemporaryLocalPhoto() != null) {
+                // If photo has changed, load the local photo copy, because uploading the new download uri can take time.
+                holder.recipePhoto.setImageBitmap(recipe.getTemporaryLocalPhoto());
+            } else {
+                // Only comes to this code if the app is online, and no download uri exists (which might happen when editing recipe photos offline).
+                // If it is offline, it will get the glide cache. If photo was changed, it will get the local copy.
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipe.getPhotoPath());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Glide.with(context).load(uri.toString()).apply(glideRequestOptions).into(holder.recipePhoto);
-                        Glide.with(context).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @com.google.firebase.database.annotations.Nullable Transition<? super Bitmap> transition) {
-                                recipe.setTemporaryLocalPhoto(resource);
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-                            }
-                        });
+                        recipe.setPhotoDownloadUri(uri.toString());
+                        RecipeManager.getInstance().saveChanges();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -88,9 +81,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
                         holder.recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_100dp);
                     }
                 });
-            } else {
-                holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_100dp);
             }
+        } else {
+            holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_100dp);
         }
 
         holder.recipeName.setText(recipe.getName());

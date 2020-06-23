@@ -18,7 +18,8 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:background="@android:color/white"
-            android:contentDescription="@string/recipe_photo_content_description" />
+            android:contentDescription="@string/recipe_photo_content_description"
+            android:scaleType="centerCrop" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeNameRecipeDetails"

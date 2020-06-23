@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * A class for handling the recipes and provide global access to the recipe objects.
- * Provides data saving/loading by using Firebase realtime databse.
+ * Provides data saving/loading by using Firebase realtime database.
  */
 public class RecipeManager {
 
@@ -86,7 +86,6 @@ public class RecipeManager {
         }
         typeRecipesList.add(index1, recipe);
 
-
         int index2 = Collections.binarySearch(allRecipesList, recipe,
                 (recipe1, recipe2) -> recipe1.getName().compareToIgnoreCase(recipe2.getName()));
 
@@ -101,15 +100,24 @@ public class RecipeManager {
 
     /**
      * Edit the recipe based on parameters.
-     * TODO: Editing a recipe puts it last in the list and ignores alphabetical order...
      */
-    public void editRecipe(String photoPath, Recipe recipe, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
+    public void editRecipe(Recipe recipe, String photoPath, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
+        String oldName = recipe.getName();
         String oldType = recipe.getType();
 
         // Remove old recipe from the main list.
         for (Recipe oldRecipe : allRecipesList) {
-            if (oldRecipe.getName().equals(recipe.getName())) {
+            if (oldRecipe.getName().equals(oldName)) {
                 allRecipesList.remove(oldRecipe);
+                break;
+            }
+        }
+
+        // Remove old recipe from the sub list.
+        List<Recipe> subList = getRecipeTypeList(oldType);
+        for (Recipe oldRecipe : subList) {
+            if (oldRecipe.getName().equals(oldName)) {
+                subList.remove(oldRecipe);
                 break;
             }
         }
@@ -122,20 +130,10 @@ public class RecipeManager {
         recipe.setIngredients(ingredients);
         recipe.setInstructions(instructions);
 
-        // Change the recipe's recipe type list, if recipe type changed.
-        if (!oldType.equals(type)) {
-            List<Recipe> recipeListToBeDeletedFrom = getRecipeTypeList(oldType);
-            recipeListToBeDeletedFrom.remove(recipe);
-            List<Recipe> recipeListToBeAddedTo = getRecipeTypeList(type);
-            recipeListToBeAddedTo.add(recipe);
-        }
-
-        // Add newly edited recipe to the main list.
-        allRecipesList.add(recipe);
-        saveChanges();
+        // Add newly edited recipe to the main list and sub list.
+        addRecipe(recipe);
     }
 
-    // TODO: Removing from the all-list will not remove from other lists...
     public void removeRecipe(Recipe recipe) {
         if (recipe.getPhotoPath() != null) {
             // If the file to be removed already exists locally, it means that it has not been uploaded to Firebase yet.
@@ -155,10 +153,22 @@ public class RecipeManager {
             });
         }
 
-        List<Recipe> recipeListToBeEdited = getRecipeTypeList(recipe.getType());
-        recipeListToBeEdited.remove(recipe);
-        allRecipesList.remove(recipe);
+        // Remove old recipe from the main list.
+        for (Recipe r : allRecipesList) {
+            if (r.getName().equals(recipe.getName())) {
+                allRecipesList.remove(r);
+                break;
+            }
+        }
 
+        // Remove old recipe from the sub list.
+        List<Recipe> subList = getRecipeTypeList(recipe.getType());
+        for (Recipe r : subList) {
+            if (r.getName().equals(recipe.getName())) {
+                subList.remove(r);
+                break;
+            }
+        }
         saveChanges();
     }
 
@@ -166,17 +176,17 @@ public class RecipeManager {
      * Save changes that has been made to the recipe list.
      * Saves the entire list in Firebase realtime database.
      */
-    private void saveChanges() {
+    public void saveChanges() {
         fireBaseDatabaseReference.setValue(allRecipesList);
     }
 
     /**
      * Returns the recipe list based on the recipe's type.
      *
-     * @param recipe The recipe object.
+     * @param recipeType The recipe object.
      */
-    private List<Recipe> getRecipeTypeList(String recipe) {
-        switch (recipe) {
+    private List<Recipe> getRecipeTypeList(String recipeType) {
+        switch (recipeType) {
             case Utils.RECIPE_TYPE_ALL:
                 return allRecipesList;
             case Utils.RECIPE_TYPE_BREAKFAST:
@@ -191,5 +201,4 @@ public class RecipeManager {
                 return null;
         }
     }
-
 }

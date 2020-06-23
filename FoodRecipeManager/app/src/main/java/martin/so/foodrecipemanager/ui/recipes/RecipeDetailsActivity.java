@@ -14,7 +14,6 @@ import martin.so.foodrecipemanager.model.Utils;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,13 +31,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.annotations.Nullable;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -46,6 +42,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Activity containing the "Recipe details"-view.
@@ -156,43 +153,40 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeInstructions.setFocusable(false);
         recipeInstructions.setEnabled(false);
 
-//        If the recipe photo is not loaded from firebase, then load it,
-//        otherwise load the local (already loaded from firebase) version.
-//        If no photo exists, show the add-photo placeholder image.
         glideRequestOptions = new RequestOptions();
         glideRequestOptions.centerCrop();
 
-        if (currentRecipe.getTemporaryLocalPhoto() != null) {
-            Glide.with(getApplicationContext()).load(currentRecipe.getTemporaryLocalPhoto()).apply(glideRequestOptions).into(recipePhoto);
-        } else {
-            if (currentRecipe.getPhotoPath() != null) {
+        // Load the recipe photo from Firebase Storage.
+        // If not available, then load placeholder in the form of the temporary local photo (if it exists),
+        // or a plain static drawable image.
+        if (currentRecipe.getPhotoPath() != null) {
+            if (currentRecipe.getPhotoDownloadUri() != null) {
+                // Load photo with Glide, which supports caching.
+                Glide.with(getApplicationContext()).load(currentRecipe.getPhotoDownloadUri()).placeholder(R.drawable.ic_food_placeholder_black_200dp).apply(glideRequestOptions).into(recipePhoto);
+            } else if (currentRecipe.getTemporaryLocalPhoto() != null) {
+                // If photo has changed, load the local photo copy, because uploading the new download uri can take time.
+                recipePhoto.setImageBitmap(currentRecipe.getTemporaryLocalPhoto());
+            } else {
+                // Only comes to this code if the app is online, and no download uri exists (which might happen when editing recipe photos offline).
+                // If it is offline, it will get the glide cache. If photo was changed, it will get the local copy.
                 StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(currentRecipe.getPhotoPath());
                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Glide.with(getApplicationContext()).load(uri.toString()).apply(glideRequestOptions).into(recipePhoto);
-                        Glide.with(getApplicationContext()).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                currentRecipe.setTemporaryLocalPhoto(resource);
-                            }
-
-                            @Override
-                            public void onLoadCleared(@Nullable Drawable placeholder) {
-                            }
-                        });
+                        currentRecipe.setPhotoDownloadUri(uri.toString());
+                        RecipeManager.getInstance().saveChanges();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_100dp);
+                        recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_200dp);
                     }
                 });
-            } else {
-                recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
             }
+        } else {
+            recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
         }
-
 
         recipeName.setText(currentRecipe.getName());
         recipeDescription.setText(currentRecipe.getDescription());
@@ -290,33 +284,42 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     if (haveFieldsChanged()) {
                         String newRecipeName = recipeName.getText().toString();
                         if (recipePhotoChanged) {
-                            // If the recipe had a photo before changing to a new photo, the old photo will be deleted.
-                            if (recipePhotoPath != null) {
-                                FirebaseStorageOfflineHandler.getInstance().addFileForDeletionInFirebaseStorage(recipePhotoPath);
-                                FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
-                                StorageReference photoRef = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
-                                photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        FirebaseStorageOfflineHandler.getInstance().removeFileForDeletionInFirebaseStorage(recipePhotoPath);
-                                        photoRef.putFile(recipePhotoLocalFilePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                            @Override
-                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipePhotoPath);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
                             recipePhotoChanged = false;
 
+                            // Upload the new photo. If the recipe had a photo before changing to a new photo, the old photo will be replaced.
+                            if (recipePhotoPath == null) {
+                                recipePhotoPath = UUID.randomUUID().toString();
+                            }
                             // Update the local image of the edited recipe.
                             currentRecipe.setTemporaryLocalPhoto(recipePhotoBitmap);
-                            RecipeManager.getInstance().editRecipe(recipePhotoPath, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
+
+                            // Set photo download uri to null, in order to prevent loading a photo from an old uri.
+                            currentRecipe.setPhotoDownloadUri(null);
+
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
 
+                            FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
+
+                            StorageReference newPhotoRef = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
+                            newPhotoRef.putFile(recipePhotoLocalFilePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipePhotoPath);
+
+                                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(currentRecipe.getPhotoPath());
+                                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            currentRecipe.setPhotoDownloadUri(uri.toString());
+                                            RecipeManager.getInstance().saveChanges();
+                                        }
+
+                                    });
+                                }
+                            });
                         } else {
-                            RecipeManager.getInstance().editRecipe(recipePhotoPath, currentRecipe, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
                         }
                     }

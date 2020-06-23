@@ -187,24 +187,35 @@ public class AddRecipeActivity extends AppCompatActivity {
                 if (!duplicateFound) {
                     if (recipePhotoAdded) {
                         String recipePhotoPath = UUID.randomUUID().toString();
+
                         FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
+
+                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
+                        recipe.setTemporaryLocalPhoto(recipePhotoBitmap);
+                        RecipeManager.getInstance().addRecipe(recipe);
+
                         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoPath);
                         storageReference.putFile(recipePhotoLocalFilePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipePhotoPath);
+
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipe.getPhotoPath());
+                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        recipe.setPhotoDownloadUri(uri.toString());
+                                        RecipeManager.getInstance().saveChanges();
+                                    }
+
+                                });
                             }
                         });
-                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
-                        recipe.setTemporaryLocalPhoto(recipePhotoBitmap);
-                        RecipeManager.getInstance().addRecipe(recipe);
-
-                        finish();
                     } else {
                         Recipe recipe = new Recipe(null, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
                         RecipeManager.getInstance().addRecipe(recipe);
-                        finish();
                     }
+                    finish();
                 }
             }
             return true;

@@ -3,6 +3,7 @@ package martin.so.foodrecipemanager.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,6 +26,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import androidx.annotation.NonNull;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -93,14 +96,32 @@ public class FirebaseStorageOfflineHandler {
 
         final int[] filesForDeletionInFirebaseStorageCount = {filesForDeletionInFirebaseStorage.size()};
         for (String recipePhotoToDelete : filesForDeletionInFirebaseStorage) {
+
             StorageReference photoRef = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(recipePhotoToDelete);
+
             photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    filesForDeletionInFirebaseStorage.remove(recipePhotoToDelete);
-                    filesForDeletionInFirebaseStorageCount[0]--;
+                    if (filesForDeletionInFirebaseStorage.remove(recipePhotoToDelete)) {
+                        filesForDeletionInFirebaseStorageCount[0]--;
+                    }
 
                     // Save/Update the deletion list after last item has been processed.
+                    if (filesForDeletionInFirebaseStorageCount[0] == 0) {
+                        Gson gson = new Gson();
+                        String json = gson.toJson(filesForDeletionInFirebaseStorage);
+
+                        sharedPreferencesEditor.putString("recipePhotosToDelete", json);
+                        sharedPreferencesEditor.apply();
+                    }
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (filesForDeletionInFirebaseStorage.remove(recipePhotoToDelete)) {
+                        filesForDeletionInFirebaseStorageCount[0]--;
+                    }
                     if (filesForDeletionInFirebaseStorageCount[0] == 0) {
                         Gson gson = new Gson();
                         String json = gson.toJson(filesForDeletionInFirebaseStorage);
@@ -140,13 +161,14 @@ public class FirebaseStorageOfflineHandler {
      * @param fileName The name of the recipe's photo. Which is a UID.
      */
     public void addFileForDeletionInFirebaseStorage(String fileName) {
-        filesForDeletionInFirebaseStorage.add(fileName);
+        if (filesForDeletionInFirebaseStorage.add(fileName)) {
 
-        Gson gson = new Gson();
-        String json = gson.toJson(filesForDeletionInFirebaseStorage);
+            Gson gson = new Gson();
+            String json = gson.toJson(filesForDeletionInFirebaseStorage);
 
-        sharedPreferencesEditor.putString("recipePhotosToDelete", json);
-        sharedPreferencesEditor.apply();
+            sharedPreferencesEditor.putString("recipePhotosToDelete", json);
+            sharedPreferencesEditor.apply();
+        }
     }
 
     /**
@@ -157,18 +179,20 @@ public class FirebaseStorageOfflineHandler {
      * @param fileName The name of the recipe's photo. Which is a UID.
      */
     public void removeFileForDeletionInFirebaseStorage(String fileName) {
-        filesForDeletionInFirebaseStorage.remove(fileName);
+        if (filesForDeletionInFirebaseStorage.remove(fileName)) {
 
-        Gson gson = new Gson();
-        String json = gson.toJson(filesForDeletionInFirebaseStorage);
+            Gson gson = new Gson();
+            String json = gson.toJson(filesForDeletionInFirebaseStorage);
 
-        sharedPreferencesEditor.putString("recipePhotosToDelete", json);
-        sharedPreferencesEditor.apply();
+            sharedPreferencesEditor.putString("recipePhotosToDelete", json);
+            sharedPreferencesEditor.apply();
+        }
     }
 
     /**
      * Creates and saves a photo, which is a photo from a bitmap.
-     *  @param fileName The name of the photo file to be saved.
+     *
+     * @param fileName The name of the photo file to be saved.
      * @param bitmap   The photo bitmap to be stored.
      */
     private void createFile(String fileName, Bitmap bitmap) {
@@ -228,7 +252,7 @@ public class FirebaseStorageOfflineHandler {
         }
     }
 
-    boolean fileExists(String fileName) {
+    public boolean fileExists(String fileName) {
         File[] files = localDirectoryFileCache.listFiles();
         for (File file : files) {
             String currentFile = file.getName();

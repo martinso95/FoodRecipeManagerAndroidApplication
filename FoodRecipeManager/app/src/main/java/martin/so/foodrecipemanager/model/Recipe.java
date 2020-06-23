@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class Recipe {
     private String photoPath = null;
+    private String photoDownloadUri = null;
     @Exclude
     private Bitmap temporaryLocalPhoto = null;
     private String name;
@@ -53,6 +54,14 @@ public class Recipe {
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public String getPhotoDownloadUri() {
+        return photoDownloadUri;
+    }
+
+    public void setPhotoDownloadUri(String photoDownloadUri) {
+        this.photoDownloadUri = photoDownloadUri;
     }
 
     @Exclude
