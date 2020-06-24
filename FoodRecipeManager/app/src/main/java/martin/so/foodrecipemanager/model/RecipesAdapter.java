@@ -2,6 +2,7 @@ package martin.so.foodrecipemanager.model;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,8 +141,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
      * Notifies that the recipe list has changed.
      *
      * @param text The text that is to be found in the recipes' names.
+     * @return the newly filtered list.
      */
-    public void filter(String text) {
+    public List<Recipe> filter(String text) {
         recipes.clear();
         if (text.isEmpty()) {
             recipes.addAll(recipesCopy);
@@ -154,6 +156,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
             }
         }
         notifyDataSetChanged();
+        return recipes;
     }
 
     public void setList(List<Recipe> newRecipes) {

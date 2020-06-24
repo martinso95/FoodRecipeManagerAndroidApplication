@@ -25,6 +25,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
     private RecipesAdapter recipesAdapter;
     private List<Recipe> allRecipesList;
     private String textToFilter = "";
+    private List<Recipe> filteredList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         allRecipesList = new ArrayList<>(RecipeManager.getInstance().getAllRecipes());
+        filteredList = new ArrayList<>(allRecipesList);
         recipesAdapter = new RecipesAdapter(this, allRecipesList);
         recipesAdapter.setClickListener(this);
         recyclerView.setAdapter(recipesAdapter);
@@ -48,7 +50,19 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
     @Override
     public void onItemClick(View view, int position) {
         Intent recipeDetailsActivity = new Intent(this, RecipeDetailsActivity.class);
-        recipeDetailsActivity.putExtra("recipeAdapterPosition", position);
+
+        // Find the actual position of the clicked recipe in the main all recipe list.
+        // In that way, we can send this position to RecipeDetailsActivity,
+        // where the target recipe is based on position clicked in the main all recipe list.
+        int actualPositionInFilteredList = 0;
+        for (Recipe r : RecipeManager.getInstance().getAllRecipes()) {
+            if (r.getName().equals(filteredList.get(position).getName())) {
+                break;
+            }
+            actualPositionInFilteredList++;
+        }
+
+        recipeDetailsActivity.putExtra("recipeAdapterPosition", actualPositionInFilteredList);
         recipeDetailsActivity.putExtra("recipeType", Utils.RECIPE_TYPE_ALL);
         startActivity(recipeDetailsActivity);
     }
@@ -73,7 +87,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
     @Override
     public boolean onQueryTextChange(String newText) {
         textToFilter = newText;
-        recipesAdapter.filter(newText);
+        filteredList = recipesAdapter.filter(newText);
         return false;
     }
 
@@ -84,7 +98,7 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
     @Override
     public boolean onQueryTextSubmit(String query) {
         textToFilter = query;
-        recipesAdapter.filter(query);
+        filteredList = recipesAdapter.filter(query);
         return false;
     }
 
@@ -108,6 +122,6 @@ public class RecipeSearchActivity extends AppCompatActivity implements RecipesAd
         super.onResume();
         Log.d("Test", "Recipe Search Activity RESUMED");
         recipesAdapter.setList(new ArrayList<>(RecipeManager.getInstance().getAllRecipes()));
-        recipesAdapter.filter(textToFilter);
+        filteredList = recipesAdapter.filter(textToFilter);
     }
 }
