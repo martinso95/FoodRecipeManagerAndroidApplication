@@ -91,4 +91,9 @@
     <string name="recipe_instructions_label">Instructions</string>
     <string name="recipe_photo_content_description">Photo of the recipe</string>
 
+    <!--    Recipe handle photo dialog layout-->
+    <string name="recipe_handle_photo_dialog_capture">Take photo</string>
+    <string name="recipe_handle_photo_dialog_gallery">Select from gallery</string>
+    <string name="recipe_handle_photo_dialog_remove">Remove photo</string>
+
 </resources>

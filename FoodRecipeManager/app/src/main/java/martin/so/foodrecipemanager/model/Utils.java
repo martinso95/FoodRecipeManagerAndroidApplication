@@ -1,9 +1,13 @@
 package martin.so.foodrecipemanager.model;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Utils {
 
@@ -38,4 +42,23 @@ public class Utils {
     // Firebase:
     public static final String FIREBASE_RECIPES_PATH = "recipes";
     public static final String FIREBASE_IMAGES_PATH = "images";
+
+    // FileProvider usage: Photos taken with the camera will temporarily be stored locally,
+    // in order to upload full image to Firebase.
+    public static final String FILE_PROVIDER_AUTHORITY = "martin.so.fileprovider";
+
+    /**
+     * Create an empty temporary photo in local file system.
+     * Used for storing photo taken with the camera.
+     *
+     * @param context context of the application.
+     * @return the created photo file.
+     * @throws IOException handle IOException.
+     */
+    public static File createTemporaryPhoto(Context context) throws IOException {
+        File storageDir = context.getFilesDir();
+        // Each file created will have a unique name.
+        return File.createTempFile("temporaryPhoto_", ".jpg", storageDir);
+    }
+
 }

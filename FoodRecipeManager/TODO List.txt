@@ -33,7 +33,6 @@ Functionality to add:
 X. Add more properties in a recipe, such as: Time.
 X. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally.
    Also possibility to alter the amount of one ingredient, and the rest should change to be proportional.
-X. Possibility to remove picture.
 X. Improve how instructions are being added and visualized. Introduce steps.
    Each step is one box of information, and so on.
 X. Implement Favorite. OR rating?

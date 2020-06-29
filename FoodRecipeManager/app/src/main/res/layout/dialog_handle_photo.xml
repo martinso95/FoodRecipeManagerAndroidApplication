@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/buttonCaptureHandlePhotoDialog"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:text="@string/recipe_handle_photo_dialog_capture"
+        android:textColor="#000000" />
+
+    <View
+        android:id="@+id/divider1HandlePhotoDialog"
+        style="@style/Divider"
+        android:layout_below="@id/buttonCaptureHandlePhotoDialog"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/buttonGalleryHandlePhotoDialog"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/divider1HandlePhotoDialog"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:text="@string/recipe_handle_photo_dialog_gallery"
+        android:textColor="#000000" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutRemoveHandlePhotoDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonGalleryHandlePhotoDialog"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:visibility="gone">
+
+        <View
+            android:id="@+id/divider2HandlePhotoDialog"
+            style="@style/Divider"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/buttonRemoveHandlePhotoDialog"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_below="@+id/divider2HandlePhotoDialog"
+            android:background="@android:color/white"
+            android:text="@string/recipe_handle_photo_dialog_remove"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/divider3HandlePhotoDialog"
+        style="@style/Divider"
+        android:layout_below="@id/relativeLayoutRemoveHandlePhotoDialog"
+        android:layout_marginBottom="10dp" />
+
+    <Button
+        android:id="@+id/buttonCancelHandlePhotoDialog"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/divider3HandlePhotoDialog"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/white"
+        android:text="@string/profile_delete_account_cancel_label"
+        android:textColor="#000000" />
+
+</RelativeLayout>

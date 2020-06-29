@@ -1,7 +1,10 @@
 package martin.so.foodrecipemanager.ui.recipes;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.FirebaseStorageOfflineHandler;
 import martin.so.foodrecipemanager.model.InformationDialog;
@@ -11,7 +14,7 @@ import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
 
-import android.content.Intent;
+import android.app.Dialog;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,8 +23,10 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -39,6 +44,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +60,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     boolean editActive = false;
 
     private ImageButton recipePhoto;
+    private File takePhotoFile = null;
+    private boolean recipePhotoAdded = false;
     private Uri recipePhotoLocalFilePath;
+    private Uri temporaryRecipePhotoLocalFilePath = null;
+    private boolean shouldRemovePhoto = false;
     private boolean recipePhotoChanged = false;
     private String recipePhotoPath = null;
     private Bitmap recipePhotoBitmap = null;
@@ -80,8 +90,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
     final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
     final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
-
-    private static final int PICK_IMAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,15 +141,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeIngredientsListEditMode = findViewById(R.id.listViewIngredientsEditModeRecipeDetails);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
 
+        recipePhotoAdded = currentRecipe.getPhotoPath() != null;
         recipePhoto.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            // Sets the type as image/*. This ensures only components of type image are selected.
-            intent.setType("image/*");
-            // Pass an extra array with the accepted mime types.
-            // This will ensure that only components with these MIME types are targeted.
-            String[] mimeTypes = {"image/jpeg", "image/png"};
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-            startActivityForResult(intent, PICK_IMAGE);
+            showDialog(recipePhotoAdded);
         });
 
         recipePhoto.setFocusable(false);
@@ -283,7 +285,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 if (!duplicateFound) {
                     if (haveFieldsChanged()) {
                         String newRecipeName = recipeName.getText().toString();
-                        if (recipePhotoChanged) {
+                        if (recipePhotoChanged && recipePhotoAdded) {
                             recipePhotoChanged = false;
 
                             // Upload the new photo. If the recipe had a photo before changing to a new photo, the old photo will be replaced.
@@ -305,6 +307,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                             newPhotoRef.putFile(recipePhotoLocalFilePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    if (takePhotoFile != null)
+                                        takePhotoFile.delete();
                                     FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipePhotoPath);
 
                                     StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(Utils.FIREBASE_IMAGES_PATH).child(FirebaseAuth.getInstance().getUid()).child(currentRecipe.getPhotoPath());
@@ -321,6 +325,17 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                         } else {
                             RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
+                        }
+
+                        if (shouldRemovePhoto) {
+                            if (recipePhotoPath != null) {
+                                RecipeManager.getInstance().removeRecipePhoto(recipePhotoPath);
+                            }
+                            currentRecipe.setPhotoDownloadUri(null);
+                            currentRecipe.setTemporaryLocalPhoto(null);
+                            currentRecipe.setPhotoPath(null);
+                            RecipeManager.getInstance().saveChanges();
+                            shouldRemovePhoto = false;
                         }
                     }
                     editActive = false;
@@ -470,23 +485,125 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         return 404;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            recipePhotoLocalFilePath = data.getData();
+    /**
+     * Shows a dialog in the activity in order to inform the user.
+     * With possibility to redirect the user to a new activity.
+     *
+     * @param photoAdded flag for knowing whether to provide option to remove an added photo or not.
+     */
+    private void showDialog(boolean photoAdded) {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_handle_photo);
+
+        Button takePhotoButton = dialog.findViewById(R.id.buttonCaptureHandlePhotoDialog);
+        takePhotoButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            ActivityResultLauncher<Uri> takePhoto = registerForActivityResult(new ActivityResultContracts.TakePicture(), result -> {
+                if (result) {
+                    recipePhotoChanged = true;
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), temporaryRecipePhotoLocalFilePath);
+                        Glide.with(getApplicationContext()).load(bitmap).apply(glideRequestOptions).into(recipePhoto);
+                        recipePhotoBitmap = bitmap;
+                        recipePhotoAdded = true;
+                        recipePhotoLocalFilePath = temporaryRecipePhotoLocalFilePath;
+                        temporaryRecipePhotoLocalFilePath = null;
+                        shouldRemovePhoto = false;
+                    } catch (IOException e) {
+                        recipePhotoChanged = false;
+                        recipePhotoAdded = false;
+                        recipePhotoBitmap = null;
+                        temporaryRecipePhotoLocalFilePath = null;
+                        if (takePhotoFile != null)
+                            takePhotoFile.delete();
+                        InformationDialog informationDialog = new InformationDialog();
+                        informationDialog.showDialog(RecipeDetailsActivity.this, null, false, getString(R.string.recipe_photo_add_fail_dialog));
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (takePhotoFile != null)
+                        takePhotoFile.delete();
+                    recipePhotoChanged = false;
+                    recipePhotoAdded = false;
+                    recipePhotoBitmap = null;
+                    temporaryRecipePhotoLocalFilePath = null;
+                    InformationDialog informationDialog = new InformationDialog();
+                    informationDialog.showDialog(RecipeDetailsActivity.this, null, false, getString(R.string.recipe_photo_add_fail_dialog));
+                }
+            });
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), recipePhotoLocalFilePath);
-                recipePhoto.setImageBitmap(bitmap);
-                recipePhotoBitmap = bitmap;
-                recipePhotoChanged = true;
+                if (takePhotoFile != null)
+                    takePhotoFile.delete();
+                takePhotoFile = Utils.createTemporaryPhoto(this);
+                temporaryRecipePhotoLocalFilePath = FileProvider.getUriForFile(this, Utils.FILE_PROVIDER_AUTHORITY, takePhotoFile);
+                takePhoto.launch(temporaryRecipePhotoLocalFilePath);
             } catch (IOException e) {
-                recipePhotoBitmap = null;
-                recipePhotoChanged = false;
-                InformationDialog informationDialog = new InformationDialog();
-                informationDialog.showDialog(RecipeDetailsActivity.this, null, false, getString(R.string.recipe_photo_add_fail_dialog));
+                temporaryRecipePhotoLocalFilePath = null;
                 e.printStackTrace();
             }
+        });
+
+        Button pickPhotoButton = dialog.findViewById(R.id.buttonGalleryHandlePhotoDialog);
+        pickPhotoButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            ActivityResultLauncher<String> pickPhoto = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                    uri -> {
+                        if (recipePhotoAdded && takePhotoFile != null) {
+                            takePhotoFile.delete();
+                        }
+                        recipePhotoLocalFilePath = uri;
+                        try {
+                            recipePhotoChanged = true;
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), recipePhotoLocalFilePath);
+                            Glide.with(getApplicationContext()).load(bitmap).apply(glideRequestOptions).into(recipePhoto);
+                            recipePhotoBitmap = bitmap;
+                            recipePhotoAdded = true;
+                            shouldRemovePhoto = false;
+                        } catch (IOException e) {
+                            recipePhotoChanged = false;
+                            recipePhotoAdded = false;
+                            recipePhotoBitmap = null;
+                            InformationDialog informationDialog = new InformationDialog();
+                            informationDialog.showDialog(RecipeDetailsActivity.this, null, false, getString(R.string.recipe_photo_add_fail_dialog));
+                            e.printStackTrace();
+                        }
+
+                    });
+            pickPhoto.launch("image/*");
+        });
+
+        Button removePhotoButton = dialog.findViewById(R.id.buttonRemoveHandlePhotoDialog);
+        removePhotoButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            // Remove current photo.
+            if (recipePhotoAdded && takePhotoFile != null)
+                takePhotoFile.delete();
+            recipePhotoChanged = true;
+            recipePhotoLocalFilePath = null;
+            recipePhotoBitmap = null;
+            recipePhotoAdded = false;
+            shouldRemovePhoto = true;
+            recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
+        });
+
+        Button cancelPhotoButton = dialog.findViewById(R.id.buttonCancelHandlePhotoDialog);
+        cancelPhotoButton.setOnClickListener(v -> dialog.dismiss());
+
+        // If a photo has been added, it should be possible to remove it.
+        if (photoAdded) {
+            dialog.findViewById(R.id.relativeLayoutRemoveHandlePhotoDialog).setVisibility(View.VISIBLE);
+        }
+        dialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!isChangingConfigurations()) {
+            if (takePhotoFile != null)
+                takePhotoFile.delete();
         }
     }
 }

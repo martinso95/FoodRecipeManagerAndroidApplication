@@ -135,22 +135,9 @@ public class RecipeManager {
     }
 
     public void removeRecipe(Recipe recipe) {
+        // Remove photo if it exists.
         if (recipe.getPhotoPath() != null) {
-            // If the file to be removed already exists locally, it means that it has not been uploaded to Firebase yet.
-            // Therefore, the local file should be deleted, instead of trying to delete non existing file in Firebase.
-            // If the local file does not exist, then delete in Firebase, because the file was already uploaded.
-            if (FirebaseStorageOfflineHandler.getInstance().fileExists(recipe.getPhotoPath())) {
-                FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipe.getPhotoPath());
-            } else {
-                FirebaseStorageOfflineHandler.getInstance().addFileForDeletionInFirebaseStorage(recipe.getPhotoPath());
-            }
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference(Utils.FIREBASE_IMAGES_PATH).child(firebaseAuth.getUid()).child(recipe.getPhotoPath());
-            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    FirebaseStorageOfflineHandler.getInstance().removeFileForDeletionInFirebaseStorage(recipe.getPhotoPath());
-                }
-            });
+            removeRecipePhoto(recipe.getPhotoPath());
         }
 
         // Remove old recipe from the main list.
@@ -170,6 +157,28 @@ public class RecipeManager {
             }
         }
         saveChanges();
+    }
+
+    /**
+     * If the file to be removed already exists locally, it means that it has not been uploaded to Firebase yet.
+     * Therefore, the local file should be deleted, instead of trying to delete non existing file in Firebase.
+     * If the local file does not exist, then delete in Firebase, because the file was already uploaded.
+     *
+     * @param recipePhotoPath the photo path/name of the recipe.
+     */
+    public void removeRecipePhoto(String recipePhotoPath) {
+        if (FirebaseStorageOfflineHandler.getInstance().fileExists(recipePhotoPath)) {
+            FirebaseStorageOfflineHandler.getInstance().removeFileForUploadInFirebaseStorage(recipePhotoPath);
+        } else {
+            FirebaseStorageOfflineHandler.getInstance().addFileForDeletionInFirebaseStorage(recipePhotoPath);
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference(Utils.FIREBASE_IMAGES_PATH).child(firebaseAuth.getUid()).child(recipePhotoPath);
+            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    FirebaseStorageOfflineHandler.getInstance().removeFileForDeletionInFirebaseStorage(recipePhotoPath);
+                }
+            });
+        }
     }
 
     /**

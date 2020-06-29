@@ -58,6 +58,18 @@ public class FirebaseStorageOfflineHandler {
      * Initialize FirebaseStorageOfflineHandler. Update Firebase Storage with additions or deletions of files, based on local cache.
      */
     public void initializeFirebaseStorageOfflineHandler(Context context) {
+
+        // Remove temporary photos in ./files, if they exist.
+        // This directory is only used for storing temporary photos when using camera to take pictures,
+        // and should be deleted afterwards.
+        File temporaryFileDirectory = context.getFilesDir();
+        if (temporaryFileDirectory.isDirectory()) {
+            File[] temporaryFiles = temporaryFileDirectory.listFiles();
+            for (File file : temporaryFiles) {
+                file.delete();
+            }
+        }
+
         sharedPreferences = context.getSharedPreferences("FoodRecipeManager", MODE_PRIVATE);
         sharedPreferencesEditor = context.getSharedPreferences("FoodRecipeManager", MODE_PRIVATE).edit();
         Gson gson = new Gson();
