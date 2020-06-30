@@ -7,25 +7,24 @@
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         tools:context=".ui.recipes.RecipeDetailsActivity">
 
         <ImageButton
             android:id="@+id/imageButtonRecipePhotoRecipeDetails"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:background="@android:color/white"
-            android:contentDescription="@string/recipe_photo_content_description"
-            android:scaleType="centerCrop" />
+            android:contentDescription="@string/recipe_photo_content_description"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeNameRecipeDetails"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/imageButtonRecipePhotoRecipeDetails"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
             android:textSize="16sp">
 
@@ -43,6 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_below="@+id/textInputLayoutRecipeNameRecipeDetails"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
             android:textSize="16sp">
 
@@ -60,6 +61,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textInputLayoutDescriptionRecipeDetails"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
             android:text="@string/recipe_category_label"
@@ -70,6 +72,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewRecipeCategoryLabelRecipeDetails"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:textSize="16sp" />
@@ -79,6 +82,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewRecipeCategoryLabelRecipeDetails"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:textSize="16sp"
@@ -89,6 +93,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textInputLayoutDescriptionRecipeDetails"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="5dp"
             android:layout_toEndOf="@id/textViewRecipeCategoryRecipeDetails"
             android:text="@string/recipe_type_label"
@@ -99,6 +104,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewRecipeTypeRecipeLabelDetails"
+            android:layout_marginEnd="16dp"
             android:layout_toEndOf="@id/spinnerRecipeCategoryRecipeDetails"
             android:textSize="16sp" />
 
@@ -107,6 +113,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewRecipeTypeRecipeLabelDetails"
+            android:layout_marginEnd="16dp"
             android:layout_toEndOf="@id/spinnerRecipeCategoryRecipeDetails"
             android:textSize="16sp"
             android:visibility="invisible" />
@@ -116,6 +123,7 @@
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/spinnerRecipeTypeRecipeDetails"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="5dp"
             android:text="@string/recipe_ingredients_label"
             android:textSize="16sp" />
@@ -125,6 +133,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewRecipeIngredientsRecipeDetails"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp">
 
             <ListView
@@ -189,6 +199,8 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_below="@+id/relativeLayoutIngredientsRecipeDetails"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
             android:textSize="16sp">
 
