@@ -52,7 +52,6 @@ X. Improve how recipes are saved. Currently, the entire list is saved/loaded for
 
 
 Design:
-X single row text entries should not allow "return" to make a new row. It should only be one row allowed.
 X Everything needs to be better looking...
 
 

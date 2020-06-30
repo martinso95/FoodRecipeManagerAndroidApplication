@@ -34,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/recipe_name_label"
+                android:inputType="text"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -50,8 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="top"
-                android:text="abc"
                 android:hint="@string/recipe_description_label"
+                android:text="abc"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,6 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/recipe_add_ingredients_hint_label"
+                android:inputType="text"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 

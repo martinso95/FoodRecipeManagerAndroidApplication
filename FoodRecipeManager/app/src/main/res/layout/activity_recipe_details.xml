@@ -34,6 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="@string/recipe_name_label"
+                android:inputType="text"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -152,7 +153,8 @@
                         android:id="@+id/textInputLayoutEditRecipeAddIngredientRecipeDetails"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="@string/recipe_add_ingredients_hint_label" />
+                        android:hint="@string/recipe_add_ingredients_hint_label"
+                        android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout

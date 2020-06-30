@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/profile_change_display_name_new_display_name_label"
+            android:inputType="text"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 

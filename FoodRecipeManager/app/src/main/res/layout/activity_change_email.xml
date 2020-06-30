@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/profile_change_email_current_email_label"
+            android:inputType="textEmailAddress"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -53,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/profile_change_email_new_email_label"
+            android:inputType="textEmailAddress"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
