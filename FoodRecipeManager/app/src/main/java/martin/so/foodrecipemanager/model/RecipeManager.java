@@ -101,7 +101,7 @@ public class RecipeManager {
     /**
      * Edit the recipe based on parameters.
      */
-    public void editRecipe(Recipe recipe, String photoPath, String name, String description, String category, String type, List<Ingredient> ingredients, String instructions) {
+    public void editRecipe(Recipe recipe, String photoPath, String name, String category, String type, List<Ingredient> ingredients, String instructions) {
         String oldName = recipe.getName();
         String oldType = recipe.getType();
 
@@ -124,7 +124,6 @@ public class RecipeManager {
 
         recipe.setPhotoPath(photoPath);
         recipe.setName(name);
-        recipe.setDescription(description);
         recipe.setCategory(category);
         recipe.setType(type);
         recipe.setIngredients(ingredients);

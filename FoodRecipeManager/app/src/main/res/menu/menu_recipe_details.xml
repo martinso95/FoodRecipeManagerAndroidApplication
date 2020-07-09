@@ -1,17 +1,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/edit_recipe_button"
-        android:icon="@drawable/ic_edit_recipe_black_24dp"
-        android:orderInCategory="100"
+        android:id="@+id/recipe_details_menu"
+        android:icon="@drawable/ic_settings_24"
+        android:orderInCategory="0"
         android:title=""
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/delete_recipe_button"
-        android:icon="@drawable/ic_delete_forever_black_24dp"
-        android:orderInCategory="100"
-        android:title=""
-        app:showAsAction="always" />
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/recipe_details_menu_edit_recipe_option"
+                android:orderInCategory="1"
+                android:title="@string/edit_recipe_label" />
+            <item
+                android:id="@+id/recipe_details_menu_delete_recipe_option"
+                android:orderInCategory="2"
+                android:title="@string/remove_recipe_label" />
+        </menu>
+    </item>
 </menu>

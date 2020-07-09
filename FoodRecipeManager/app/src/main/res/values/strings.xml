@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">FoodRecipeManager</string>
+
+    <!--    Titles of all views in the app-->
     <string name="title_recipes">Recipes</string>
     <string name="title_tbd1">Tbd1</string>
     <string name="title_profile">Profile</string>
@@ -14,6 +16,8 @@
     <!--    Common labels-->
     <string name="ok_label">OK</string>
     <string name="changed_label">Changed</string>
+    <string name="edit_recipe_label">Edit recipe</string>
+    <string name="remove_recipe_label">Remove recipe</string>
 
     <!--    User sign in layout-->
     <string name="user_sign_in_label">Sign in</string>
@@ -75,25 +79,30 @@
     <string name="profile_delete_account_dialog_description">Your account has been deleted.</string>
     <string name="profile_delete_account_failed_dialog_description">Your account could not be deleted. \n Please try again later.</string>
 
-    <!--    Card layout-->
+    <!--    Recipe card layout-->
     <string name="card_recipe_type_label">Type:</string>
     <string name="card_recipe_category_label">Category:</string>
 
-    <!--    Recipe layout-->
+    <!--    Recipe add/details layout-->
     <string name="recipe_name_label">Recipe name</string>
+    <string name="recipe_add_name_label">Add a recipe name…</string>
     <string name="recipe_description_label">Description</string>
     <string name="recipe_category_label">Category</string>
     <string name="recipe_type_label">Type</string>
-    <string name="recipe_ingredients_label">Ingredients</string>
-    <string name="recipe_add_ingredients_hint_label">Add ingredients</string>
+    <string name="recipe_ingredients_label"><b>Ingredients</b></string>
+    <string name="recipe_add_ingredients_hint_label">Add ingredients…</string>
     <string name="recipe_photo_upload_fail_dialog">Something went wrong with uploading your photo. \n Please try again.</string>
     <string name="recipe_photo_add_fail_dialog">Something went wrong with adding your photo. \n Please try again.</string>
-    <string name="recipe_instructions_label">Instructions</string>
-    <string name="recipe_photo_content_description">Photo of the recipe</string>
+    <string name="recipe_instructions_label"><b>Instructions</b></string>
+    <string name="recipe_add_instructions_label">Add instructions…</string>
 
     <!--    Recipe handle photo dialog layout-->
     <string name="recipe_handle_photo_dialog_capture">Take photo</string>
     <string name="recipe_handle_photo_dialog_gallery">Select from gallery</string>
     <string name="recipe_handle_photo_dialog_remove">Remove photo</string>
+
+    <!--    Image descriptions-->
+    <string name="recipe_photo_content_description">Recipe photo</string>
+    <string name="profile_photo_content_description">Profile photo</string>
 
 </resources>

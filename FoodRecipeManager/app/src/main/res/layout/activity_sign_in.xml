@@ -20,8 +20,9 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutEmailSignIn"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/textViewSignInTitleSignIn"
         android:layout_marginBottom="20dp"
         android:textSize="16sp">
@@ -30,6 +31,7 @@
             android:id="@+id/textInputLayoutEditEmailSignIn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:hint="@string/user_email_label"
             android:inputType="textEmailAddress"
             android:textSize="16sp" />
@@ -37,8 +39,9 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutPasswordSignIn"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/textInputLayoutEmailSignIn"
         android:layout_marginBottom="20dp"
         android:textSize="16sp"
@@ -48,6 +51,7 @@
             android:id="@+id/textInputLayoutEditPasswordSignIn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:hint="@string/user_password_label"
             android:inputType="textPassword"
             android:textSize="16sp" />

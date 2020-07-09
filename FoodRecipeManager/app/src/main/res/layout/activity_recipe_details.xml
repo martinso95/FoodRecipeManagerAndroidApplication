@@ -7,6 +7,7 @@
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         tools:context=".ui.recipes.RecipeDetailsActivity">
 
         <ImageButton
@@ -14,119 +15,153 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
             android:background="@android:color/white"
-            android:contentDescription="@string/recipe_photo_content_description"/>
+            android:contentDescription="@string/recipe_photo_content_description" />
+
+        <View
+            android:id="@+id/horizontalDivider1RecipeDetails"
+            style="@style/Divider_Gray_Horizontal"
+            android:layout_below="@id/imageButtonRecipePhotoRecipeDetails" />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutQuickInformationRecipeDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/horizontalDivider1RecipeDetails"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textViewRecipeCategoryLabelRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/recipe_category_label"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textViewRecipeCategoryRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewRecipeCategoryLabelRecipeDetails"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerRecipeCategoryRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewRecipeCategoryLabelRecipeDetails"
+                    android:layout_marginStart="-16dp"
+                    android:layout_marginTop="-13dp"
+                    android:layout_marginBottom="-4dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/verticalDivider1RecipeDetails"
+                style="@style/Divider_Gray_Vertical"
+                android:layout_weight="0" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textViewRecipeTypeLabelRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/recipe_type_label"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textViewRecipeTypeRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewRecipeTypeLabelRecipeDetails"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerRecipeTypeRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewRecipeTypeLabelRecipeDetails"
+                    android:layout_marginStart="-16dp"
+                    android:layout_marginTop="-13dp"
+                    android:layout_marginBottom="-4dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/horizontalDivider2RecipeDetails"
+            style="@style/Divider_Gray_Horizontal"
+            android:layout_below="@id/linearLayoutQuickInformationRecipeDetails"
+            android:layout_marginBottom="10dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeNameRecipeDetails"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@+id/imageButtonRecipePhotoRecipeDetails"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/horizontalDivider2RecipeDetails"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="16sp">
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/white"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeColor="@android:color/black"
+            app:hintTextColor="@android:color/black"
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textInputLayoutEditRecipeNameRecipeDetails"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/recipe_name_label"
+                android:hint="@string/recipe_add_name_label"
+                android:imeOptions="actionDone"
                 android:inputType="text"
-                android:textSize="16sp" />
+                android:maxLength="25"
+                android:textColor="@android:color/black"
+                android:textSize="24sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutDescriptionRecipeDetails"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_below="@+id/textInputLayoutRecipeNameRecipeDetails"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="16sp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/textInputLayoutEditDescriptionRecipeDetails"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top"
-                android:hint="@string/recipe_description_label"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/textViewRecipeCategoryLabelRecipeDetails"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textInputLayoutDescriptionRecipeDetails"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/recipe_category_label"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/textViewRecipeCategoryRecipeDetails"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewRecipeCategoryLabelRecipeDetails"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spinnerRecipeCategoryRecipeDetails"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewRecipeCategoryLabelRecipeDetails"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="16sp"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/textViewRecipeTypeRecipeLabelDetails"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textInputLayoutDescriptionRecipeDetails"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="5dp"
-            android:layout_toEndOf="@id/textViewRecipeCategoryRecipeDetails"
-            android:text="@string/recipe_type_label"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/textViewRecipeTypeRecipeDetails"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewRecipeTypeRecipeLabelDetails"
-            android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@id/spinnerRecipeCategoryRecipeDetails"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spinnerRecipeTypeRecipeDetails"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/textViewRecipeTypeRecipeLabelDetails"
-            android:layout_marginEnd="16dp"
-            android:layout_toEndOf="@id/spinnerRecipeCategoryRecipeDetails"
-            android:textSize="16sp"
-            android:visibility="invisible" />
+        <View
+            android:id="@+id/horizontalDivider3RecipeDetails"
+            style="@style/Divider_Gray_Horizontal"
+            android:layout_below="@id/textInputLayoutRecipeNameRecipeDetails"
+            android:layout_marginBottom="10dp" />
 
         <TextView
             android:id="@+id/textViewRecipeIngredientsRecipeDetails"
-            android:layout_width="180dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/spinnerRecipeTypeRecipeDetails"
+            android:layout_below="@id/horizontalDivider3RecipeDetails"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="5dp"
             android:text="@string/recipe_ingredients_label"
-            android:textSize="16sp" />
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutIngredientsRecipeDetails"
@@ -135,15 +170,16 @@
             android:layout_below="@id/textViewRecipeIngredientsRecipeDetails"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="10dp">
 
             <ListView
                 android:id="@+id/listViewIngredientsRecipeDetails"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:divider="@null"
                 android:drawSelectorOnTop="false"
                 android:isScrollContainer="false"
-                android:textSize="16sp" />
+                android:listSelector="@android:color/transparent" />
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutIngredientsEditModeRecipeDetails"
@@ -153,18 +189,26 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayoutRecipeAddIngredientsRecipeDetails"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="330dp"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="20dp"
-                    android:textSize="16sp"
-                    app:hintEnabled="false">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:color/white"
+                    app:hintEnabled="false"
+                    app:boxStrokeWidth="1dp"
+                    app:boxStrokeColor="@android:color/black"
+                    app:hintTextColor="@android:color/black">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/textInputLayoutEditRecipeAddIngredientRecipeDetails"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:hint="@string/recipe_add_ingredients_hint_label"
-                        android:inputType="text" />
+                        android:imeOptions="actionDone"
+                        android:inputType="text"
+                        android:maxLength="30"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout
@@ -187,30 +231,56 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/textInputLayoutRecipeAddIngredientsRecipeDetails"
-                    android:layout_marginBottom="20dp"
                     android:drawSelectorOnTop="false"
                     android:isScrollContainer="false"
-                    android:textSize="16sp" />
+                    android:listSelector="@android:color/transparent" />
             </RelativeLayout>
+
         </RelativeLayout>
+
+        <View
+            android:id="@+id/horizontalDivider4RecipeDetails"
+            style="@style/Divider_Gray_Horizontal"
+            android:layout_below="@id/relativeLayoutIngredientsRecipeDetails"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:id="@+id/textViewRecipeInstructionsLabelRecipeDetails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/horizontalDivider4RecipeDetails"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/recipe_instructions_label"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeInstructionsRecipeDetails"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/relativeLayoutIngredientsRecipeDetails"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewRecipeInstructionsLabelRecipeDetails"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
-            android:textSize="16sp">
+            android:background="@android:color/white"
+            android:minHeight="200dp"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeColor="@android:color/black"
+            app:hintTextColor="@android:color/black"
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/textInputLayoutEditRecipeInstructionsRecipeDetails"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="top"
-                android:hint="@string/recipe_instructions_label"
-                android:textSize="16sp" />
+                android:hint="@string/recipe_add_instructions_label"
+                android:minHeight="200dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:textInputLayoutFocusedRectEnabled="false" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>

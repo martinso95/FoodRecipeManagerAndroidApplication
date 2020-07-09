@@ -7,6 +7,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutNewDisplayNameChangeDisplayName"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
@@ -17,6 +18,7 @@
             android:id="@+id/textInputLayoutEditNewDisplayNameChangeDisplayName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:hint="@string/profile_change_display_name_new_display_name_label"
             android:inputType="text"
             android:textSize="16sp" />

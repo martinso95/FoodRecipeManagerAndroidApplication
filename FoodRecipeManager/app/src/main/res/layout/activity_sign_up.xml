@@ -21,6 +21,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutNameEditSignUp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/textViewSignUpTitleSignUp"
@@ -31,6 +32,7 @@
             android:id="@+id/textInputLayoutEditNameEditSignUp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:hint="@string/user_name_label"
             android:inputType="text"
             android:textSize="16sp" />
@@ -38,6 +40,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutEmailEditSignUp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/textInputLayoutNameEditSignUp"
@@ -48,6 +51,7 @@
             android:id="@+id/textInputLayoutEditEmailEditSignUp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:hint="@string/user_email_label"
             android:inputType="textEmailAddress"
             android:textSize="16sp" />
@@ -55,6 +59,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutPasswordEditSignUp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@id/textInputLayoutEmailEditSignUp"
@@ -66,6 +71,7 @@
             android:id="@+id/textInputLayoutEditPasswordEditSignUp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:hint="@string/user_password_label"
             android:inputType="textPassword"
             android:textSize="16sp" />

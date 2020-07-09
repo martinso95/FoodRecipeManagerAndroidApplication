@@ -1,8 +1,10 @@
 package martin.so.foodrecipemanager.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -59,6 +61,19 @@ public class Utils {
         File storageDir = context.getFilesDir();
         // Each file created will have a unique name.
         return File.createTempFile("temporaryPhoto_", ".jpg", storageDir);
+    }
+
+    /**
+     * Hides the keyboard when it is up.
+     *
+     * @param activity must be an activity.
+     */
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 }

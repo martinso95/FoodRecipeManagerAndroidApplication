@@ -8,24 +8,26 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/ic_add_photo_black_200dp" />
+        android:background="@drawable/ic_add_photo_black_200dp"
+        android:contentDescription="@string/profile_photo_content_description" />
 
     <TextView
         android:id="@+id/textViewDisplayNameLabelProfile"
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/imageButtonProfilePhotoProfile"
         android:layout_marginStart="16dp"
         android:gravity="center_vertical"
         android:text="@string/profile_display_name_label"
+        android:textColor="@android:color/darker_gray"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textViewDisplayNameProfile"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/textViewDisplayNameLabelProfile"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
@@ -36,25 +38,26 @@
 
     <View
         android:id="@+id/divider1Profile"
-        style="@style/Divider"
+        style="@style/Divider_Gray_Horizontal"
         android:layout_below="@id/textViewDisplayNameProfile" />
 
     <TextView
         android:id="@+id/textViewEmailLabelProfile"
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/divider1Profile"
         android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
         android:text="@string/profile_email_label"
+        android:textColor="@android:color/darker_gray"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textViewEmailNotVerifiedLabelProfile"
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/divider1Profile"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@id/textViewEmailLabelProfile"
@@ -67,7 +70,7 @@
     <TextView
         android:id="@+id/textViewEmailProfile"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/textViewEmailLabelProfile"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
@@ -78,24 +81,25 @@
 
     <View
         android:id="@+id/divider2Profile"
-        style="@style/Divider"
+        style="@style/Divider_Gray_Horizontal"
         android:layout_below="@id/textViewEmailProfile" />
 
     <TextView
         android:id="@+id/textViewPasswordLabelProfile"
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/divider2Profile"
         android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:text="@string/profile_password_label"
+        android:textColor="@android:color/darker_gray"
         android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textViewPasswordProfile"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/textViewPasswordLabelProfile"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
@@ -107,45 +111,22 @@
 
     <View
         android:id="@+id/divider3Profile"
-        style="@style/Divider"
-        android:layout_below="@id/textViewPasswordProfile" />
-
-    <View
-        android:id="@+id/divider4Profile"
-        style="@style/Divider"
-        android:layout_below="@id/divider3Profile"
-        android:layout_marginTop="40dp" />
-
-    <TextView
-        android:id="@+id/textViewDeleteAccountProfile"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/divider4Profile"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center_vertical"
-        android:text="@string/profile_delete_account_label"
-        android:textColor="@android:color/holo_red_light"
-        android:textSize="16sp" />
-
-    <View
-        android:id="@+id/divider5Profile"
-        style="@style/Divider"
-        android:layout_below="@id/textViewDeleteAccountProfile"
+        style="@style/Divider_Gray_Horizontal"
+        android:layout_below="@id/textViewPasswordProfile"
         android:layout_marginBottom="40dp" />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutReSendEmailVerificationProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/divider5Profile"
+        android:layout_height="50dp"
+        android:layout_below="@id/divider3Profile"
         android:layout_marginBottom="20dp"
         android:visibility="gone">
 
         <Button
             android:id="@+id/buttonReSendEmailVerificationProfile"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:background="@color/colorPrimary"
             android:text="@string/profile_re_send_email_verification_label"
@@ -155,8 +136,8 @@
 
         <TextView
             android:id="@+id/textViewReSendEmailVerificationProfile"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:background="@drawable/text_view_border"
             android:gravity="center"
@@ -169,12 +150,35 @@
     <Button
         android:id="@+id/buttonSignOutProfile"
         android:layout_width="250dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/relativeLayoutReSendEmailVerificationProfile"
         android:layout_centerHorizontal="true"
         android:background="@color/colorPrimary"
         android:text="@string/user_sign_out_label"
         android:textColor="#FFFFFF"
         android:textSize="16sp" />
+
+    <View
+        android:id="@+id/divider4Profile"
+        style="@style/Divider_Gray_Horizontal"
+        android:layout_above="@+id/textViewDeleteAccountProfile" />
+
+    <TextView
+        android:id="@+id/textViewDeleteAccountProfile"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/divider5Profile"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_vertical"
+        android:text="@string/profile_delete_account_label"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/divider5Profile"
+        style="@style/Divider_Gray_Horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp" />
 
 </RelativeLayout>

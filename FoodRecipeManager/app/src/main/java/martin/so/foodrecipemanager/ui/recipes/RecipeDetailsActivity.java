@@ -21,9 +21,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -39,6 +41,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -56,7 +59,6 @@ import java.util.UUID;
 public class RecipeDetailsActivity extends AppCompatActivity {
 
     private Recipe currentRecipe;
-    private Menu actionbarMenu;
     boolean editActive = false;
 
     private ImageButton recipePhoto;
@@ -68,8 +70,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private boolean recipePhotoChanged = false;
     private String recipePhotoPath = null;
     private Bitmap recipePhotoBitmap = null;
+    private TextInputLayout recipeNameLayout;
     private TextInputEditText recipeName;
-    private TextInputEditText recipeDescription;
     private TextView recipeCategory;
     private Spinner recipeCategorySpinner;
     private String selectedRecipeCategory;
@@ -85,6 +87,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private List<Ingredient> recipeIngredients;
     IngredientsAdapter ingredientsAdapter;
     IngredientsAdapter ingredientsAdapterEditMode;
+    private TextInputLayout recipeInstructionsLayout;
     private TextInputEditText recipeInstructions;
     private RequestOptions glideRequestOptions;
 
@@ -128,8 +131,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipePhotoPath = currentRecipe.getPhotoPath();
 
         recipePhoto = findViewById(R.id.imageButtonRecipePhotoRecipeDetails);
+        recipeNameLayout = findViewById(R.id.textInputLayoutRecipeNameRecipeDetails);
         recipeName = findViewById(R.id.textInputLayoutEditRecipeNameRecipeDetails);
-        recipeDescription = findViewById(R.id.textInputLayoutEditDescriptionRecipeDetails);
         recipeCategory = findViewById(R.id.textViewRecipeCategoryRecipeDetails);
         recipeCategorySpinner = findViewById(R.id.spinnerRecipeCategoryRecipeDetails);
         recipeType = findViewById(R.id.textViewRecipeTypeRecipeDetails);
@@ -139,6 +142,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeIngredientInput = findViewById(R.id.textInputLayoutEditRecipeAddIngredientRecipeDetails);
         recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonRecipeDetails);
         recipeIngredientsListEditMode = findViewById(R.id.listViewIngredientsEditModeRecipeDetails);
+        recipeInstructionsLayout = findViewById(R.id.textInputLayoutRecipeInstructionsRecipeDetails);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
 
         recipePhotoAdded = currentRecipe.getPhotoPath() != null;
@@ -150,8 +154,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipePhoto.setEnabled(false);
         recipeName.setFocusable(false);
         recipeName.setEnabled(false);
-        recipeDescription.setFocusable(false);
-        recipeDescription.setEnabled(false);
         recipeInstructions.setFocusable(false);
         recipeInstructions.setEnabled(false);
 
@@ -191,7 +193,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         }
 
         recipeName.setText(currentRecipe.getName());
-        recipeDescription.setText(currentRecipe.getDescription());
         recipeCategory.setText(currentRecipe.getCategory());
         recipeType.setText(currentRecipe.getType());
 
@@ -248,16 +249,27 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }
         });
 
-        recipeAddIngredient.setOnClickListener(v -> {
-            String input = recipeIngredientInput.getText().toString();
-            if (!input.isEmpty()) {
-                recipeIngredients.add(new Ingredient(input));
-                recipeIngredientInput.getText().clear();
-                recipeIngredientInput.clearFocus();
-                ingredientsAdapterEditMode.notifyDataSetChanged();
-                ingredientsAdapter.notifyDataSetChanged();
-                recipeIngredientsChanged = true;
+        recipeName.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                recipeName.clearFocus();
+                handled = true;
             }
+            return handled;
+        });
+
+        recipeIngredientInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addIngredient();
+                handled = true;
+            }
+            return handled;
+        });
+
+        recipeAddIngredient.setOnClickListener(v -> {
+            addIngredient();
         });
 
         recipeInstructions.setText(currentRecipe.getInstructions());
@@ -298,7 +310,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                             // Set photo download uri to null, in order to prevent loading a photo from an old uri.
                             currentRecipe.setPhotoDownloadUri(null);
 
-                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
 
                             FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
@@ -323,7 +335,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, recipeDescription.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
                         }
 
@@ -339,13 +351,11 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                         }
                     }
                     editActive = false;
-                    actionbarMenu.findItem(R.id.edit_recipe_button).setIcon(R.drawable.ic_edit_recipe_black_24dp);
                     recipePhoto.setFocusable(false);
                     recipePhoto.setEnabled(false);
+                    recipeNameLayout.setBoxStrokeWidth(0);
                     recipeName.setFocusable(false);
                     recipeName.setEnabled(false);
-                    recipeDescription.setFocusable(false);
-                    recipeDescription.setEnabled(false);
                     recipeCategorySpinner.setVisibility(View.INVISIBLE);
                     recipeCategory.setVisibility(View.VISIBLE);
                     recipeCategory.setText(selectedRecipeCategory);
@@ -354,40 +364,47 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     recipeType.setText(selectedRecipeType);
                     recipeIngredientEditModeLayout.setVisibility(View.GONE);
                     recipeIngredientsList.setVisibility(View.VISIBLE);
+                    recipeInstructionsLayout.setBoxStrokeWidth(0);
                     recipeInstructions.setFocusable(false);
                     recipeInstructions.setEnabled(false);
                 }
             }
         } else {
             editActive = true;
-            actionbarMenu.findItem(R.id.edit_recipe_button).setIcon(R.drawable.ic_save_black_24dp);
             recipePhoto.setFocusable(true);
             recipePhoto.setEnabled(true);
+            recipeNameLayout.setBoxStrokeWidth(3);
             recipeName.setFocusable(true);
             recipeName.setEnabled(true);
             recipeName.setFocusableInTouchMode(true);
-            recipeDescription.setFocusable(true);
-            recipeDescription.setEnabled(true);
-            recipeDescription.setFocusableInTouchMode(true);
             recipeCategorySpinner.setVisibility(View.VISIBLE);
             recipeCategory.setVisibility(View.INVISIBLE);
             recipeTypeSpinner.setVisibility(View.VISIBLE);
             recipeType.setVisibility(View.INVISIBLE);
             recipeIngredientEditModeLayout.setVisibility(View.VISIBLE);
             recipeIngredientsList.setVisibility(View.GONE);
+            recipeInstructionsLayout.setBoxStrokeWidth(3);
             recipeInstructions.setFocusable(true);
             recipeInstructions.setEnabled(true);
             recipeInstructions.setFocusableInTouchMode(true);
         }
     }
 
-    /**
-     * Creates the menu items: "Edit recipe"-button, "Delete recipe"-button, "Save changes"-button
-     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_recipe_details, menu);
-        actionbarMenu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.clear();
+        MenuInflater inflater = getMenuInflater();
+        if (editActive) {
+            inflater.inflate(R.menu.menu_recipe_details_edit_mode, menu);
+        } else {
+            inflater.inflate(R.menu.menu_recipe_details, menu);
+        }
         return true;
     }
 
@@ -399,13 +416,19 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.edit_recipe_button) {
+        if (id == R.id.recipe_details_menu_edit_recipe_option) {
+            invalidateOptionsMenu();
             editRecipe();
             return true;
 
-        } else if (id == R.id.delete_recipe_button) {
+        } else if (id == R.id.recipe_details_menu_delete_recipe_option) {
             RecipeManager.getInstance().removeRecipe(currentRecipe);
             finish();
+            return true;
+
+        } else if (id == R.id.recipe_details_menu_edit_mode) {
+            invalidateOptionsMenu();
+            editRecipe();
             return true;
 
         } else if (id == android.R.id.home) {
@@ -424,9 +447,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             haveChanged = true;
         }
         if (!(recipeName.getText().toString()).equals(currentRecipe.getName())) {
-            haveChanged = true;
-        }
-        if (!(recipeDescription.getText().toString()).equals(currentRecipe.getDescription())) {
             haveChanged = true;
         }
         if (!selectedRecipeCategory.equals(currentRecipe.getCategory())) {
@@ -454,10 +474,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipeName.setError("Please enter Recipe name");
             noEmpty = false;
         }
-        if (recipeDescription.getText().toString().isEmpty()) {
-            recipeDescription.setError("Please enter Description");
-            noEmpty = false;
-        }
         if (recipeIngredients.isEmpty()) {
             Toast.makeText(getApplicationContext(), "Add ingredients",
                     Toast.LENGTH_LONG).show();
@@ -483,6 +499,22 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }
         }
         return 404;
+    }
+
+    /**
+     * Add the ingredient to the recipe, based on what the user has input in the ingredient textInput.
+     */
+    private void addIngredient() {
+        String input = recipeIngredientInput.getText().toString();
+        if (!input.isEmpty()) {
+            recipeIngredients.add(new Ingredient(input));
+            recipeIngredientInput.getText().clear();
+            ingredientsAdapterEditMode.notifyDataSetChanged();
+            ingredientsAdapter.notifyDataSetChanged();
+            recipeIngredientsChanged = true;
+        }
+        Utils.hideKeyboard(this);
+        recipeIngredientInput.clearFocus();
     }
 
     /**

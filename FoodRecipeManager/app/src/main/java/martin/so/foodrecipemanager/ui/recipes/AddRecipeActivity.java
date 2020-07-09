@@ -14,7 +14,6 @@ import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
 
-
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -24,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -59,7 +59,6 @@ public class AddRecipeActivity extends AppCompatActivity {
     private Uri temporaryRecipePhotoLocalFilePath = null;
     private Bitmap recipePhotoBitmap = null;
     private TextInputEditText recipeName;
-    private TextInputEditText recipeDescription;
     private Spinner recipeCategory;
     private String selectedRecipeCategory = Utils.RECIPE_CATEGORY;
     private Spinner recipeType;
@@ -86,7 +85,6 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         recipePhoto = findViewById(R.id.imageButtonRecipePhotoAddRecipe);
         recipeName = findViewById(R.id.textInputLayoutEditRecipeNameAddRecipe);
-        recipeDescription = findViewById(R.id.textInputLayoutEditRecipeDescriptionAddRecipe);
         recipeCategory = findViewById(R.id.spinnerRecipeCategoryAddRecipe);
         recipeType = findViewById(R.id.spinnerRecipeTypeAddRecipe);
         recipeIngredientInput = findViewById(R.id.textInputLayoutEditRecipeAddIngredientAddRecipe);
@@ -142,16 +140,28 @@ public class AddRecipeActivity extends AppCompatActivity {
         ingredientsAdapter.notifyDataSetChanged();
         Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
 
+        recipeName.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                recipeName.clearFocus();
+                handled = true;
+            }
+            return handled;
+        });
+
+
+        recipeIngredientInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                addIngredient();
+                handled = true;
+            }
+            return handled;
+        });
 
         recipeAddIngredient.setOnClickListener(v -> {
-            String input = recipeIngredientInput.getText().toString();
-            if (!input.isEmpty()) {
-                recipeIngredients.add(new Ingredient(input));
-                recipeIngredientInput.getText().clear();
-                recipeIngredientInput.clearFocus();
-                ingredientsAdapter.notifyDataSetChanged();
-                Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
-            }
+            addIngredient();
         });
 
         glideRequestOptions = new RequestOptions();
@@ -191,7 +201,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
                         FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
 
-                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
+                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
                         recipe.setTemporaryLocalPhoto(recipePhotoBitmap);
                         RecipeManager.getInstance().addRecipe(recipe);
 
@@ -215,7 +225,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Recipe recipe = new Recipe(null, recipeName.getText().toString(), recipeDescription.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
+                        Recipe recipe = new Recipe(null, recipeName.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
                         RecipeManager.getInstance().addRecipe(recipe);
                     }
                     finish();
@@ -239,16 +249,13 @@ public class AddRecipeActivity extends AppCompatActivity {
             recipeName.setError("Please enter Recipe name");
             noEmpty = false;
         }
-        if (recipeDescription.getText().toString().isEmpty()) {
-            recipeDescription.setError("Please enter Description");
-            noEmpty = false;
-        }
 
         if (selectedRecipeCategory.equals(Utils.RECIPE_CATEGORY)) {
             Toast.makeText(getApplicationContext(), "Select Recipe Category and Type",
                     Toast.LENGTH_LONG).show();
             noEmpty = false;
         }
+
         if (selectedRecipeType.equals(Utils.RECIPE_TYPE)) {
             Toast.makeText(getApplicationContext(), "Select Recipe Category and Type",
                     Toast.LENGTH_LONG).show();
@@ -266,6 +273,21 @@ public class AddRecipeActivity extends AppCompatActivity {
             noEmpty = false;
         }
         return noEmpty;
+    }
+
+    /**
+     * Add the ingredient to the recipe, based on what the user has input in the ingredient textInput.
+     */
+    private void addIngredient() {
+        String input = recipeIngredientInput.getText().toString();
+        if (!input.isEmpty()) {
+            recipeIngredients.add(new Ingredient(input));
+            recipeIngredientInput.getText().clear();
+            ingredientsAdapter.notifyDataSetChanged();
+            Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+        }
+        Utils.hideKeyboard(this);
+        recipeIngredientInput.clearFocus();
     }
 
     /**
