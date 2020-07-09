@@ -108,6 +108,7 @@ public class ProfileFragment extends Fragment {
                     firebaseAuth.signOut();
                     Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
                     startActivity(signInActivity);
+                    getActivity().overridePendingTransition(R.anim.slide_in_left_activity, R.anim.slide_out_right_activity);
                     getActivity().finish();
                 }
             });

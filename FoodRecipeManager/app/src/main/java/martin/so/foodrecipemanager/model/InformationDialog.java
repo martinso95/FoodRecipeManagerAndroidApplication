@@ -43,6 +43,7 @@ public class InformationDialog {
                     Intent returnActivity = new Intent(currentActivity, reDirectionActivity);
                     dialog.dismiss();
                     currentActivity.startActivity(returnActivity);
+                    currentActivity.overridePendingTransition(R.anim.slide_in_left_activity, R.anim.slide_out_right_activity);
                     currentActivity.finish();
                 } else {
                     dialog.dismiss();

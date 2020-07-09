@@ -39,7 +39,7 @@ public class SignInActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+        setTheme(R.style.AppTheme_NoActionBar);
         firebaseAuth = FirebaseAuth.getInstance();
 
         checkIfSignedIn();
@@ -74,6 +74,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent signUpActivity = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(signUpActivity);
+                overridePendingTransition(R.anim.slide_in_right_activity, R.anim.slide_out_left_activity);
             }
         });
 

@@ -52,7 +52,6 @@ X. Improve how recipes are saved. Currently, the entire list is saved/loaded for
 
 
 Design:
-X When navigating to and back between activities, make the animation "swipe to right/left". Currently the animation goes up/down.
 X Everything needs to be better looking...
 
 
