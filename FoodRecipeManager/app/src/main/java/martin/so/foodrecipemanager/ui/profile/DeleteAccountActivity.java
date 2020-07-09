@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.InformationDialog;
+import martin.so.foodrecipemanager.model.Utils;
 import martin.so.foodrecipemanager.model.user.SignInActivity;
 
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -47,54 +49,68 @@ public class DeleteAccountActivity extends AppCompatActivity {
         currentEmail = findViewById(R.id.textInputLayoutEditCurrentEmailDeleteAccount);
         String currentEmailValue = currentUser.getEmail() == null ? "" : currentUser.getEmail();
         currentEmail.setText(currentEmailValue);
+        currentEmail.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
 
         currentPassword = findViewById(R.id.textInputLayoutEditCurrentPasswordDeleteAccount);
+        currentPassword.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
 
         incorrectPasswordLabel = findViewById(R.id.textViewIncorrectPasswordDeleteAccount);
 
         deleteAccountButton = findViewById(R.id.buttonDeleteAccount);
-        deleteAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showProgressBar();
-                if (!fieldsValid()) {
-                    hideProgressBar();
-                    incorrectPasswordLabel.setVisibility(View.GONE);
-                } else {
-                    if (currentUser != null) {
-                        AuthCredential credential = EmailAuthProvider.getCredential(currentEmail.getText().toString(), currentPassword.getText().toString());
-                        currentUser.reauthenticate(credential)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("Test", "User is authenticated");
-                                            currentUser.delete()
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if (task.isSuccessful()) {
-                                                                Log.d("Test", "User account deleted.");
-                                                                hideProgressBar();
-                                                                InformationDialog informationDialog = new InformationDialog();
-                                                                informationDialog.showDialog(DeleteAccountActivity.this, SignInActivity.class, true, getString(R.string.profile_delete_account_dialog_description));
-                                                            } else {
-                                                                Log.d("Test", "User account could not be deleted.");
-                                                                InformationDialog informationDialog = new InformationDialog();
-                                                                informationDialog.showDialog(DeleteAccountActivity.this, null, false, getString(R.string.profile_delete_account_failed_dialog_description));
-                                                                hideProgressBar();
-                                                            }
+        deleteAccountButton.setOnClickListener(view -> {
+            Utils.hideKeyboard(this);
+            showProgressBar();
+            if (!fieldsValid()) {
+                hideProgressBar();
+                incorrectPasswordLabel.setVisibility(View.GONE);
+            } else {
+                if (currentUser != null) {
+                    AuthCredential credential = EmailAuthProvider.getCredential(currentEmail.getText().toString(), currentPassword.getText().toString());
+                    currentUser.reauthenticate(credential)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("Test", "User is authenticated");
+                                        currentUser.delete()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("Test", "User account deleted.");
+                                                            hideProgressBar();
+                                                            InformationDialog informationDialog = new InformationDialog();
+                                                            informationDialog.showDialog(DeleteAccountActivity.this, SignInActivity.class, true, getString(R.string.profile_delete_account_dialog_description));
+                                                        } else {
+                                                            Log.d("Test", "User account could not be deleted.");
+                                                            InformationDialog informationDialog = new InformationDialog();
+                                                            informationDialog.showDialog(DeleteAccountActivity.this, null, false, getString(R.string.profile_delete_account_failed_dialog_description));
+                                                            hideProgressBar();
                                                         }
-                                                    });
+                                                    }
+                                                });
 
-                                        } else {
-                                            Log.d("Test", "Credentials could not be authenticated.");
-                                            hideProgressBar();
-                                            incorrectPasswordLabel.setVisibility(View.VISIBLE);
-                                        }
+                                    } else {
+                                        Log.d("Test", "Credentials could not be authenticated.");
+                                        hideProgressBar();
+                                        incorrectPasswordLabel.setVisibility(View.VISIBLE);
                                     }
-                                });
-                    }
+                                }
+                            });
                 }
             }
         });

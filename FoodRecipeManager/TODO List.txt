@@ -26,7 +26,9 @@ WARNING text color:
 
 TODO:
 Prioritized fixes needed:
--
+- hide keyboard when it should.
+- go to next input on enter when it should.
+- change theme to dark
 
 
 Functionality to add:
@@ -46,12 +48,13 @@ X. Handle loading all tabs at start better.
 
 Firebase improvements:
 X. Require double password entry for cases like change password, and sign up.
-X. Implement profile picture.
+X. Implement profile picture. A round picture?
 X. Improve how recipes are saved. Currently, the entire list is saved/loaded for every save/load.
    Only the saved/loaded recipe should be involved in a save/load.
 
 
 Design:
+X Change color theme to dark.
 X Everything needs to be better looking...
 
 

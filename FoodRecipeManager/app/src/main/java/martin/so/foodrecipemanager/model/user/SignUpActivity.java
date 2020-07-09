@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.InformationDialog;
+import martin.so.foodrecipemanager.model.Utils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,8 +51,36 @@ public class SignUpActivity extends AppCompatActivity {
         emailInput = findViewById(R.id.textInputLayoutEditEmailEditSignUp);
         passwordInput = findViewById(R.id.textInputLayoutEditPasswordEditSignUp);
 
+        nameInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
+
+        emailInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
+
+        passwordInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
+
         signUpButton = findViewById(R.id.buttonSignUp);
         signUpButton.setOnClickListener(view -> {
+            Utils.hideKeyboard(this);
             Log.d("Test", "Start signUp");
             if (!fieldsValid()) {
                 Toast.makeText(SignUpActivity.this, "Enter correct values",

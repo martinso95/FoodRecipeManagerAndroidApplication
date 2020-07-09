@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.InformationDialog;
+import martin.so.foodrecipemanager.model.Utils;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -42,35 +43,33 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         email = findViewById(R.id.textInputLayoutEditEmailForgotPassword);
 
         send = findViewById(R.id.buttonSendForgotPassword);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showProgressBar();
-                String emailValue = email.getText().toString();
-                if (TextUtils.isEmpty(emailValue) || !emailValue.contains("@")) {
-                    hideProgressBar();
-                    email.setError("Enter a valid email");
-                } else {
-                    FirebaseAuth.getInstance().sendPasswordResetEmail(emailValue)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Log.d("Test", "Password reset email sent.");
-                                        hideProgressBar();
-                                        InformationDialog informationDialog = new InformationDialog();
-                                        informationDialog.showDialog(ForgotPasswordActivity.this, SignInActivity.class, true, getString(R.string.forgot_password_email_sent_dialog_description));
-                                    } else {
-                                        hideProgressBar();
-                                        InformationDialog informationDialog = new InformationDialog();
-                                        informationDialog.showDialog(ForgotPasswordActivity.this, null, false, getString(R.string.forgot_password_email_sent_dialog_failed_description));
-                                        Log.d("Test", "Password reset email could not be sent.");
-                                        Toast.makeText(ForgotPasswordActivity.this, "Password reset email could not be sent.",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+        send.setOnClickListener(view -> {
+            Utils.hideKeyboard(this);
+            showProgressBar();
+            String emailValue = email.getText().toString();
+            if (TextUtils.isEmpty(emailValue) || !emailValue.contains("@")) {
+                hideProgressBar();
+                email.setError("Enter a valid email");
+            } else {
+                FirebaseAuth.getInstance().sendPasswordResetEmail(emailValue)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("Test", "Password reset email sent.");
+                                    hideProgressBar();
+                                    InformationDialog informationDialog = new InformationDialog();
+                                    informationDialog.showDialog(ForgotPasswordActivity.this, SignInActivity.class, true, getString(R.string.forgot_password_email_sent_dialog_description));
+                                } else {
+                                    hideProgressBar();
+                                    InformationDialog informationDialog = new InformationDialog();
+                                    informationDialog.showDialog(ForgotPasswordActivity.this, null, false, getString(R.string.forgot_password_email_sent_dialog_failed_description));
+                                    Log.d("Test", "Password reset email could not be sent.");
+                                    Toast.makeText(ForgotPasswordActivity.this, "Password reset email could not be sent.",
+                                            Toast.LENGTH_SHORT).show();
                                 }
-                            });
-                }
+                            }
+                        });
             }
         });
         progressBar = findViewById(R.id.progressBarSendForgotPassword);

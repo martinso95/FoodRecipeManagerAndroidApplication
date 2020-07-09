@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.InformationDialog;
+import martin.so.foodrecipemanager.model.Utils;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -45,34 +46,32 @@ public class ChangeDisplayNameActivity extends AppCompatActivity {
         newDisplayName.setText(currentUser.getDisplayName());
 
         saveChanges = findViewById(R.id.buttonSaveChangeDisplayName);
-        saveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showProgressBar();
-                if (TextUtils.isEmpty(newDisplayName.getText().toString()) || (newDisplayName.length() >= 16)) {
-                    showSaveButton();
-                    newDisplayName.setError("Name too long");
-                } else {
-                    if (currentUser != null) {
-                        UserProfileChangeRequest profileDisplayNameUpdate = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(newDisplayName.getText().toString())
-                                .build();
-                        currentUser.updateProfile(profileDisplayNameUpdate)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("Test", "User profile display name updated.");
-                                            showChangedLabel();
-                                        } else {
-                                            Log.d("Test", "User profile display name update failed.");
-                                            showSaveButton();
-                                            InformationDialog informationDialog = new InformationDialog();
-                                            informationDialog.showDialog(ChangeDisplayNameActivity.this, null, false, getString(R.string.profile_change_display_name_failed_dialog_description));
-                                        }
+        saveChanges.setOnClickListener(view -> {
+            Utils.hideKeyboard(this);
+            showProgressBar();
+            if (TextUtils.isEmpty(newDisplayName.getText().toString()) || (newDisplayName.length() >= 16)) {
+                showSaveButton();
+                newDisplayName.setError("Name too long");
+            } else {
+                if (currentUser != null) {
+                    UserProfileChangeRequest profileDisplayNameUpdate = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(newDisplayName.getText().toString())
+                            .build();
+                    currentUser.updateProfile(profileDisplayNameUpdate)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("Test", "User profile display name updated.");
+                                        showChangedLabel();
+                                    } else {
+                                        Log.d("Test", "User profile display name update failed.");
+                                        showSaveButton();
+                                        InformationDialog informationDialog = new InformationDialog();
+                                        informationDialog.showDialog(ChangeDisplayNameActivity.this, null, false, getString(R.string.profile_change_display_name_failed_dialog_description));
                                     }
-                                });
-                    }
+                                }
+                            });
                 }
             }
         });

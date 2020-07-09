@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.InformationDialog;
+import martin.so.foodrecipemanager.model.Utils;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -47,56 +49,78 @@ public class ChangeEmailActivity extends AppCompatActivity {
 
         currentEmail = findViewById(R.id.textInputLayoutEditCurrentEmailChangeEmail);
         currentEmail.setText(currentUser.getEmail());
+        currentEmail.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
 
         currentPassword = findViewById(R.id.textInputLayoutEditCurrentPasswordChangeEmail);
+        currentPassword.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
 
         newEmail = findViewById(R.id.textInputLayoutEditNewEmailChangeEmail);
+        newEmail.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
 
         incorrectPasswordLabel = findViewById(R.id.textViewIncorrectPasswordChangeEmail);
 
         saveChanges = findViewById(R.id.buttonSaveChangeChangeEmail);
-        saveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showProgressBar();
-                incorrectPasswordLabel.setVisibility(View.GONE);
-                if (!fieldsValid()) {
-                    showSaveButton();
-                } else {
-                    if (currentUser != null) {
-                        AuthCredential credential = EmailAuthProvider.getCredential(currentEmail.getText().toString(), currentPassword.getText().toString());
-                        currentUser.reauthenticate(credential)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d("Test", "User is authenticated");
-                                            currentUser.updateEmail(newEmail.getText().toString())
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if (task.isSuccessful()) {
-                                                                Log.d("Test", "User profile email updated.");
-                                                                sendEmailVerification();
-                                                                showChangedLabel();
-                                                                InformationDialog informationDialog = new InformationDialog();
-                                                                informationDialog.showDialog(ChangeEmailActivity.this, null, false, getString(R.string.profile_change_email_success_dialog_description));
-                                                            } else {
-                                                                Log.d("Test", "User profile email update failed.");
-                                                                showSaveButton();
-                                                                InformationDialog informationDialog = new InformationDialog();
-                                                                informationDialog.showDialog(ChangeEmailActivity.this, null, false, getString(R.string.profile_change_email_failed_dialog_description));
-                                                            }
+        saveChanges.setOnClickListener(view -> {
+            Utils.hideKeyboard(this);
+            showProgressBar();
+            incorrectPasswordLabel.setVisibility(View.GONE);
+            if (!fieldsValid()) {
+                showSaveButton();
+            } else {
+                if (currentUser != null) {
+                    AuthCredential credential = EmailAuthProvider.getCredential(currentEmail.getText().toString(), currentPassword.getText().toString());
+                    currentUser.reauthenticate(credential)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("Test", "User is authenticated");
+                                        currentUser.updateEmail(newEmail.getText().toString())
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Log.d("Test", "User profile email updated.");
+                                                            sendEmailVerification();
+                                                            showChangedLabel();
+                                                            InformationDialog informationDialog = new InformationDialog();
+                                                            informationDialog.showDialog(ChangeEmailActivity.this, null, false, getString(R.string.profile_change_email_success_dialog_description));
+                                                        } else {
+                                                            Log.d("Test", "User profile email update failed.");
+                                                            showSaveButton();
+                                                            InformationDialog informationDialog = new InformationDialog();
+                                                            informationDialog.showDialog(ChangeEmailActivity.this, null, false, getString(R.string.profile_change_email_failed_dialog_description));
                                                         }
-                                                    });
-                                        } else {
-                                            Log.d("Test", "Credentials could not be authenticated.");
-                                            showSaveButton();
-                                            incorrectPasswordLabel.setVisibility(View.VISIBLE);
-                                        }
+                                                    }
+                                                });
+                                    } else {
+                                        Log.d("Test", "Credentials could not be authenticated.");
+                                        showSaveButton();
+                                        incorrectPasswordLabel.setVisibility(View.VISIBLE);
                                     }
-                                });
-                    }
+                                }
+                            });
                 }
             }
         });

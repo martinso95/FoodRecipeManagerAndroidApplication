@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import martin.so.foodrecipemanager.MainActivity;
 import martin.so.foodrecipemanager.R;
+import martin.so.foodrecipemanager.model.Utils;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -51,8 +53,27 @@ public class SignInActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.textInputLayoutEditPasswordSignIn);
         incorrectPasswordLabel = findViewById(R.id.textViewIncorrectPasswordSignIn);
 
+        emailInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
+
+        passwordInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
+
         signInButton = findViewById(R.id.buttonSignInSignIn);
         signInButton.setOnClickListener(v -> {
+            Utils.hideKeyboard(this);
             Log.d("Test", "Start signIp");
             if (!fieldsValid()) {
                 Toast.makeText(SignInActivity.this, "Incorrect user or password",
