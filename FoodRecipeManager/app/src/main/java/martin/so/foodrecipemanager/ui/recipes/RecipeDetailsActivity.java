@@ -70,7 +70,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private boolean recipePhotoChanged = false;
     private String recipePhotoPath = null;
     private Bitmap recipePhotoBitmap = null;
-    private TextInputLayout recipeNameLayout;
     private TextInputEditText recipeName;
     private TextView recipeCategory;
     private Spinner recipeCategorySpinner;
@@ -87,7 +86,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private List<Ingredient> recipeIngredients;
     IngredientsAdapter ingredientsAdapter;
     IngredientsAdapter ingredientsAdapterEditMode;
-    private TextInputLayout recipeInstructionsLayout;
     private TextInputEditText recipeInstructions;
     private RequestOptions glideRequestOptions;
 
@@ -131,7 +129,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipePhotoPath = currentRecipe.getPhotoPath();
 
         recipePhoto = findViewById(R.id.imageButtonRecipePhotoRecipeDetails);
-        recipeNameLayout = findViewById(R.id.textInputLayoutRecipeNameRecipeDetails);
         recipeName = findViewById(R.id.textInputLayoutEditRecipeNameRecipeDetails);
         recipeCategory = findViewById(R.id.textViewRecipeCategoryRecipeDetails);
         recipeCategorySpinner = findViewById(R.id.spinnerRecipeCategoryRecipeDetails);
@@ -142,7 +139,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeIngredientInput = findViewById(R.id.textInputLayoutEditRecipeAddIngredientRecipeDetails);
         recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonRecipeDetails);
         recipeIngredientsListEditMode = findViewById(R.id.listViewIngredientsEditModeRecipeDetails);
-        recipeInstructionsLayout = findViewById(R.id.textInputLayoutRecipeInstructionsRecipeDetails);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
 
         recipePhotoAdded = currentRecipe.getPhotoPath() != null;
@@ -166,7 +162,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         if (currentRecipe.getPhotoPath() != null) {
             if (currentRecipe.getPhotoDownloadUri() != null) {
                 // Load photo with Glide, which supports caching.
-                Glide.with(getApplicationContext()).load(currentRecipe.getPhotoDownloadUri()).placeholder(R.drawable.ic_food_placeholder_black_200dp).apply(glideRequestOptions).into(recipePhoto);
+                Glide.with(getApplicationContext()).load(currentRecipe.getPhotoDownloadUri()).placeholder(R.drawable.ic_food_placeholder_200dp).apply(glideRequestOptions).into(recipePhoto);
             } else if (currentRecipe.getTemporaryLocalPhoto() != null) {
                 // If photo has changed, load the local photo copy, because uploading the new download uri can take time.
                 recipePhoto.setImageBitmap(currentRecipe.getTemporaryLocalPhoto());
@@ -184,12 +180,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_200dp);
+                        recipePhoto.setImageResource(R.drawable.ic_food_placeholder_200dp);
                     }
                 });
             }
         } else {
-            recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
+            recipePhoto.setImageResource(R.drawable.ic_add_photo_200dp);
         }
 
         recipeName.setText(currentRecipe.getName());
@@ -353,9 +349,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     editActive = false;
                     recipePhoto.setFocusable(false);
                     recipePhoto.setEnabled(false);
-                    recipeNameLayout.setBoxStrokeWidth(0);
                     recipeName.setFocusable(false);
                     recipeName.setEnabled(false);
+                    recipeName.setBackgroundResource(R.color.backgroundDark);
                     recipeCategorySpinner.setVisibility(View.INVISIBLE);
                     recipeCategory.setVisibility(View.VISIBLE);
                     recipeCategory.setText(selectedRecipeCategory);
@@ -364,29 +360,29 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     recipeType.setText(selectedRecipeType);
                     recipeIngredientEditModeLayout.setVisibility(View.GONE);
                     recipeIngredientsList.setVisibility(View.VISIBLE);
-                    recipeInstructionsLayout.setBoxStrokeWidth(0);
                     recipeInstructions.setFocusable(false);
                     recipeInstructions.setEnabled(false);
+                    recipeInstructions.setBackgroundResource(R.color.backgroundDark);
                 }
             }
         } else {
             editActive = true;
             recipePhoto.setFocusable(true);
             recipePhoto.setEnabled(true);
-            recipeNameLayout.setBoxStrokeWidth(3);
             recipeName.setFocusable(true);
             recipeName.setEnabled(true);
             recipeName.setFocusableInTouchMode(true);
+            recipeName.setBackgroundResource(R.color.backgroundLightDark);
             recipeCategorySpinner.setVisibility(View.VISIBLE);
             recipeCategory.setVisibility(View.INVISIBLE);
             recipeTypeSpinner.setVisibility(View.VISIBLE);
             recipeType.setVisibility(View.INVISIBLE);
             recipeIngredientEditModeLayout.setVisibility(View.VISIBLE);
             recipeIngredientsList.setVisibility(View.GONE);
-            recipeInstructionsLayout.setBoxStrokeWidth(3);
             recipeInstructions.setFocusable(true);
             recipeInstructions.setEnabled(true);
             recipeInstructions.setFocusableInTouchMode(true);
+            recipeInstructions.setBackgroundResource(R.color.backgroundLightDark);
         }
     }
 
@@ -617,7 +613,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipePhotoBitmap = null;
             recipePhotoAdded = false;
             shouldRemovePhoto = true;
-            recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
+            recipePhoto.setImageResource(R.drawable.ic_add_photo_200dp);
         });
 
         Button cancelPhotoButton = dialog.findViewById(R.id.buttonCancelHandlePhotoDialog);

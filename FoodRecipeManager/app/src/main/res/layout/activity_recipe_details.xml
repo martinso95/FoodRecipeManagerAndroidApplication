@@ -2,12 +2,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@color/backgroundDark">
 
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@color/backgroundDark"
         tools:context=".ui.recipes.RecipeDetailsActivity">
 
         <ImageButton
@@ -15,12 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
-            android:background="@android:color/white"
+            android:background="@color/backgroundDark"
             android:contentDescription="@string/recipe_photo_content_description" />
 
         <View
             android:id="@+id/horizontalDivider1RecipeDetails"
-            style="@style/Divider_Gray_Horizontal"
+            style="@style/DividerHorizontal"
             android:layout_below="@id/imageButtonRecipePhotoRecipeDetails" />
 
         <LinearLayout
@@ -43,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="@string/recipe_category_label"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/textGray"
                     android:textSize="12sp" />
 
                 <TextView
@@ -51,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textViewRecipeCategoryLabelRecipeDetails"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textOnDark"
                     android:textSize="16sp" />
 
                 <Spinner
@@ -62,7 +63,8 @@
                     android:layout_marginStart="-16dp"
                     android:layout_marginTop="-13dp"
                     android:layout_marginBottom="-4dp"
-                    android:textColor="@android:color/black"
+                    android:backgroundTint="@color/backgroundLight"
+                    android:textColor="@color/textOnDark"
                     android:textSize="16sp"
                     android:visibility="invisible" />
 
@@ -70,7 +72,7 @@
 
             <View
                 android:id="@+id/verticalDivider1RecipeDetails"
-                style="@style/Divider_Gray_Vertical"
+                style="@style/DividerVertical"
                 android:layout_weight="0" />
 
             <RelativeLayout
@@ -86,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="@string/recipe_type_label"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/textGray"
                     android:textSize="12sp" />
 
                 <TextView
@@ -94,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/textViewRecipeTypeLabelRecipeDetails"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/textOnDark"
                     android:textSize="16sp" />
 
                 <Spinner
@@ -105,7 +107,8 @@
                     android:layout_marginStart="-16dp"
                     android:layout_marginTop="-13dp"
                     android:layout_marginBottom="-4dp"
-                    android:textColor="@android:color/black"
+                    android:backgroundTint="@color/backgroundLight"
+                    android:textColor="@color/textOnDark"
                     android:textSize="16sp"
                     android:visibility="invisible" />
 
@@ -115,23 +118,23 @@
 
         <View
             android:id="@+id/horizontalDivider2RecipeDetails"
-            style="@style/Divider_Gray_Horizontal"
+            style="@style/DividerHorizontal"
             android:layout_below="@id/linearLayoutQuickInformationRecipeDetails"
             android:layout_marginBottom="10dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeNameRecipeDetails"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/horizontalDivider2RecipeDetails"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp"
-            android:background="@android:color/white"
+            android:textColor="@color/textOnDark"
+            android:textColorHint="@color/textOnDark"
             app:boxStrokeWidth="0dp"
-            app:boxStrokeColor="@android:color/black"
-            app:hintTextColor="@android:color/black"
+            app:hintTextColor="@color/textOnDark"
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -142,13 +145,16 @@
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLength="25"
-                android:textColor="@android:color/black"
-                android:textSize="24sp" />
+                android:textColor="@color/textOnDark"
+                android:textColorHint="@color/textOnDark"
+                android:textCursorDrawable="@null"
+                android:textSize="24sp"
+                app:hintTextColor="@color/textOnDark" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:id="@+id/horizontalDivider3RecipeDetails"
-            style="@style/Divider_Gray_Horizontal"
+            style="@style/DividerHorizontal"
             android:layout_below="@id/textInputLayoutRecipeNameRecipeDetails"
             android:layout_marginBottom="10dp" />
 
@@ -160,7 +166,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginBottom="5dp"
             android:text="@string/recipe_ingredients_label"
-            android:textColor="@android:color/black"
+            android:textColor="@color/textOnDark"
             android:textSize="20sp" />
 
         <RelativeLayout
@@ -189,15 +195,16 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayoutRecipeAddIngredientsRecipeDetails"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="330dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:background="@android:color/white"
-                    app:hintEnabled="false"
-                    app:boxStrokeWidth="1dp"
-                    app:boxStrokeColor="@android:color/black"
-                    app:hintTextColor="@android:color/black">
+                    android:background="@color/backgroundLightDark"
+                    android:textColor="@color/textOnDark"
+                    android:textColorHint="@color/textOnDark"
+                    app:boxStrokeWidth="0dp"
+                    app:hintTextColor="@color/textOnDark"
+                    app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/textInputLayoutEditRecipeAddIngredientRecipeDetails"
@@ -207,8 +214,11 @@
                         android:imeOptions="actionDone"
                         android:inputType="text"
                         android:maxLength="30"
-                        android:textColor="@android:color/black"
-                        android:textSize="16sp" />
+                        android:textColor="@color/textOnDark"
+                        android:textColorHint="@color/textOnDark"
+                        android:textCursorDrawable="@null"
+                        android:textSize="16sp"
+                        app:hintTextColor="@color/textOnDark" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RelativeLayout
@@ -223,7 +233,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/ic_add_black_24dp" />
+                        android:background="@drawable/ic_add_24dp"
+                        android:contentDescription="@string/add_ingredient_content_description" />
                 </RelativeLayout>
 
                 <ListView
@@ -240,7 +251,7 @@
 
         <View
             android:id="@+id/horizontalDivider4RecipeDetails"
-            style="@style/Divider_Gray_Horizontal"
+            style="@style/DividerHorizontal"
             android:layout_below="@id/relativeLayoutIngredientsRecipeDetails"
             android:layout_marginBottom="10dp" />
 
@@ -252,23 +263,23 @@
             android:layout_marginStart="16dp"
             android:layout_marginBottom="5dp"
             android:text="@string/recipe_instructions_label"
-            android:textColor="@android:color/black"
+            android:textColor="@color/textOnDark"
             android:textSize="20sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayoutRecipeInstructionsRecipeDetails"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textViewRecipeInstructionsLabelRecipeDetails"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="20dp"
-            android:background="@android:color/white"
             android:minHeight="200dp"
+            android:textColor="@color/textOnDark"
+            android:textColorHint="@color/textOnDark"
             app:boxStrokeWidth="0dp"
-            app:boxStrokeColor="@android:color/black"
-            app:hintTextColor="@android:color/black"
+            app:hintTextColor="@color/textOnDark"
             app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -278,8 +289,11 @@
                 android:gravity="top"
                 android:hint="@string/recipe_add_instructions_label"
                 android:minHeight="200dp"
-                android:textColor="@android:color/black"
+                android:textColor="@color/textOnDark"
+                android:textColorHint="@color/textOnDark"
+                android:textCursorDrawable="@null"
                 android:textSize="16sp"
+                app:hintTextColor="@color/textOnDark"
                 app:textInputLayoutFocusedRectEnabled="false" />
         </com.google.android.material.textfield.TextInputLayout>
 

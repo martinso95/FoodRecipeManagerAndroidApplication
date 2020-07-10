@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="50dp"
-    android:layout_marginRight="50dp"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:background="@color/backgroundDark"
     android:orientation="vertical">
 
     <TextView
@@ -16,10 +17,10 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
         android:gravity="center_horizontal"
-        android:textColor="#000000"
+        android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonOkInformationDialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,9 +29,11 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
-        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/backgroundLightDark"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="@string/ok_label"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 
 </RelativeLayout>

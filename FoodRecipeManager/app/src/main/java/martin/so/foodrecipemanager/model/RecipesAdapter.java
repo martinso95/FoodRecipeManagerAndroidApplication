@@ -60,7 +60,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
         if (recipe.getPhotoPath() != null) {
             if (recipe.getPhotoDownloadUri() != null) {
                 // Load photo with Glide, which supports caching.
-                Glide.with(context).load(recipe.getPhotoDownloadUri()).placeholder(R.drawable.ic_food_placeholder_black_100dp).apply(glideRequestOptions).into(holder.recipePhoto);
+                Glide.with(context).load(recipe.getPhotoDownloadUri()).placeholder(R.drawable.ic_food_placeholder_100dp).apply(glideRequestOptions).into(holder.recipePhoto);
             } else if (recipe.getTemporaryLocalPhoto() != null) {
                 // If photo has changed, load the local photo copy, because uploading the new download uri can take time.
                 holder.recipePhoto.setImageBitmap(recipe.getTemporaryLocalPhoto());
@@ -78,12 +78,12 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.ViewHold
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        holder.recipePhoto.setImageResource(R.drawable.ic_food_placeholder_black_100dp);
+                        holder.recipePhoto.setImageResource(R.drawable.ic_food_placeholder_100dp);
                     }
                 });
             }
         } else {
-            holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_black_100dp);
+            holder.recipePhoto.setImageResource(R.drawable.ic_add_photo_100dp);
         }
 
         holder.recipeName.setText(recipe.getName());

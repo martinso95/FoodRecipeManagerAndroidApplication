@@ -8,12 +8,13 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        card_view:cardElevation="5dp"
+        card_view:cardElevation="3dp"
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/backgroundDarkest">
 
             <ImageView
                 android:id="@+id/imageViewThumbnailCard"
@@ -21,7 +22,7 @@
                 android:layout_height="100dp"
                 android:layout_centerVertical="true"
                 android:layout_margin="5dp"
-                android:background="@android:color/white"
+                android:background="@color/backgroundDarkest"
                 android:scaleType="centerCrop" />
 
             <TextView
@@ -29,14 +30,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
                 android:layout_toEndOf="@id/imageViewThumbnailCard"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:minLines="1"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textColor="#000000"
+                android:textColor="@color/textOnDark"
                 android:textStyle="normal|bold" />
 
             <TextView
@@ -49,7 +50,7 @@
                 android:layout_toEndOf="@id/imageViewThumbnailCard"
                 android:text="@string/card_recipe_category_label"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="#000000" />
+                android:textColor="@color/textOnDark" />
 
             <TextView
                 android:id="@+id/textViewRecipeCategoryCard"
@@ -60,7 +61,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_toEndOf="@id/textViewRecipeCategoryLabelCard"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="#000000" />
+                android:textColor="@color/textOnDark" />
 
             <TextView
                 android:id="@+id/textViewRecipeTypLabelCard"
@@ -72,7 +73,7 @@
                 android:layout_toEndOf="@id/textViewRecipeCategoryCard"
                 android:text="@string/card_recipe_type_label"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="#000000" />
+                android:textColor="@color/textOnDark" />
 
             <TextView
                 android:id="@+id/textViewRecipeTypeCard"
@@ -83,7 +84,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_toEndOf="@id/textViewRecipeTypLabelCard"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="#000000" />
+                android:textColor="@color/textOnDark" />
 
         </RelativeLayout>
 

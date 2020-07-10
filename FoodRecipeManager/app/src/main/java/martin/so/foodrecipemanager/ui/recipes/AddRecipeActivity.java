@@ -15,6 +15,7 @@ import martin.so.foodrecipemanager.model.RecipeManager;
 import martin.so.foodrecipemanager.model.Utils;
 
 import android.app.Dialog;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -131,6 +132,12 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeIngredients = new ArrayList<>();
         ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, true);
         recipeIngredientsList.setAdapter(ingredientsAdapter);
+        ingredientsAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+            }
+        });
 
 
         // placeholder for quicker testing...
@@ -149,7 +156,6 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
             return handled;
         });
-
 
         recipeIngredientInput.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
@@ -381,7 +387,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             recipePhotoLocalFilePath = null;
             recipePhotoBitmap = null;
             recipePhotoAdded = false;
-            recipePhoto.setImageResource(R.drawable.ic_add_photo_black_200dp);
+            recipePhoto.setImageResource(R.drawable.ic_add_photo_200dp);
         });
 
         Button cancelPhotoButton = dialog.findViewById(R.id.buttonCancelHandlePhotoDialog);

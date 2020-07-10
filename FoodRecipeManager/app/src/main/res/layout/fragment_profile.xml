@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:background="@color/backgroundDark">
 
     <ImageButton
         android:id="@+id/imageButtonProfilePhotoProfile"
@@ -10,7 +11,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/ic_add_photo_black_200dp"
+        android:background="@drawable/ic_add_photo_200dp"
         android:contentDescription="@string/profile_photo_content_description" />
 
     <TextView
@@ -21,7 +22,7 @@
         android:layout_marginStart="16dp"
         android:gravity="center_vertical"
         android:text="@string/profile_display_name_label"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/textOnDark"
         android:textSize="12sp" />
 
     <TextView
@@ -33,12 +34,12 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="5dp"
         android:gravity="center_vertical"
-        android:textColor="#000000"
+        android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 
     <View
         android:id="@+id/divider1Profile"
-        style="@style/Divider_Gray_Horizontal"
+        style="@style/DividerHorizontal"
         android:layout_below="@id/textViewDisplayNameProfile" />
 
     <TextView
@@ -51,7 +52,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
         android:text="@string/profile_email_label"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/textOnDark"
         android:textSize="12sp" />
 
     <TextView
@@ -63,7 +64,7 @@
         android:layout_toEndOf="@id/textViewEmailLabelProfile"
         android:gravity="center_vertical"
         android:text="@string/profile_email_not_verified_label"
-        android:textColor="@android:color/holo_red_light"
+        android:textColor="@color/textWarning"
         android:textSize="12sp"
         android:visibility="gone" />
 
@@ -76,12 +77,12 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="5dp"
         android:gravity="center_vertical"
-        android:textColor="#000000"
+        android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 
     <View
         android:id="@+id/divider2Profile"
-        style="@style/Divider_Gray_Horizontal"
+        style="@style/DividerHorizontal"
         android:layout_below="@id/textViewEmailProfile" />
 
     <TextView
@@ -93,7 +94,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:text="@string/profile_password_label"
-        android:textColor="@android:color/darker_gray"
+        android:textColor="@color/textOnDark"
         android:textSize="12sp" />
 
     <TextView
@@ -106,12 +107,12 @@
         android:layout_marginBottom="5dp"
         android:gravity="center_vertical"
         android:text="@string/profile_password_placeholder"
-        android:textColor="#000000"
+        android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 
     <View
         android:id="@+id/divider3Profile"
-        style="@style/Divider_Gray_Horizontal"
+        style="@style/DividerHorizontal"
         android:layout_below="@id/textViewPasswordProfile"
         android:layout_marginBottom="40dp" />
 
@@ -124,14 +125,16 @@
         android:layout_marginBottom="20dp"
         android:visibility="visible">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonReSendEmailVerificationProfile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:background="@color/colorPrimary"
+            android:backgroundTint="@color/backgroundLightDark"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/profile_re_send_email_verification_label"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/textOnDark"
             android:textSize="16sp"
             android:visibility="visible" />
 
@@ -143,25 +146,27 @@
             android:background="@drawable/text_view_border"
             android:gravity="center"
             android:text="@string/profile_email_verification_sent_label"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textOnDark"
             android:textSize="16sp"
             android:visibility="gone" />
     </RelativeLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonSignOutProfile"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/relativeLayoutReSendEmailVerificationProfile"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/backgroundLightDark"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
         android:text="@string/user_sign_out_label"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 
     <View
         android:id="@+id/divider4Profile"
-        style="@style/Divider_Gray_Horizontal"
+        style="@style/DividerHorizontal"
         android:layout_above="@+id/textViewDeleteAccountProfile" />
 
     <TextView
@@ -173,12 +178,12 @@
         android:layout_marginEnd="16dp"
         android:gravity="center_vertical"
         android:text="@string/profile_delete_account_label"
-        android:textColor="@android:color/holo_red_light"
+        android:textColor="@color/textWarning"
         android:textSize="16sp" />
 
     <View
         android:id="@+id/divider5Profile"
-        style="@style/Divider_Gray_Horizontal"
+        style="@style/DividerHorizontal"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp" />
 

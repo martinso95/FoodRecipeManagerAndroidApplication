@@ -3,48 +3,68 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp">
+    android:background="@color/backgroundDark"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCurrentEmailDeleteAccount"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:textSize="16sp">
+        android:textColor="@color/textOnDark"
+        android:textColorHint="@color/textOnDark"
+        android:textSize="16sp"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
+        app:hintTextColor="@color/textOnDark">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputLayoutEditCurrentEmailDeleteAccount"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/backgroundLightDark"
             android:hint="@string/profile_delete_account_current_email_label"
             android:imeOptions="actionDone"
             android:inputType="textEmailAddress"
-            android:textSize="16sp" />
+            android:textColor="@color/textOnDark"
+            android:textColorHint="@color/textOnDark"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp"
+            app:hintTextColor="@color/textOnDark" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCurrentPasswordDeleteAccount"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/textInputLayoutCurrentEmailDeleteAccount"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
+        android:textColor="@color/textOnDark"
+        android:textColorHint="@color/textOnDark"
         android:textSize="16sp"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
+        app:hintTextColor="@color/textOnDark"
+        app:passwordToggleTint="@color/textOnDark"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputLayoutEditCurrentPasswordDeleteAccount"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/backgroundLightDark"
             android:hint="@string/profile_delete_account_current_password_label"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
-            android:textSize="16sp" />
+            android:textColor="@color/textOnDark"
+            android:textColorHint="@color/textOnDark"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp"
+            app:hintTextColor="@color/textOnDark" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <RelativeLayout
@@ -59,18 +79,20 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:text="@string/user_incorrect_password_label"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/textWarning"
             android:textSize="16sp"
             android:visibility="gone" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonDeleteAccount"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/textViewIncorrectPasswordDeleteAccount"
-            android:background="@android:color/holo_red_light"
+            android:backgroundTint="@color/backgroundLightDark"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/profile_delete_account_delete_label"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/textOnDark"
             android:textSize="16sp" />
 
         <ProgressBar

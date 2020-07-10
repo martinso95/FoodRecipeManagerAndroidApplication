@@ -104,5 +104,6 @@
     <!--    Image descriptions-->
     <string name="recipe_photo_content_description">Recipe photo</string>
     <string name="profile_photo_content_description">Profile photo</string>
+    <string name="add_ingredient_content_description">Add ingredient</string>
 
 </resources>

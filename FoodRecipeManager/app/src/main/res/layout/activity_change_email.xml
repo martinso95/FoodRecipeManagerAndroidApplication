@@ -3,68 +3,97 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp">
+    android:background="@color/backgroundDark"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCurrentEmailChangeEmail"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        android:textSize="16sp">
+        android:textColor="@color/textOnDark"
+        android:textColorHint="@color/textOnDark"
+        android:textSize="16sp"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
+        app:hintTextColor="@color/textOnDark">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputLayoutEditCurrentEmailChangeEmail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/backgroundLightDark"
             android:hint="@string/profile_change_email_current_email_label"
             android:imeOptions="actionDone"
             android:inputType="textEmailAddress"
-            android:textSize="16sp" />
+            android:textColor="@color/textOnDark"
+            android:textColorHint="@color/textOnDark"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp"
+            app:hintTextColor="@color/textOnDark" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutCurrentPasswordChangeEmail"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/textInputLayoutCurrentEmailChangeEmail"
         android:layout_marginBottom="20dp"
+        android:textColor="@color/textOnDark"
+        android:textColorHint="@color/textOnDark"
         android:textSize="16sp"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
+        app:hintTextColor="@color/textOnDark"
+        app:passwordToggleTint="@color/textOnDark"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputLayoutEditCurrentPasswordChangeEmail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/backgroundLightDark"
             android:hint="@string/profile_change_email_current_password_label"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
-            android:textSize="16sp" />
+            android:textColor="@color/textOnDark"
+            android:textColorHint="@color/textOnDark"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp"
+            app:hintTextColor="@color/textOnDark" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayoutNewEmailChangeEmail"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/textInputLayoutCurrentPasswordChangeEmail"
-        android:layout_marginBottom="20dp"
-        android:textSize="16sp">
+        android:layout_marginBottom="40dp"
+        android:textColor="@color/textOnDark"
+        android:textColorHint="@color/textOnDark"
+        android:textSize="16sp"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
+        app:hintTextColor="@color/textOnDark">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textInputLayoutEditNewEmailChangeEmail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/white"
+            android:background="@color/backgroundLightDark"
             android:hint="@string/profile_change_email_new_email_label"
             android:imeOptions="actionDone"
             android:inputType="textEmailAddress"
-            android:textSize="16sp" />
+            android:textColor="@color/textOnDark"
+            android:textColorHint="@color/textOnDark"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp"
+            app:hintTextColor="@color/textOnDark" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <RelativeLayout
@@ -79,18 +108,20 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:text="@string/user_incorrect_password_label"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/textWarning"
             android:textSize="16sp"
             android:visibility="gone" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSaveChangeChangeEmail"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@+id/textViewIncorrectPasswordChangeEmail"
-            android:background="@color/colorPrimary"
+            android:backgroundTint="@color/backgroundLightDark"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/profile_save_label"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/textOnDark"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -109,7 +140,7 @@
             android:background="@drawable/text_view_border"
             android:gravity="center"
             android:text="@string/changed_label"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textOnDark"
             android:textSize="16sp"
             android:textStyle="bold"
             android:visibility="gone" />
