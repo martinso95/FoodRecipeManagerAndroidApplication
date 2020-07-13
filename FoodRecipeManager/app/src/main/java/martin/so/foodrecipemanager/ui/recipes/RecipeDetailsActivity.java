@@ -9,6 +9,7 @@ import martin.so.foodrecipemanager.R;
 import martin.so.foodrecipemanager.model.FirebaseStorageOfflineHandler;
 import martin.so.foodrecipemanager.model.InformationDialog;
 import martin.so.foodrecipemanager.model.Ingredient;
+import martin.so.foodrecipemanager.model.IngredientManager;
 import martin.so.foodrecipemanager.model.IngredientsAdapter;
 import martin.so.foodrecipemanager.model.Recipe;
 import martin.so.foodrecipemanager.model.RecipeManager;
@@ -41,7 +42,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -80,7 +80,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private boolean recipeIngredientsChanged = false;
     private ListView recipeIngredientsList;
     private RelativeLayout recipeIngredientEditModeLayout;
-    private TextInputEditText recipeIngredientInput;
+    private TextInputEditText recipeIngredientAmountInput;
+    private TextInputEditText recipeIngredientNameInput;
     private ImageButton recipeAddIngredient;
     private ListView recipeIngredientsListEditMode;
     private List<Ingredient> recipeIngredients;
@@ -136,8 +137,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeTypeSpinner = findViewById(R.id.spinnerRecipeTypeRecipeDetails);
         recipeIngredientsList = findViewById(R.id.listViewIngredientsRecipeDetails);
         recipeIngredientEditModeLayout = findViewById(R.id.relativeLayoutIngredientsEditModeRecipeDetails);
-        recipeIngredientInput = findViewById(R.id.textInputLayoutEditRecipeAddIngredientRecipeDetails);
-        recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonRecipeDetails);
+        recipeIngredientAmountInput = findViewById(R.id.textInputLayoutEditAddIngredientAmountEditModeRecipeDetails);
+        recipeIngredientNameInput = findViewById(R.id.textInputLayoutEditAddIngredientNameEditModeRecipeDetails);
+        recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonEditModeRecipeDetails);
         recipeIngredientsListEditMode = findViewById(R.id.listViewIngredientsEditModeRecipeDetails);
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
 
@@ -255,10 +257,19 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             return handled;
         });
 
-        recipeIngredientInput.setOnEditorActionListener((v, actionId, event) -> {
+        recipeIngredientAmountInput.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                addIngredient();
+                Utils.hideKeyboard(this);
+                handled = true;
+            }
+            return handled;
+        });
+
+        recipeIngredientNameInput.setOnEditorActionListener((v, actionId, event) -> {
+            boolean handled = false;
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Utils.hideKeyboard(this);
                 handled = true;
             }
             return handled;
@@ -501,16 +512,26 @@ public class RecipeDetailsActivity extends AppCompatActivity {
      * Add the ingredient to the recipe, based on what the user has input in the ingredient textInput.
      */
     private void addIngredient() {
-        String input = recipeIngredientInput.getText().toString();
-        if (!input.isEmpty()) {
-            recipeIngredients.add(new Ingredient(input));
-            recipeIngredientInput.getText().clear();
+        String amountInput = recipeIngredientAmountInput.getText().toString();
+        String nameInput = recipeIngredientNameInput.getText().toString();
+        if (!nameInput.isEmpty()) {
+            IngredientManager.addIngredient(recipeIngredients, new Ingredient(amountInput, nameInput));
             ingredientsAdapterEditMode.notifyDataSetChanged();
             ingredientsAdapter.notifyDataSetChanged();
             recipeIngredientsChanged = true;
+            Utils.hideKeyboard(this);
+
+            if (recipeIngredientAmountInput.isFocused()) {
+                recipeIngredientAmountInput.clearFocus();
+            }
+
+            if (recipeIngredientNameInput.isFocused()) {
+                recipeIngredientNameInput.clearFocus();
+            }
+
+            recipeIngredientAmountInput.getText().clear();
+            recipeIngredientNameInput.getText().clear();
         }
-        Utils.hideKeyboard(this);
-        recipeIngredientInput.clearFocus();
     }
 
     /**

@@ -158,30 +158,31 @@
             android:layout_below="@id/textInputLayoutRecipeNameRecipeDetails"
             android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/textViewRecipeIngredientsRecipeDetails"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/horizontalDivider3RecipeDetails"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/recipe_ingredients_label"
-            android:textColor="@color/textOnDark"
-            android:textSize="20sp" />
-
         <RelativeLayout
             android:id="@+id/relativeLayoutIngredientsRecipeDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textViewRecipeIngredientsRecipeDetails"
+            android:layout_below="@id/horizontalDivider3RecipeDetails"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textViewIngredientsLabelRecipeDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/recipe_ingredients_label"
+                android:textColor="@color/textOnDark"
+                android:textSize="20sp" />
 
             <ListView
                 android:id="@+id/listViewIngredientsRecipeDetails"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/textViewIngredientsLabelRecipeDetails"
                 android:divider="@null"
                 android:drawSelectorOnTop="false"
                 android:isScrollContainer="false"
@@ -191,60 +192,104 @@
                 android:id="@+id/relativeLayoutIngredientsEditModeRecipeDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/textViewIngredientsLabelRecipeDetails"
                 android:visibility="gone">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textInputLayoutRecipeAddIngredientsRecipeDetails"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="330dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@color/backgroundLightDark"
-                    android:textColor="@color/textOnDark"
-                    android:textColorHint="@color/textOnDark"
-                    app:boxStrokeWidth="0dp"
-                    app:hintTextColor="@color/textOnDark"
-                    app:hintEnabled="false">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/textInputLayoutEditRecipeAddIngredientRecipeDetails"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="@string/recipe_add_ingredients_hint_label"
-                        android:imeOptions="actionDone"
-                        android:inputType="text"
-                        android:maxLength="30"
-                        android:textColor="@color/textOnDark"
-                        android:textColorHint="@color/textOnDark"
-                        android:textCursorDrawable="@null"
-                        android:textSize="16sp"
-                        app:hintTextColor="@color/textOnDark" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutAddIngredientButtonRecipeDetails"
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_toEndOf="@+id/textInputLayoutRecipeAddIngredientsRecipeDetails">
-
-                    <ImageButton
-                        android:id="@+id/imageButtonAddIngredientButtonRecipeDetails"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/ic_add_24dp"
-                        android:contentDescription="@string/add_ingredient_content_description" />
-                </RelativeLayout>
 
                 <ListView
                     android:id="@+id/listViewIngredientsEditModeRecipeDetails"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/textInputLayoutRecipeAddIngredientsRecipeDetails"
+                    android:layout_marginBottom="10dp"
+                    android:divider="@null"
                     android:drawSelectorOnTop="false"
                     android:isScrollContainer="false"
                     android:listSelector="@android:color/transparent" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutIngredientInputEditModeRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/listViewIngredientsEditModeRecipeDetails"
+                    android:background="@color/backgroundDark"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutAddIngredientAmountEditModeRecipeDetails"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/textOnDark"
+                        android:textColorHint="@color/textOnDark"
+                        app:boxStrokeWidth="0dp"
+                        app:hintTextColor="@color/textOnDark"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textInputLayoutEditAddIngredientAmountEditModeRecipeDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/backgroundLightDark"
+                            android:hint="@string/recipe_add_ingredient_amount_hint_label"
+                            android:imeOptions="actionDone"
+                            android:inputType="text"
+                            android:maxLength="10"
+                            android:textColor="@color/textOnDark"
+                            android:textColorHint="@color/textOnDark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:hintTextColor="@color/textOnDark" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutAddIngredientNameEditModeRecipeDetails"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="2"
+                        android:textColor="@color/textOnDark"
+                        android:textColorHint="@color/textOnDark"
+                        app:boxStrokeWidth="0dp"
+                        app:hintTextColor="@color/textOnDark"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/textInputLayoutEditAddIngredientNameEditModeRecipeDetails"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@color/backgroundLightDark"
+                            android:hint="@string/recipe_add_ingredient_name_hint_label"
+                            android:imeOptions="actionDone"
+                            android:inputType="text"
+                            android:maxLength="20"
+                            android:textColor="@color/textOnDark"
+                            android:textColorHint="@color/textOnDark"
+                            android:textCursorDrawable="@null"
+                            android:textSize="16sp"
+                            app:hintTextColor="@color/textOnDark" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutAddIngredientButtonEditModeRecipeDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0">
+
+                        <ImageButton
+                            android:id="@+id/imageButtonAddIngredientButtonEditModeRecipeDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_add_24dp"
+                            android:contentDescription="@string/add_ingredient_content_description" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
             </RelativeLayout>
 
         </RelativeLayout>

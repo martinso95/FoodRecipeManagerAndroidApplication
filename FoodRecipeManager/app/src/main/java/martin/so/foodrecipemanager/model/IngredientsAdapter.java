@@ -46,15 +46,21 @@ public class IngredientsAdapter extends ArrayAdapter<Ingredient> {
         Ingredient ingredient = getItem(position);
 
         if (ingredient != null) {
-            TextView ingredientDescription = v.findViewById(R.id.textViewIngredientDescriptionIngredientItemEditMode);
-            ingredientDescription.setText(ingredient.getDescription());
-
             if (editModeActive) {
                 ImageButton deleteIngredientButton = v.findViewById(R.id.imageButtonDeleteIngredientIngredientItemEditMode);
+                TextView ingredientAmount = v.findViewById(R.id.textViewIngredientAmountIngredientItemEditMode);
+                TextView ingredientName = v.findViewById(R.id.textViewIngredientNameIngredientItemEditMode);
+                ingredientAmount.setText(ingredient.getAmount());
+                ingredientName.setText(ingredient.getName());
                 deleteIngredientButton.setOnClickListener(v1 -> {
                     allIngredients.remove(position);
                     notifyDataSetChanged();
                 });
+            } else {
+                TextView ingredientAmount = v.findViewById(R.id.textViewIngredientAmountIngredientItem);
+                TextView ingredientName = v.findViewById(R.id.textViewIngredientNameIngredientItem);
+                ingredientAmount.setText(ingredient.getAmount());
+                ingredientName.setText(ingredient.getName());
             }
         }
         return v;

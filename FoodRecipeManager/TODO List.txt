@@ -30,7 +30,7 @@ Prioritized fixes needed:
 
 
 Functionality to add:
-X. Add more properties in a recipe, such as: Time.
+X. Add more properties in a recipe, such as: Time. Portions.
 X. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally.
    Also possibility to alter the amount of one ingredient, and the rest should change to be proportional.
 X. Improve how instructions are being added and visualized. Introduce steps.
@@ -39,6 +39,7 @@ X. Implement Favorite. OR rating?
    Involves implementing a Favorite tab. Or Filter functionality.
 X. Add favorites tab. OR rating? Mark recipe as favorite.
 X. Add filter functionality.
+X. Show loading animation while loading Firebase data.
 
 Performance improvement:
 X. Look into: "I/Choreographer: Skipped 62 frames!  The application may be doing too much work on its main thread."
@@ -53,6 +54,7 @@ X. Improve how recipes are saved. Currently, the entire list is saved/loaded for
 
 Design:
 X Change color theme to dark.
+X Improve the recipe cards.
 X Everything needs to be better looking...
 
 

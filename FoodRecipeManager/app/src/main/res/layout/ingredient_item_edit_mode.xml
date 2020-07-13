@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
+    android:background="@color/backgroundDark"
+    android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingTop="5dp"
     android:paddingBottom="5dp">
 
     <TextView
-        android:id="@+id/textViewIngredientDescriptionIngredientItemEditMode"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="34dp"
+        android:id="@+id/textViewIngredientAmountIngredientItemEditMode"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        android:textAlignment="textEnd"
+        android:textColor="@color/textOnDark"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textViewIngredientNameIngredientItemEditMode"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="2"
+        android:textAlignment="textStart"
         android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 
@@ -20,8 +33,8 @@
         android:id="@+id/imageButtonDeleteIngredientIngredientItemEditMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/ic_delete_24dp" />
+        android:layout_weight="0"
+        android:background="@drawable/ic_delete_24dp"
+        android:contentDescription="@string/remove_ingredient_content_description" />
 
-</RelativeLayout>
+</LinearLayout>

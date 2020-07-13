@@ -23,9 +23,9 @@
     <string name="user_sign_in_label">Sign in</string>
     <string name="user_sign_up_label">Sign up</string>
     <string name="user_forgot_password_label">Forgot password?</string>
-    <string name="user_name_label">Name</string>
-    <string name="user_email_label">Email</string>
-    <string name="user_password_label">Password</string>
+    <string name="user_name_label"><i>Name</i></string>
+    <string name="user_email_label"><i>Email</i></string>
+    <string name="user_password_label"><i>Password</i></string>
     <string name="user_incorrect_password_label">Incorrect password</string>
     <string name="user_already_signed_up_label">Already signed up?</string>
     <string name="user_sign_out_label">Sign out</string>
@@ -39,7 +39,7 @@
     <string name="forgot_password_description">Please enter your email so that \n we can send you a password reset email</string>
     <string name="forgot_password_email_sent_dialog_description">A password reset email has been sent to your email address. \n Please check your email and reset your password. </string>
     <string name="forgot_password_email_sent_dialog_failed_description">A password reset email could not be sent. \n Please try again later.</string>
-    <string name="forgot_password_email_label">Email</string>
+    <string name="forgot_password_email_label"><i>Email</i></string>
     <string name="forgot_password_send_label">Send</string>
 
     <!--    Profile layout-->
@@ -56,25 +56,25 @@
     <string name="profile_save_label">Save</string>
 
     <!--    Profile change display name layout-->
-    <string name="profile_change_display_name_new_display_name_label">New name</string>
+    <string name="profile_change_display_name_new_display_name_label"><i>New name</i></string>
     <string name="profile_change_display_name_failed_dialog_description">Your name could not be changed. \n Please try again later.</string>
 
     <!--    Profile change email layout-->
-    <string name="profile_change_email_current_email_label">Current email</string>
-    <string name="profile_change_email_current_password_label">Current password</string>
-    <string name="profile_change_email_new_email_label">New email</string>
+    <string name="profile_change_email_current_email_label"><i>Current email</i></string>
+    <string name="profile_change_email_current_password_label"><i>Current password</i></string>
+    <string name="profile_change_email_new_email_label"><i>New email</i></string>
     <string name="profile_change_email_success_dialog_description">Your email has been changed. \n We have also sent you an email to verify your new email. \n Please verify it as soon as possible.</string>
     <string name="profile_change_email_failed_dialog_description">Your email could not be changed. \n Please try again later.</string>
 
     <!--    Profile change password layout-->
-    <string name="profile_change_password_current_email_label">Current email</string>
-    <string name="profile_change_password_current_password_label">Current password</string>
-    <string name="profile_change_password_new_password_label">New password</string>
+    <string name="profile_change_password_current_email_label"><i>Current email</i></string>
+    <string name="profile_change_password_current_password_label"><i>Current password</i></string>
+    <string name="profile_change_password_new_password_label"><i>New password</i></string>
     <string name="profile_change_password_failed_dialog_description">Your password could not be changed. \n Please try again later.</string>
 
     <!--    Profile delete account layout-->
-    <string name="profile_delete_account_current_email_label">Current email</string>
-    <string name="profile_delete_account_current_password_label">Current password</string>
+    <string name="profile_delete_account_current_email_label"><i>Current email</i></string>
+    <string name="profile_delete_account_current_password_label"><i>Current password</i></string>
     <string name="profile_delete_account_delete_label">Delete account</string>
     <string name="profile_delete_account_dialog_description">Your account has been deleted.</string>
     <string name="profile_delete_account_failed_dialog_description">Your account could not be deleted. \n Please try again later.</string>
@@ -84,26 +84,26 @@
     <string name="card_recipe_category_label">Category:</string>
 
     <!--    Recipe add/details layout-->
-    <string name="recipe_name_label">Recipe name</string>
-    <string name="recipe_add_name_label">Add a recipe name…</string>
-    <string name="recipe_description_label">Description</string>
+    <string name="recipe_add_name_label"><i>Name</i></string>
     <string name="recipe_category_label">Category</string>
     <string name="recipe_type_label">Type</string>
     <string name="recipe_ingredients_label"><b>Ingredients</b></string>
-    <string name="recipe_add_ingredients_hint_label">Add ingredients…</string>
+    <string name="recipe_add_ingredient_amount_hint_label"><i>Amount</i></string>
+    <string name="recipe_add_ingredient_name_hint_label"><i>Ingredient</i></string>
     <string name="recipe_photo_upload_fail_dialog">Something went wrong with uploading your photo. \n Please try again.</string>
     <string name="recipe_photo_add_fail_dialog">Something went wrong with adding your photo. \n Please try again.</string>
     <string name="recipe_instructions_label"><b>Instructions</b></string>
-    <string name="recipe_add_instructions_label">Add instructions…</string>
+    <string name="recipe_add_instructions_label"><i>Instructions</i></string>
 
     <!--    Recipe handle photo dialog layout-->
     <string name="recipe_handle_photo_dialog_capture">Take photo</string>
     <string name="recipe_handle_photo_dialog_gallery">Select from gallery</string>
     <string name="recipe_handle_photo_dialog_remove">Remove photo</string>
 
-    <!--    Image descriptions-->
+    <!--    Image button descriptions-->
     <string name="recipe_photo_content_description">Recipe photo</string>
     <string name="profile_photo_content_description">Profile photo</string>
     <string name="add_ingredient_content_description">Add ingredient</string>
+    <string name="remove_ingredient_content_description">Remove ingredient</string>
 
 </resources>
