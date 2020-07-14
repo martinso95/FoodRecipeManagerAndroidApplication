@@ -70,7 +70,7 @@
         android:backgroundTint="@color/backgroundLightDark"
         android:insetTop="0dp"
         android:insetBottom="0dp"
-        android:text="@string/profile_delete_account_cancel_label"
+        android:text="@string/cancel_label"
         android:textColor="@color/textOnDark"
         android:textSize="16sp" />
 

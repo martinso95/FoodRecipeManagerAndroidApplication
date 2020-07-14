@@ -27,6 +27,8 @@ public class Utils {
 
     public static final String[] RECIPE_TYPES = {"All", "Breakfast", "Light meal", "Heavy meal", "Dessert"};
 
+    public static final String TIME_NA = "N/A";
+
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter mAdapter = listView.getAdapter();
         int totalHeight = 0;

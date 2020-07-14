@@ -18,6 +18,8 @@ public class Recipe {
     private String name;
     private String type;
     private String category;
+    private int timeHours = -1; // Negative means no time is set.
+    private int timeMinutes = -1; // Negative means no time is set.
     private List<Ingredient> ingredients;
     private String instructions;
 
@@ -31,16 +33,20 @@ public class Recipe {
      * @param photoPath    Is null if the recipe does not have a photo.
      *                     If it has, then the photo's path is a random UUID.
      * @param name         A unique name of the recipe.
-     * @param type         Type of the recipe. (All, Breakfast, Light meal, Heavy meal, Dessert).
      * @param category     Category of the recipe. (Meat, Vegetarian, Vegan).
+     * @param type         Type of the recipe. (All, Breakfast, Light meal, Heavy meal, Dessert).
+     * @param timeHours    Number of hours it takes for this recipe. Negative if no time exists for this recipe.
+     * @param timeMinutes  Number of minutes it takes for this recipe. Negative if no time exists for this recipe.
      * @param ingredients  List of ingredients, type Ingredient.
      * @param instructions Full instructions on how to cook the recipe.
      */
-    public Recipe(String photoPath, String name, String type, String category, List<Ingredient> ingredients, String instructions) {
+    public Recipe(String photoPath, String name, String category, String type, int timeHours, int timeMinutes, List<Ingredient> ingredients, String instructions) {
         this.photoPath = photoPath;
         this.name = name;
         this.type = type;
         this.category = category;
+        this.timeHours = timeHours;
+        this.timeMinutes = timeMinutes;
         this.ingredients = ingredients;
         this.instructions = instructions;
     }
@@ -93,6 +99,22 @@ public class Recipe {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public int getTimeHours() {
+        return timeHours;
+    }
+
+    public void setTimeHours(int timeHours) {
+        this.timeHours = timeHours;
+    }
+
+    public int getTimeMinutes() {
+        return timeMinutes;
+    }
+
+    public void setTimeMinutes(int timeMinutes) {
+        this.timeMinutes = timeMinutes;
     }
 
     public List<Ingredient> getIngredients() {

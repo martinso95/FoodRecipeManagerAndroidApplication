@@ -15,6 +15,7 @@
 
     <!--    Common labels-->
     <string name="ok_label">OK</string>
+    <string name="cancel_label">Cancel</string>
     <string name="changed_label">Changed</string>
     <string name="edit_recipe_label">Edit recipe</string>
     <string name="remove_recipe_label">Remove recipe</string>
@@ -87,6 +88,11 @@
     <string name="recipe_add_name_label"><i>Name</i></string>
     <string name="recipe_category_label">Category</string>
     <string name="recipe_type_label">Type</string>
+    <string name="recipe_time_label">Time</string>
+    <string name="recipe_hours_label">hours</string>
+    <string name="recipe_minutes_label">minutes</string>
+    <string name="recipe_time_description">Select time</string>
+    <string name="recipe_remove_time_label">Remove time</string>
     <string name="recipe_ingredients_label"><b>Ingredients</b></string>
     <string name="recipe_add_ingredient_amount_hint_label"><i>Amount</i></string>
     <string name="recipe_add_ingredient_name_hint_label"><i>Ingredient</i></string>

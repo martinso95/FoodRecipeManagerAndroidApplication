@@ -31,7 +31,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -65,6 +67,9 @@ public class AddRecipeActivity extends AppCompatActivity {
     private String selectedRecipeCategory = Utils.RECIPE_CATEGORY;
     private Spinner recipeType;
     private String selectedRecipeType = Utils.RECIPE_TYPE;
+    private TextView recipeTime;
+    private int recipeTimeHours = 0;
+    private int recipeTimeMinutes = 0;
     private TextInputEditText recipeIngredientAmountInput;
     private TextInputEditText recipeIngredientNameInput;
     private ImageButton recipeAddIngredient;
@@ -90,6 +95,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeName = findViewById(R.id.textInputLayoutEditRecipeNameAddRecipe);
         recipeCategory = findViewById(R.id.spinnerRecipeCategoryAddRecipe);
         recipeType = findViewById(R.id.spinnerRecipeTypeAddRecipe);
+        recipeTime = findViewById(R.id.textViewRecipeTimeAddRecipe);
         recipeIngredientAmountInput = findViewById(R.id.textInputLayoutEditAddIngredientAmountAddRecipe);
         recipeIngredientNameInput = findViewById(R.id.textInputLayoutEditAddIngredientNameAddRecipe);
         recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonAddRecipe);
@@ -97,7 +103,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsAddRecipe);
 
         recipePhoto.setOnClickListener(v -> {
-            showDialog(recipePhotoAdded);
+            showPhotoPickerDialog(recipePhotoAdded);
         });
 
         ArrayAdapter<String> recipeCategoryAdapter = new ArrayAdapter<String>(this,
@@ -129,6 +135,14 @@ public class AddRecipeActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
+        recipeTime.setText(Utils.TIME_NA);
+        recipeTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog();
             }
         });
 
@@ -217,7 +231,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
                         FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
 
-                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
+                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
                         recipe.setTemporaryLocalPhoto(recipePhotoBitmap);
                         RecipeManager.getInstance().addRecipe(recipe);
 
@@ -241,7 +255,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Recipe recipe = new Recipe(null, recipeName.getText().toString(), selectedRecipeType, selectedRecipeCategory, recipeIngredients, recipeInstructions.getText().toString());
+                        Recipe recipe = new Recipe(null, recipeName.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
                         RecipeManager.getInstance().addRecipe(recipe);
                     }
                     finish();
@@ -258,6 +272,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     /**
      * Checks if the recipe property input fields are not empty.
      * The reason is that none of these fields are allowed to be empty.
+     * <p>
+     * Time can be unset.
      */
     private boolean checkFieldsAreNotEmpty() {
         boolean noEmpty = true;
@@ -318,12 +334,53 @@ public class AddRecipeActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows a dialog in the activity in order to inform the user.
-     * With possibility to redirect the user to a new activity.
+     * Dialog for picking a time for the recipe.
+     */
+    private void showTimePickerDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_time_picker);
+        dialog.show();
+
+        NumberPicker recipeNumberPickerHour = dialog.findViewById(R.id.numberPickerHoursTimePickerDialog);
+        recipeNumberPickerHour.setMaxValue(200);
+        recipeNumberPickerHour.setMinValue(0);
+        recipeNumberPickerHour.setWrapSelectorWheel(false);
+        recipeNumberPickerHour.setValue(recipeTimeHours);
+        NumberPicker recipeNumberPickerMinutes = dialog.findViewById(R.id.numberPickerMinutesTimePickerDialog);
+        recipeNumberPickerMinutes.setMaxValue(59);
+        recipeNumberPickerMinutes.setMinValue(0);
+        recipeNumberPickerMinutes.setWrapSelectorWheel(false);
+        recipeNumberPickerMinutes.setValue(recipeTimeMinutes);
+
+        Button okButton = dialog.findViewById(R.id.buttonOkTimePickerDialog);
+        okButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            recipeTimeHours = recipeNumberPickerHour.getValue();
+            recipeTimeMinutes = recipeNumberPickerMinutes.getValue();
+            recipeTime.setText(new StringBuilder().append(recipeNumberPickerHour.getValue()).append("h : ").append(recipeNumberPickerMinutes.getValue()).append("m"));
+        });
+
+        Button cancelButton = dialog.findViewById(R.id.buttonCancelTimePickerDialog);
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        Button removeTimeButton = dialog.findViewById(R.id.buttonRemoveTimePickerDialog);
+        removeTimeButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            recipeTimeHours = -1;
+            recipeTimeMinutes = -1;
+            recipeTime.setText(Utils.TIME_NA);
+        });
+    }
+
+    /**
+     * Dialog for adding a photo either by taking a photo or picking one from the gallery.
      *
      * @param photoAdded flag for knowing whether to provide option to remove an added photo or not.
      */
-    private void showDialog(boolean photoAdded) {
+    private void showPhotoPickerDialog(boolean photoAdded) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);

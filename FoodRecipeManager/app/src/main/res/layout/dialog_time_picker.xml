@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="0dp"
+    android:layout_marginRight="0dp"
+    android:background="@color/backgroundDark"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewDescriptionTimePickerDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/recipe_time_description"
+        android:textColor="@color/textOnDark"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutTimePickerDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewDescriptionTimePickerDialog"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <NumberPicker
+            android:id="@+id/numberPickerHoursTimePickerDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textViewHoursTimePickerDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/recipe_hours_label"
+            android:textColor="@color/textOnDark"
+            android:textSize="16sp" />
+
+        <NumberPicker
+            android:id="@+id/numberPickerMinutesTimePickerDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/textViewMinutesTimePickerDialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/recipe_minutes_label"
+            android:textColor="@color/textOnDark"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutButtonsTimePickerDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutTimePickerDialog"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonCancelTimePickerDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/backgroundLightDark"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/profile_delete_account_cancel_label"
+            android:textColor="@color/textOnDark"
+            android:textSize="16sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonOkTimePickerDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/backgroundLightDark"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/ok_label"
+            android:textColor="@color/textOnDark"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonRemoveTimePickerDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearLayoutButtonsTimePickerDialog"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/backgroundLightDark"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/recipe_remove_time_label"
+        android:textColor="@color/textOnDark"
+        android:textSize="16sp" />
+
+</RelativeLayout>

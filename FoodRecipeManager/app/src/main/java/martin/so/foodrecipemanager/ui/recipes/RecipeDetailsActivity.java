@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -77,6 +78,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private TextView recipeType;
     private Spinner recipeTypeSpinner;
     private String selectedRecipeType;
+    private TextView recipeTime;
+    private int recipeTimeHours;
+    private int recipeTimeMinutes;
     private boolean recipeIngredientsChanged = false;
     private ListView recipeIngredientsList;
     private RelativeLayout recipeIngredientEditModeLayout;
@@ -135,6 +139,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeCategorySpinner = findViewById(R.id.spinnerRecipeCategoryRecipeDetails);
         recipeType = findViewById(R.id.textViewRecipeTypeRecipeDetails);
         recipeTypeSpinner = findViewById(R.id.spinnerRecipeTypeRecipeDetails);
+        recipeTime = findViewById(R.id.textViewRecipeTimeRecipeDetails);
         recipeIngredientsList = findViewById(R.id.listViewIngredientsRecipeDetails);
         recipeIngredientEditModeLayout = findViewById(R.id.relativeLayoutIngredientsEditModeRecipeDetails);
         recipeIngredientAmountInput = findViewById(R.id.textInputLayoutEditAddIngredientAmountEditModeRecipeDetails);
@@ -145,7 +150,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         recipePhotoAdded = currentRecipe.getPhotoPath() != null;
         recipePhoto.setOnClickListener(v -> {
-            showDialog(recipePhotoAdded);
+            showPhotoPickerDialog(recipePhotoAdded);
         });
 
         recipePhoto.setFocusable(false);
@@ -230,6 +235,19 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeTypeSpinner.setSelection(getSpinnerPosition(recipeTypes, currentRecipe.getType()));
         selectedRecipeCategory = currentRecipe.getCategory();
         selectedRecipeType = currentRecipe.getType();
+
+        if (currentRecipe.getTimeHours() < 0 || currentRecipe.getTimeMinutes() < 0) {
+            recipeTime.setText(Utils.TIME_NA);
+        } else {
+            recipeTime.setText(new StringBuilder().append(currentRecipe.getTimeHours()).append("h : ").append(currentRecipe.getTimeMinutes()).append("m"));
+        }
+
+        recipeTime.setOnClickListener(view -> showTimePickerDialog());
+        recipeTime.setFocusable(false);
+        recipeTime.setEnabled(false);
+        recipeTime.setClickable(false);
+        recipeTimeHours = currentRecipe.getTimeHours();
+        recipeTimeMinutes = currentRecipe.getTimeMinutes();
 
         recipeIngredients = new ArrayList<>(currentRecipe.getIngredients());
         ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, false);
@@ -317,7 +335,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                             // Set photo download uri to null, in order to prevent loading a photo from an old uri.
                             currentRecipe.setPhotoDownloadUri(null);
 
-                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
 
                             FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
@@ -342,7 +360,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
                         }
 
@@ -369,6 +387,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     recipeTypeSpinner.setVisibility(View.INVISIBLE);
                     recipeType.setVisibility(View.VISIBLE);
                     recipeType.setText(selectedRecipeType);
+                    recipeTime.setFocusable(false);
+                    recipeTime.setEnabled(false);
+                    recipeTime.setClickable(false);
                     recipeIngredientEditModeLayout.setVisibility(View.GONE);
                     recipeIngredientsList.setVisibility(View.VISIBLE);
                     recipeInstructions.setFocusable(false);
@@ -388,6 +409,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipeCategory.setVisibility(View.INVISIBLE);
             recipeTypeSpinner.setVisibility(View.VISIBLE);
             recipeType.setVisibility(View.INVISIBLE);
+            recipeTime.setFocusable(true);
+            recipeTime.setEnabled(true);
+            recipeTime.setClickable(true);
             recipeIngredientEditModeLayout.setVisibility(View.VISIBLE);
             recipeIngredientsList.setVisibility(View.GONE);
             recipeInstructions.setFocusable(true);
@@ -462,6 +486,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         if (!selectedRecipeType.equals(currentRecipe.getType())) {
             haveChanged = true;
         }
+        if (recipeTimeHours != currentRecipe.getTimeHours() || recipeTimeMinutes != currentRecipe.getTimeMinutes()) {
+            haveChanged = true;
+        }
         if (recipeIngredientsChanged) {
             haveChanged = true;
         }
@@ -474,6 +501,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     /**
      * Checks if the recipe property input fields are not empty.
      * The reason is that none of these fields are allowed to be empty.
+     * <p>
+     * Time can be unset.
      */
     private boolean checkFieldsAreNotEmpty() {
         boolean noEmpty = true;
@@ -535,12 +564,56 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows a dialog in the activity in order to inform the user.
-     * With possibility to redirect the user to a new activity.
+     * Dialog for picking a time for the recipe.
+     */
+    private void showTimePickerDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_time_picker);
+        dialog.show();
+
+        NumberPicker recipeNumberPickerHour = dialog.findViewById(R.id.numberPickerHoursTimePickerDialog);
+        recipeNumberPickerHour.setMaxValue(200);
+        recipeNumberPickerHour.setMinValue(0);
+        recipeNumberPickerHour.setWrapSelectorWheel(false);
+        if (recipeTimeHours >= 0) {
+            recipeNumberPickerHour.setValue(recipeTimeHours);
+        }
+        NumberPicker recipeNumberPickerMinutes = dialog.findViewById(R.id.numberPickerMinutesTimePickerDialog);
+        recipeNumberPickerMinutes.setMaxValue(59);
+        recipeNumberPickerMinutes.setMinValue(0);
+        recipeNumberPickerMinutes.setWrapSelectorWheel(false);
+        if (recipeTimeMinutes >= 0) {
+            recipeNumberPickerMinutes.setValue(recipeTimeMinutes);
+        }
+        Button okButton = dialog.findViewById(R.id.buttonOkTimePickerDialog);
+        okButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            recipeTimeHours = recipeNumberPickerHour.getValue();
+            recipeTimeMinutes = recipeNumberPickerMinutes.getValue();
+            recipeTime.setText(new StringBuilder().append(recipeTimeHours).append("h : ").append(recipeTimeMinutes).append("m"));
+        });
+
+        Button cancelButton = dialog.findViewById(R.id.buttonCancelTimePickerDialog);
+        cancelButton.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        Button removeTimeButton = dialog.findViewById(R.id.buttonRemoveTimePickerDialog);
+        removeTimeButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            recipeTimeHours = -1;
+            recipeTimeMinutes = -1;
+            recipeTime.setText(Utils.TIME_NA);
+        });
+    }
+
+    /**
+     * Dialog for adding a photo either by taking a photo or picking one from the gallery.
      *
      * @param photoAdded flag for knowing whether to provide option to remove an added photo or not.
      */
-    private void showDialog(boolean photoAdded) {
+    private void showPhotoPickerDialog(boolean photoAdded) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);

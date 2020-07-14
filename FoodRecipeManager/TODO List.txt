@@ -27,12 +27,16 @@ WARNING text color:
 TODO:
 Prioritized fixes needed:
 
+- Add portions and make it adjustable. e.g. incrementing portions will increment ingredients accordingly.
+  (MAYBE also possibility to alter the amount of one ingredient, and the rest should change to be proportional.)
 
+- Improve card design.
+
+- Require double password entry for cases like change password, and sign up.
+
+- Implement profile picture. A round picture?
 
 Functionality to add:
-X. Add more properties in a recipe, such as: Time. Portions.
-X. Functionality to increase/decrease portions and then the ingredients needed should be changed proportionally.
-   Also possibility to alter the amount of one ingredient, and the rest should change to be proportional.
 X. Improve how instructions are being added and visualized. Introduce steps.
    Each step is one box of information, and so on.
 X. Implement Favorite. OR rating?
@@ -46,17 +50,11 @@ X. Look into: "I/Choreographer: Skipped 62 frames!  The application may be doing
 X. Handle loading all tabs at start better.
 
 Firebase improvements:
-X. Require double password entry for cases like change password, and sign up.
-X. Implement profile picture. A round picture?
 X. Improve how recipes are saved. Currently, the entire list is saved/loaded for every save/load.
    Only the saved/loaded recipe should be involved in a save/load.
 
 
 Design:
-X Change color theme to dark.
-X Improve the recipe cards.
-X Everything needs to be better looking...
-
 
 Other sections of the app, Tbd1:
 - Shopping list? What you have at home list?

@@ -29,14 +29,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/horizontalDivider1RecipeDetails"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:orientation="horizontal">
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1">
+                android:layout_weight="2">
 
                 <TextView
                     android:id="@+id/textViewRecipeCategoryLabelRecipeDetails"
@@ -78,9 +78,8 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_weight="1">
+                android:layout_marginStart="5dp"
+                android:layout_weight="2">
 
                 <TextView
                     android:id="@+id/textViewRecipeTypeLabelRecipeDetails"
@@ -112,6 +111,35 @@
                     android:textSize="16sp"
                     android:visibility="invisible" />
 
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/verticalDivider2RecipeDetails"
+                style="@style/DividerVertical"
+                android:layout_weight="0" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/textViewRecipeTimeLabelRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="@string/recipe_time_label"
+                    android:textColor="@color/textGray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/textViewRecipeTimeRecipeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textViewRecipeTimeLabelRecipeDetails"
+                    android:textColor="@color/textOnDark"
+                    android:textSize="16sp" />
             </RelativeLayout>
 
         </LinearLayout>
@@ -171,8 +199,6 @@
                 android:id="@+id/textViewIngredientsLabelRecipeDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="10dp"
                 android:text="@string/recipe_ingredients_label"
                 android:textColor="@color/textOnDark"
