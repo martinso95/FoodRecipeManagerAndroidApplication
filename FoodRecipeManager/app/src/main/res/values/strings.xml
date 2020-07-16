@@ -93,8 +93,9 @@
     <string name="recipe_minutes_label">minutes</string>
     <string name="recipe_time_description">Select time</string>
     <string name="recipe_remove_time_label">Remove time</string>
+    <string name="recipe_portions">%1$d portions</string>
     <string name="recipe_ingredients_label"><b>Ingredients</b></string>
-    <string name="recipe_add_ingredient_amount_hint_label"><i>Amount</i></string>
+    <string name="recipe_add_ingredient_amount_hint_label"><i>#</i></string>
     <string name="recipe_add_ingredient_name_hint_label"><i>Ingredient</i></string>
     <string name="recipe_photo_upload_fail_dialog">Something went wrong with uploading your photo. \n Please try again.</string>
     <string name="recipe_photo_add_fail_dialog">Something went wrong with adding your photo. \n Please try again.</string>
@@ -111,5 +112,7 @@
     <string name="profile_photo_content_description">Profile photo</string>
     <string name="add_ingredient_content_description">Add ingredient</string>
     <string name="remove_ingredient_content_description">Remove ingredient</string>
+    <string name="decrement_portions_content_description">Decrement portions</string>
+    <string name="add_portions_content_description">Add portions</string>
 
 </resources>

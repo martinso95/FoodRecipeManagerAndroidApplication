@@ -21,6 +21,7 @@ public class Recipe {
     private int timeHours = -1; // Negative means no time is set.
     private int timeMinutes = -1; // Negative means no time is set.
     private List<Ingredient> ingredients;
+    private int portions = 2; // Default portions is 2.
     private String instructions;
 
     public Recipe() {
@@ -38,9 +39,10 @@ public class Recipe {
      * @param timeHours    Number of hours it takes for this recipe. Negative if no time exists for this recipe.
      * @param timeMinutes  Number of minutes it takes for this recipe. Negative if no time exists for this recipe.
      * @param ingredients  List of ingredients, type Ingredient.
+     * @param portions     Number of portions set for this recipe.
      * @param instructions Full instructions on how to cook the recipe.
      */
-    public Recipe(String photoPath, String name, String category, String type, int timeHours, int timeMinutes, List<Ingredient> ingredients, String instructions) {
+    public Recipe(String photoPath, String name, String category, String type, int timeHours, int timeMinutes, List<Ingredient> ingredients, int portions, String instructions) {
         this.photoPath = photoPath;
         this.name = name;
         this.type = type;
@@ -48,6 +50,7 @@ public class Recipe {
         this.timeHours = timeHours;
         this.timeMinutes = timeMinutes;
         this.ingredients = ingredients;
+        this.portions = portions;
         this.instructions = instructions;
     }
 
@@ -123,6 +126,14 @@ public class Recipe {
 
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = new ArrayList<>(ingredients);
+    }
+
+    public int getPortions() {
+        return portions;
+    }
+
+    public void setPortions(int portions) {
+        this.portions = portions;
     }
 
     public String getInstructions() {

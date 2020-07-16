@@ -27,7 +27,9 @@ public class Utils {
 
     public static final String[] RECIPE_TYPES = {"All", "Breakfast", "Light meal", "Heavy meal", "Dessert"};
 
-    public static final String TIME_NA = "N/A";
+    public static final String NA = "N/A";
+
+    public static final String[] RECIPE_INGREDIENT_UNITS = {"N/A", "mg", "g", "kg", "tsp", "tbsp", "ml", "dl", "l"};
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter mAdapter = listView.getAdapter();
@@ -77,6 +79,21 @@ public class Utils {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             view.clearFocus();
         }
+    }
+
+    /**
+     * Returns the position of the specified target in the spinner.
+     *
+     * @param spinnerValues The spinner array to be searched in.
+     * @param targetValue   The target to be searched for in the spinner array.
+     */
+    public static int getSpinnerPosition(String[] spinnerValues, String targetValue) {
+        for (int i = 0; i < spinnerValues.length; i++) {
+            if (spinnerValues[i].equals(targetValue)) {
+                return i;
+            }
+        }
+        return 404;
     }
 
 }

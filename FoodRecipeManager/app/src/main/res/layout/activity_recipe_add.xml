@@ -185,25 +185,67 @@
             android:layout_below="@id/textInputLayoutRecipeNameAddRecipe"
             android:layout_marginBottom="10dp" />
 
-        <TextView
-            android:id="@+id/textViewIngredientsLabelAddRecipe"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/relativeLayoutIngredientPortionsBarAddRecipe"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/horizontalDivider3AddRecipe"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/recipe_ingredients_label"
-            android:textColor="@color/textOnDark"
-            android:textSize="20sp" />
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/textViewIngredientsLabelAddRecipe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_ingredients_label"
+                android:textColor="@color/textOnDark"
+                android:textSize="20sp" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/textViewIngredientsLabelAddRecipe">
+
+                <ImageButton
+                    android:id="@+id/imageButtonDecrementPortionsButtonAddRecipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/textViewPortionsAddRecipe"
+                    android:background="@drawable/ic_decrement_24dp"
+                    android:contentDescription="@string/decrement_portions_content_description" />
+
+                <TextView
+                    android:id="@+id/textViewPortionsAddRecipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_toStartOf="@+id/imageButtonAddPortionsButtonAddRecipe"
+                    android:text="@string/recipe_portions"
+                    android:textColor="@color/textOnDark"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:id="@+id/imageButtonAddPortionsButtonAddRecipe"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/ic_add_24dp"
+                    android:contentDescription="@string/add_portions_content_description" />
+
+            </RelativeLayout>
+        </RelativeLayout>
 
         <ListView
             android:id="@+id/listViewIngredientsAddRecipe"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewIngredientsLabelAddRecipe"
+            android:layout_below="@+id/relativeLayoutIngredientPortionsBarAddRecipe"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="10dp"
             android:divider="@null"
             android:drawSelectorOnTop="false"
             android:isScrollContainer="false"
@@ -226,8 +268,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:textColor="@color/textOnDark"
                 android:textColorHint="@color/textOnDark"
                 app:boxStrokeWidth="0dp"
@@ -242,8 +283,8 @@
                     android:gravity="end"
                     android:hint="@string/recipe_add_ingredient_amount_hint_label"
                     android:imeOptions="actionDone"
-                    android:inputType="text"
-                    android:maxLength="10"
+                    android:inputType="numberDecimal"
+                    android:maxLength="9"
                     android:textColor="@color/textOnDark"
                     android:textColorHint="@color/textOnDark"
                     android:textCursorDrawable="@null"
@@ -251,14 +292,22 @@
                     app:hintTextColor="@color/textOnDark" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <Spinner
+                android:id="@+id/spinnerAddIngredientUnitAddRecipe"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:backgroundTint="@color/backgroundLight"
+                android:textColor="@color/textOnDark"
+                android:textSize="16sp" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayoutAddIngredientNameAddRecipe"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_weight="2"
+                android:layout_weight="5"
                 android:textColor="@color/textOnDark"
                 android:textColorHint="@color/textOnDark"
                 app:boxStrokeWidth="0dp"

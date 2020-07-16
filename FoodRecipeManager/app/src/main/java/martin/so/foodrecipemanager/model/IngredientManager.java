@@ -1,5 +1,6 @@
 package martin.so.foodrecipemanager.model;
 
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,5 +21,17 @@ public class IngredientManager {
             }
             ingredientList.add(index, ingredient);
         }
+    }
+
+    /**
+     * Limits the number of decimals to four.
+     * Removes trailing zeros.
+     *
+     * @param number a double with too many unnecessary decimals.
+     * @return A number in the form of a String, with at most four decimals and without starting and trailing zeros.
+     */
+    public static String formatDecimals(double number) {
+        DecimalFormat numberFormat = new DecimalFormat("#.####");
+        return numberFormat.format(number);
     }
 }

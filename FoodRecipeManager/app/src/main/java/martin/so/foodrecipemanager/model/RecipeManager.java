@@ -101,7 +101,7 @@ public class RecipeManager {
     /**
      * Edit the recipe based on parameters.
      */
-    public void editRecipe(Recipe recipe, String photoPath, String name, String category, String type, int timeHours, int timeMinutes, List<Ingredient> ingredients, String instructions) {
+    public void editRecipe(Recipe recipe, String photoPath, String name, String category, String type, int timeHours, int timeMinutes, List<Ingredient> ingredients, int portions, String instructions) {
         String oldName = recipe.getName();
         String oldType = recipe.getType();
 
@@ -129,6 +129,7 @@ public class RecipeManager {
         recipe.setTimeHours(timeHours);
         recipe.setTimeMinutes(timeMinutes);
         recipe.setIngredients(ingredients);
+        recipe.setPortions(portions);
         recipe.setInstructions(instructions);
 
         // Add newly edited recipe to the main list and sub list.

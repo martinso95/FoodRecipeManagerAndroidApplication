@@ -56,31 +56,55 @@ import java.util.UUID;
  */
 public class AddRecipeActivity extends AppCompatActivity {
 
+    // ======================================== Recipe photo ========================================
     private ImageButton recipePhoto;
     private File takePhotoFile = null;
     private boolean recipePhotoAdded = false;
     private Uri recipePhotoLocalFilePath = null;
     private Uri temporaryRecipePhotoLocalFilePath = null;
     private Bitmap recipePhotoBitmap = null;
+
+    // ======================================== Recipe name ========================================
     private TextInputEditText recipeName;
+
+    // ======================================== Recipe category ========================================
     private Spinner recipeCategory;
     private String selectedRecipeCategory = Utils.RECIPE_CATEGORY;
+    // TODO: Change the initial value back to normal (CATEGORY), once testing is done.
+    final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
+
+    // ======================================== Recipe type ========================================
     private Spinner recipeType;
     private String selectedRecipeType = Utils.RECIPE_TYPE;
+    // TODO: Change the initial value back to normal (TYPE), once testing is done.
+    final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
+
+    // ======================================== Recipe time ========================================
     private TextView recipeTime;
     private int recipeTimeHours = 0;
     private int recipeTimeMinutes = 0;
+
+    // ======================================== Recipe ingredients ========================================
     private TextInputEditText recipeIngredientAmountInput;
+    private Spinner recipeIngredientUnitInput;
+    private String selectedRecipeIngredientUnitInput = Utils.RECIPE_INGREDIENT_UNITS[2]; // Default is grams.
     private TextInputEditText recipeIngredientNameInput;
     private ImageButton recipeAddIngredient;
     private ListView recipeIngredientsList;
     private List<Ingredient> recipeIngredients;
-    IngredientsAdapter ingredientsAdapter;
-    private TextInputEditText recipeInstructions;
-    private RequestOptions glideRequestOptions;
+    private IngredientsAdapter ingredientsAdapter;
 
-    final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
-    final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
+    // ======================================== Recipe portions ========================================
+    private int recipePortions = 2;
+    private TextView recipePortionsTextView;
+    private ImageButton decrementRecipePortions;
+    private ImageButton addRecipePortions;
+
+    // ======================================== Recipe instructions ========================================
+    private TextInputEditText recipeInstructions;
+
+    // ======================================== Glide options ========================================
+    private RequestOptions glideRequestOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,20 +116,33 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
 
         recipePhoto = findViewById(R.id.imageButtonRecipePhotoAddRecipe);
+
         recipeName = findViewById(R.id.textInputLayoutEditRecipeNameAddRecipe);
+
         recipeCategory = findViewById(R.id.spinnerRecipeCategoryAddRecipe);
+
         recipeType = findViewById(R.id.spinnerRecipeTypeAddRecipe);
+
         recipeTime = findViewById(R.id.textViewRecipeTimeAddRecipe);
+
         recipeIngredientAmountInput = findViewById(R.id.textInputLayoutEditAddIngredientAmountAddRecipe);
+        recipeIngredientUnitInput = findViewById(R.id.spinnerAddIngredientUnitAddRecipe);
         recipeIngredientNameInput = findViewById(R.id.textInputLayoutEditAddIngredientNameAddRecipe);
         recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonAddRecipe);
         recipeIngredientsList = findViewById(R.id.listViewIngredientsAddRecipe);
+
+        recipePortionsTextView = findViewById(R.id.textViewPortionsAddRecipe);
+        decrementRecipePortions = findViewById(R.id.imageButtonDecrementPortionsButtonAddRecipe);
+        addRecipePortions = findViewById(R.id.imageButtonAddPortionsButtonAddRecipe);
+
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsAddRecipe);
 
+        // ======================================== Recipe photo ========================================
         recipePhoto.setOnClickListener(v -> {
             showPhotoPickerDialog(recipePhotoAdded);
         });
 
+        // ======================================== Recipe category ========================================
         ArrayAdapter<String> recipeCategoryAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipeCategories);
         recipeCategoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -122,6 +159,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         });
 
+        // ======================================== Recipe type ========================================
         ArrayAdapter<String> recipeTypeAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipeTypes);
         recipeTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -138,7 +176,8 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         });
 
-        recipeTime.setText(Utils.TIME_NA);
+        // ======================================== Recipe time ========================================
+        recipeTime.setText(Utils.NA);
         recipeTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -146,23 +185,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
         });
 
-        recipeIngredients = new ArrayList<>();
-        ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, true);
-        recipeIngredientsList.setAdapter(ingredientsAdapter);
-        ingredientsAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
-            }
-        });
-
-
-        // placeholder for quicker testing...
-        IngredientManager.addIngredient(recipeIngredients, new Ingredient("2 dl", "Milk"));
-        ingredientsAdapter.notifyDataSetChanged();
-        Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
-
-
+        // ======================================== Recipe name ========================================
         recipeName.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -170,6 +193,17 @@ public class AddRecipeActivity extends AppCompatActivity {
                 handled = true;
             }
             return handled;
+        });
+
+        // ======================================== Recipe ingredients ========================================
+        recipeIngredients = new ArrayList<>();
+        ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, true, 0);
+        recipeIngredientsList.setAdapter(ingredientsAdapter);
+        ingredientsAdapter.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+            }
         });
 
         recipeIngredientAmountInput.setOnEditorActionListener((v, actionId, event) -> {
@@ -180,6 +214,23 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
             return handled;
         });
+
+        ArrayAdapter<String> recipeIngredientUnitInputAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, Utils.RECIPE_INGREDIENT_UNITS);
+        recipeIngredientUnitInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        recipeIngredientUnitInput.setAdapter(recipeIngredientUnitInputAdapter);
+
+        recipeIngredientUnitInput.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                selectedRecipeIngredientUnitInput = Utils.RECIPE_INGREDIENT_UNITS[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+        recipeIngredientUnitInput.setSelection(Utils.getSpinnerPosition(Utils.RECIPE_INGREDIENT_UNITS, selectedRecipeIngredientUnitInput));
 
         recipeIngredientNameInput.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
@@ -194,6 +245,30 @@ public class AddRecipeActivity extends AppCompatActivity {
             addIngredient();
         });
 
+        // TODO: Remove once done with testing.
+        // placeholder for quicker testing...
+        IngredientManager.addIngredient(recipeIngredients, new Ingredient(2, Utils.RECIPE_INGREDIENT_UNITS[8], "Milk"));
+        ingredientsAdapter.notifyDataSetChanged();
+        Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
+
+        // ======================================== Recipe portions ========================================
+        decrementRecipePortions.setOnClickListener(v -> {
+            if (recipePortions > 0) {
+                recipePortions--;
+                recipePortionsTextView.setText(getString(R.string.recipe_portions, recipePortions));
+            }
+        });
+
+        addRecipePortions.setOnClickListener(v -> {
+            if (recipePortions < 100) {
+                recipePortions++;
+                recipePortionsTextView.setText(getString(R.string.recipe_portions, recipePortions));
+            }
+        });
+
+        recipePortionsTextView.setText(getString(R.string.recipe_portions, recipePortions));
+
+        // ======================================== Glide options ========================================
         glideRequestOptions = new RequestOptions();
         glideRequestOptions.centerCrop();
     }
@@ -231,7 +306,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
                         FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
 
-                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
+                        Recipe recipe = new Recipe(recipePhotoPath, recipeName.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipePortions, recipeInstructions.getText().toString());
                         recipe.setTemporaryLocalPhoto(recipePhotoBitmap);
                         RecipeManager.getInstance().addRecipe(recipe);
 
@@ -255,7 +330,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        Recipe recipe = new Recipe(null, recipeName.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
+                        Recipe recipe = new Recipe(null, recipeName.getText().toString(), selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipePortions, recipeInstructions.getText().toString());
                         RecipeManager.getInstance().addRecipe(recipe);
                     }
                     finish();
@@ -311,11 +386,12 @@ public class AddRecipeActivity extends AppCompatActivity {
      * Add the ingredient to the recipe, based on what the user has input in the ingredient textInput.
      */
     private void addIngredient() {
-        String amountInput = recipeIngredientAmountInput.getText().toString();
+        String amountInputValue = recipeIngredientAmountInput.getText().toString();
+        double amountInput = amountInputValue.isEmpty() ? 0 : Double.parseDouble(amountInputValue);
         String nameInput = recipeIngredientNameInput.getText().toString();
 
         if (!nameInput.isEmpty()) {
-            IngredientManager.addIngredient(recipeIngredients, new Ingredient(amountInput, nameInput));
+            IngredientManager.addIngredient(recipeIngredients, new Ingredient(amountInput, selectedRecipeIngredientUnitInput, nameInput));
             ingredientsAdapter.notifyDataSetChanged();
             Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
             Utils.hideKeyboard(this);
@@ -371,7 +447,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             dialog.dismiss();
             recipeTimeHours = -1;
             recipeTimeMinutes = -1;
-            recipeTime.setText(Utils.TIME_NA);
+            recipeTime.setText(Utils.NA);
         });
     }
 

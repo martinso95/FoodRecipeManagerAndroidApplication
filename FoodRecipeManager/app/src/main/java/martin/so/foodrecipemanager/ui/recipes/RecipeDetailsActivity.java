@@ -62,6 +62,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private Recipe currentRecipe;
     boolean editActive = false;
 
+    // ======================================== Recipe photo ========================================
     private ImageButton recipePhoto;
     private File takePhotoFile = null;
     private boolean recipePhotoAdded = false;
@@ -71,37 +72,83 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private boolean recipePhotoChanged = false;
     private String recipePhotoPath = null;
     private Bitmap recipePhotoBitmap = null;
+
+    // ======================================== Recipe name ========================================
     private TextInputEditText recipeName;
+
+    // ======================================== Recipe category ========================================
     private TextView recipeCategory;
     private Spinner recipeCategorySpinner;
     private String selectedRecipeCategory;
+    final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
+
+    // ======================================== Recipe type ========================================
     private TextView recipeType;
     private Spinner recipeTypeSpinner;
     private String selectedRecipeType;
+    final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
+
+    // ======================================== Recipe time ========================================
     private TextView recipeTime;
     private int recipeTimeHours;
     private int recipeTimeMinutes;
+
+    // ======================================== Recipe ingredients ========================================
     private boolean recipeIngredientsChanged = false;
-    private ListView recipeIngredientsList;
     private RelativeLayout recipeIngredientEditModeLayout;
     private TextInputEditText recipeIngredientAmountInput;
+    private Spinner recipeIngredientUnitInput;
+    private String selectedRecipeIngredientUnitInput = Utils.RECIPE_INGREDIENT_UNITS[2]; // Default is grams.
     private TextInputEditText recipeIngredientNameInput;
     private ImageButton recipeAddIngredient;
+    private ListView recipeIngredientsListForDisplay;
     private ListView recipeIngredientsListEditMode;
     private List<Ingredient> recipeIngredients;
-    IngredientsAdapter ingredientsAdapter;
+    IngredientsAdapter ingredientsAdapterForDisplay;
     IngredientsAdapter ingredientsAdapterEditMode;
+
+    // ======================================== Recipe portions ========================================
+    private int recipePortions;
+    private TextView recipePortionsTextView;
+    private ImageButton decrementRecipePortions;
+    private ImageButton addRecipePortions;
+
+    // ======================================== Recipe instructions ========================================
     private TextInputEditText recipeInstructions;
     private RequestOptions glideRequestOptions;
-
-    final String[] recipeCategories = {Utils.RECIPE_CATEGORY_MEAT, Utils.RECIPE_CATEGORY_VEGETARIAN, Utils.RECIPE_CATEGORY_VEGAN};
-    final String[] recipeTypes = {Utils.RECIPE_TYPE_BREAKFAST, Utils.RECIPE_TYPE_LIGHT_MEAL, Utils.RECIPE_TYPE_HEAVY_MEAL, Utils.RECIPE_TYPE_DESSERT};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
+        recipePhoto = findViewById(R.id.imageButtonRecipePhotoRecipeDetails);
+
+        recipeName = findViewById(R.id.textInputLayoutEditRecipeNameRecipeDetails);
+
+        recipeCategory = findViewById(R.id.textViewRecipeCategoryRecipeDetails);
+        recipeCategorySpinner = findViewById(R.id.spinnerRecipeCategoryRecipeDetails);
+
+        recipeType = findViewById(R.id.textViewRecipeTypeRecipeDetails);
+        recipeTypeSpinner = findViewById(R.id.spinnerRecipeTypeRecipeDetails);
+
+        recipeTime = findViewById(R.id.textViewRecipeTimeRecipeDetails);
+
+        recipeIngredientsListForDisplay = findViewById(R.id.listViewIngredientsForDisplayRecipeDetails);
+        recipeIngredientEditModeLayout = findViewById(R.id.relativeLayoutIngredientsEditModeRecipeDetails);
+        recipeIngredientsListEditMode = findViewById(R.id.listViewIngredientsEditModeRecipeDetails);
+        recipeIngredientAmountInput = findViewById(R.id.textInputLayoutEditAddIngredientAmountEditModeRecipeDetails);
+        recipeIngredientUnitInput = findViewById(R.id.spinnerAddIngredientUnitRecipeDetails);
+        recipeIngredientNameInput = findViewById(R.id.textInputLayoutEditAddIngredientNameEditModeRecipeDetails);
+        recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonEditModeRecipeDetails);
+
+        recipePortionsTextView = findViewById(R.id.textViewPortionsRecipeDetails);
+        decrementRecipePortions = findViewById(R.id.imageButtonDecrementPortionsButtonRecipeDetails);
+        addRecipePortions = findViewById(R.id.imageButtonAddPortionsButtonRecipeDetails);
+
+        recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
+
+        // ======================================== Get the recipe object ========================================
         int currentRecipeAdapterPosition = getIntent().getIntExtra("recipeAdapterPosition", 0);
         List<Recipe> currentRecipeTypeList = null;
         String currentRecipeType = getIntent().getStringExtra("recipeType");
@@ -126,42 +173,17 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         currentRecipe = currentRecipeTypeList.get(currentRecipeAdapterPosition);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(currentRecipe.getName());
-        }
-
+        // ======================================== Recipe photo ========================================
         recipePhotoPath = currentRecipe.getPhotoPath();
 
-        recipePhoto = findViewById(R.id.imageButtonRecipePhotoRecipeDetails);
-        recipeName = findViewById(R.id.textInputLayoutEditRecipeNameRecipeDetails);
-        recipeCategory = findViewById(R.id.textViewRecipeCategoryRecipeDetails);
-        recipeCategorySpinner = findViewById(R.id.spinnerRecipeCategoryRecipeDetails);
-        recipeType = findViewById(R.id.textViewRecipeTypeRecipeDetails);
-        recipeTypeSpinner = findViewById(R.id.spinnerRecipeTypeRecipeDetails);
-        recipeTime = findViewById(R.id.textViewRecipeTimeRecipeDetails);
-        recipeIngredientsList = findViewById(R.id.listViewIngredientsRecipeDetails);
-        recipeIngredientEditModeLayout = findViewById(R.id.relativeLayoutIngredientsEditModeRecipeDetails);
-        recipeIngredientAmountInput = findViewById(R.id.textInputLayoutEditAddIngredientAmountEditModeRecipeDetails);
-        recipeIngredientNameInput = findViewById(R.id.textInputLayoutEditAddIngredientNameEditModeRecipeDetails);
-        recipeAddIngredient = findViewById(R.id.imageButtonAddIngredientButtonEditModeRecipeDetails);
-        recipeIngredientsListEditMode = findViewById(R.id.listViewIngredientsEditModeRecipeDetails);
-        recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
-
         recipePhotoAdded = currentRecipe.getPhotoPath() != null;
+
         recipePhoto.setOnClickListener(v -> {
             showPhotoPickerDialog(recipePhotoAdded);
         });
 
         recipePhoto.setFocusable(false);
         recipePhoto.setEnabled(false);
-        recipeName.setFocusable(false);
-        recipeName.setEnabled(false);
-        recipeInstructions.setFocusable(false);
-        recipeInstructions.setEnabled(false);
-
-        glideRequestOptions = new RequestOptions();
-        glideRequestOptions.centerCrop();
 
         // Load the recipe photo from Firebase Storage.
         // If not available, then load placeholder in the form of the temporary local photo (if it exists),
@@ -195,9 +217,8 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipePhoto.setImageResource(R.drawable.ic_add_photo_200dp);
         }
 
-        recipeName.setText(currentRecipe.getName());
+        // ======================================== Recipe category ========================================
         recipeCategory.setText(currentRecipe.getCategory());
-        recipeType.setText(currentRecipe.getType());
 
         ArrayAdapter<String> recipeCategoryAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipeCategories);
@@ -215,6 +236,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }
         });
 
+        selectedRecipeCategory = currentRecipe.getCategory();
+        recipeCategorySpinner.setSelection(Utils.getSpinnerPosition(recipeCategories, selectedRecipeCategory));
+
+        // ======================================== Recipe type ========================================
+        recipeType.setText(currentRecipe.getType());
+
         ArrayAdapter<String> recipeTypeAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, recipeTypes);
         recipeTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -231,13 +258,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }
         });
 
-        recipeCategorySpinner.setSelection(getSpinnerPosition(recipeCategories, currentRecipe.getCategory()));
-        recipeTypeSpinner.setSelection(getSpinnerPosition(recipeTypes, currentRecipe.getType()));
-        selectedRecipeCategory = currentRecipe.getCategory();
         selectedRecipeType = currentRecipe.getType();
+        recipeTypeSpinner.setSelection(Utils.getSpinnerPosition(recipeTypes, selectedRecipeType));
 
+        // ======================================== Recipe time ========================================
         if (currentRecipe.getTimeHours() < 0 || currentRecipe.getTimeMinutes() < 0) {
-            recipeTime.setText(Utils.TIME_NA);
+            recipeTime.setText(Utils.NA);
         } else {
             recipeTime.setText(new StringBuilder().append(currentRecipe.getTimeHours()).append("h : ").append(currentRecipe.getTimeMinutes()).append("m"));
         }
@@ -249,21 +275,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         recipeTimeHours = currentRecipe.getTimeHours();
         recipeTimeMinutes = currentRecipe.getTimeMinutes();
 
-        recipeIngredients = new ArrayList<>(currentRecipe.getIngredients());
-        ingredientsAdapter = new IngredientsAdapter(this, recipeIngredients, false);
-        ingredientsAdapterEditMode = new IngredientsAdapter(this, recipeIngredients, true);
-        recipeIngredientsList.setAdapter(ingredientsAdapter);
-        recipeIngredientsListEditMode.setAdapter(ingredientsAdapterEditMode);
-        Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
-        Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
-        ingredientsAdapterEditMode.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
-                Utils.setListViewHeightBasedOnChildren(recipeIngredientsList);
-                recipeIngredientsChanged = true;
-            }
-        });
+        // ======================================== Recipe name ========================================
+        recipeName.setFocusable(false);
+        recipeName.setEnabled(false);
+        recipeName.setText(currentRecipe.getName());
 
         recipeName.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
@@ -275,6 +290,32 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             return handled;
         });
 
+        // Set action bar title to be the recipe name.
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(currentRecipe.getName());
+        }
+
+        // ======================================== Recipe ingredients ========================================
+        recipeIngredients = new ArrayList<>(currentRecipe.getIngredients());
+
+        ingredientsAdapterEditMode = new IngredientsAdapter(this, recipeIngredients, true, 0);
+        recipeIngredientsListEditMode.setAdapter(ingredientsAdapterEditMode);
+        Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
+
+        ingredientsAdapterForDisplay = new IngredientsAdapter(this, recipeIngredients, false, currentRecipe.getPortions());
+        recipeIngredientsListForDisplay.setAdapter(ingredientsAdapterForDisplay);
+        Utils.setListViewHeightBasedOnChildren(recipeIngredientsListForDisplay);
+
+        ingredientsAdapterEditMode.registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
+                Utils.setListViewHeightBasedOnChildren(recipeIngredientsListForDisplay);
+                recipeIngredientsChanged = true;
+            }
+        });
+
         recipeIngredientAmountInput.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -283,6 +324,23 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             }
             return handled;
         });
+
+        ArrayAdapter<String> recipeIngredientUnitInputAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, Utils.RECIPE_INGREDIENT_UNITS);
+        recipeIngredientUnitInputAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        recipeIngredientUnitInput.setAdapter(recipeIngredientUnitInputAdapter);
+
+        recipeIngredientUnitInput.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long id) {
+                selectedRecipeIngredientUnitInput = Utils.RECIPE_INGREDIENT_UNITS[position];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+        recipeIngredientUnitInput.setSelection(Utils.getSpinnerPosition(Utils.RECIPE_INGREDIENT_UNITS, selectedRecipeIngredientUnitInput));
 
         recipeIngredientNameInput.setOnEditorActionListener((v, actionId, event) -> {
             boolean handled = false;
@@ -297,7 +355,44 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             addIngredient();
         });
 
+        // ======================================== Recipe portions ========================================
+        recipePortions = currentRecipe.getPortions();
+
+        decrementRecipePortions.setOnClickListener(v -> {
+            if (recipePortions > 1) {
+                recipePortions--;
+                recipePortionsTextView.setText(getString(R.string.recipe_portions, recipePortions));
+
+                if (!editActive) {
+                    // Adjust ingredient proportions according to portions:
+                    ingredientsAdapterForDisplay.adjustIngredientAmountAccordingToPortions(recipePortions);
+                }
+            }
+        });
+
+        addRecipePortions.setOnClickListener(v -> {
+            if (recipePortions < 100) {
+                recipePortions++;
+                recipePortionsTextView.setText(getString(R.string.recipe_portions, recipePortions));
+
+                if (!editActive) {
+                    // Adjust ingredient proportions according to portions:
+                    ingredientsAdapterForDisplay.adjustIngredientAmountAccordingToPortions(recipePortions);
+                }
+            }
+        });
+
+        recipePortionsTextView.setText(getString(R.string.recipe_portions, recipePortions));
+
+        // ======================================== Recipe instructions ========================================
+        recipeInstructions.setFocusable(false);
+        recipeInstructions.setEnabled(false);
+
         recipeInstructions.setText(currentRecipe.getInstructions());
+
+        // ======================================== Glide options ========================================
+        glideRequestOptions = new RequestOptions();
+        glideRequestOptions.centerCrop();
     }
 
     /**
@@ -335,7 +430,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                             // Set photo download uri to null, in order to prevent loading a photo from an old uri.
                             currentRecipe.setPhotoDownloadUri(null);
 
-                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipePortions, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
 
                             FirebaseStorageOfflineHandler.getInstance().addFileForUploadInFirebaseStorage(recipePhotoPath, recipePhotoBitmap);
@@ -360,7 +455,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipeInstructions.getText().toString());
+                            RecipeManager.getInstance().editRecipe(currentRecipe, recipePhotoPath, newRecipeName, selectedRecipeCategory, selectedRecipeType, recipeTimeHours, recipeTimeMinutes, recipeIngredients, recipePortions, recipeInstructions.getText().toString());
                             getSupportActionBar().setTitle(recipeName.getText().toString());
                         }
 
@@ -391,7 +486,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                     recipeTime.setEnabled(false);
                     recipeTime.setClickable(false);
                     recipeIngredientEditModeLayout.setVisibility(View.GONE);
-                    recipeIngredientsList.setVisibility(View.VISIBLE);
+                    recipeIngredientsListForDisplay.setVisibility(View.VISIBLE);
                     recipeInstructions.setFocusable(false);
                     recipeInstructions.setEnabled(false);
                     recipeInstructions.setBackgroundResource(R.color.backgroundDark);
@@ -413,12 +508,17 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             recipeTime.setEnabled(true);
             recipeTime.setClickable(true);
             recipeIngredientEditModeLayout.setVisibility(View.VISIBLE);
-            recipeIngredientsList.setVisibility(View.GONE);
+            recipeIngredientsListForDisplay.setVisibility(View.GONE);
             recipeInstructions.setFocusable(true);
             recipeInstructions.setEnabled(true);
             recipeInstructions.setFocusableInTouchMode(true);
             recipeInstructions.setBackgroundResource(R.color.backgroundLightDark);
         }
+        // Reset values in case they were edited for the purpose of seeing how many ingredients are needed for different number of portions.
+        recipePortions = currentRecipe.getPortions();
+        recipePortionsTextView.setText(getString(R.string.recipe_portions, recipePortions));
+        ingredientsAdapterForDisplay.resetAdjustedIngredientPortions();
+        ingredientsAdapterForDisplay.setInitialPortions(recipePortions);
     }
 
     @Override
@@ -492,6 +592,9 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         if (recipeIngredientsChanged) {
             haveChanged = true;
         }
+        if (recipePortions != currentRecipe.getPortions()) {
+            haveChanged = true;
+        }
         if (!(recipeInstructions.getText().toString()).equals(currentRecipe.getInstructions())) {
             haveChanged = true;
         }
@@ -523,30 +626,19 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Returns the position of the specified target in the spinner.
-     *
-     * @param spinnerValues The spinner array to be searched in.
-     * @param targetValue   The target to be searched for in the spinner array.
-     */
-    private int getSpinnerPosition(String[] spinnerValues, String targetValue) {
-        for (int i = 0; i < spinnerValues.length; i++) {
-            if (spinnerValues[i].equals(targetValue)) {
-                return i;
-            }
-        }
-        return 404;
-    }
-
-    /**
      * Add the ingredient to the recipe, based on what the user has input in the ingredient textInput.
      */
     private void addIngredient() {
-        String amountInput = recipeIngredientAmountInput.getText().toString();
+        String amountInputValue = recipeIngredientAmountInput.getText().toString();
+        double amountInput = amountInputValue.isEmpty() ? 0 : Double.parseDouble(amountInputValue);
         String nameInput = recipeIngredientNameInput.getText().toString();
+
         if (!nameInput.isEmpty()) {
-            IngredientManager.addIngredient(recipeIngredients, new Ingredient(amountInput, nameInput));
+            IngredientManager.addIngredient(recipeIngredients, new Ingredient(amountInput, selectedRecipeIngredientUnitInput, nameInput));
             ingredientsAdapterEditMode.notifyDataSetChanged();
-            ingredientsAdapter.notifyDataSetChanged();
+            ingredientsAdapterForDisplay.notifyDataSetChanged();
+            Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
+            Utils.setListViewHeightBasedOnChildren(recipeIngredientsListForDisplay);
             recipeIngredientsChanged = true;
             Utils.hideKeyboard(this);
 
@@ -604,7 +696,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
             dialog.dismiss();
             recipeTimeHours = -1;
             recipeTimeMinutes = -1;
-            recipeTime.setText(Utils.TIME_NA);
+            recipeTime.setText(Utils.NA);
         });
     }
 

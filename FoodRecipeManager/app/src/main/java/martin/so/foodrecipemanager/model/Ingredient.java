@@ -5,24 +5,41 @@ package martin.so.foodrecipemanager.model;
  */
 public class Ingredient {
 
-    private String amount;
+    private double amount;
+    private String unit;
     private String name;
 
     public Ingredient() {
         // Empty constructor in order for Firebase realtime database to work.
     }
 
-    public Ingredient(String amount, String name) {
+    /**
+     * Properties of an ingredient.
+     *
+     * @param amount amount of an ingredient.
+     * @param unit   unit of an ingredient.
+     * @param name   name of an ingredient.
+     */
+    public Ingredient(double amount, String unit, String name) {
         this.amount = amount;
+        this.unit = unit;
         this.name = name;
     }
 
-    public String getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 
     public String getName() {

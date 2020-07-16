@@ -27,14 +27,18 @@ WARNING text color:
 TODO:
 Prioritized fixes needed:
 
-- Add portions and make it adjustable. e.g. incrementing portions will increment ingredients accordingly.
-  (MAYBE also possibility to alter the amount of one ingredient, and the rest should change to be proportional.)
-
 - Improve card design.
 
 - Require double password entry for cases like change password, and sign up.
 
 - Implement profile picture. A round picture?
+
+- Implement custom spinners, in order to improve the layout, such as removing unnecessary padding, or maybe adding icons, etc.
+
+- Make it possible to edit an ingredient's amount while viewing it (NOT EDIT MODE).
+  In this way, if you only have 900g flour, you can make the rest of the ingredients proportional to your "900g of flour",
+  instead of proportional to the portions. So, make it possible to edit the amount while viewing it.
+  And this should not save it. Saving is done through editing the recipe.
 
 Functionality to add:
 X. Improve how instructions are being added and visualized. Introduce steps.
@@ -44,6 +48,7 @@ X. Implement Favorite. OR rating?
 X. Add favorites tab. OR rating? Mark recipe as favorite.
 X. Add filter functionality.
 X. Show loading animation while loading Firebase data.
+X. Remember email for login for the last user.
 
 Performance improvement:
 X. Look into: "I/Choreographer: Skipped 62 frames!  The application may be doing too much work on its main thread."

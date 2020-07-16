@@ -12,22 +12,33 @@
         android:id="@+id/textViewIngredientAmountIngredientItemEditMode"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
-        android:layout_weight="1"
-        android:textAlignment="textEnd"
+        android:layout_weight="2"
+        android:gravity="center_vertical|end"
         android:textColor="@color/textOnDark"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/textViewIngredientUnitIngredientItemEditMode"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical|start"
+        android:textColor="@color/textOnDark"
+        android:textSize="16sp"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/textViewIngredientNameIngredientItemEditMode"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_weight="2"
-        android:textAlignment="textStart"
+        android:layout_weight="5"
+        android:gravity="center_vertical|start"
         android:textColor="@color/textOnDark"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="italic" />
 
     <ImageButton
         android:id="@+id/imageButtonDeleteIngredientIngredientItemEditMode"
