@@ -148,6 +148,10 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         recipeInstructions = findViewById(R.id.textInputLayoutEditRecipeInstructionsRecipeDetails);
 
+        // ======================================== Glide options ========================================
+        glideRequestOptions = new RequestOptions();
+        glideRequestOptions.centerCrop();
+
         // ======================================== Get the recipe object ========================================
         int currentRecipeAdapterPosition = getIntent().getIntExtra("recipeAdapterPosition", 0);
         List<Recipe> currentRecipeTypeList = null;
@@ -390,9 +394,6 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
         recipeInstructions.setText(currentRecipe.getInstructions());
 
-        // ======================================== Glide options ========================================
-        glideRequestOptions = new RequestOptions();
-        glideRequestOptions.centerCrop();
     }
 
     /**
