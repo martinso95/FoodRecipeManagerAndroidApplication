@@ -317,6 +317,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 Utils.setListViewHeightBasedOnChildren(recipeIngredientsListEditMode);
                 Utils.setListViewHeightBasedOnChildren(recipeIngredientsListForDisplay);
                 recipeIngredientsChanged = true;
+                ingredientsAdapterForDisplay.notifyDataSetChanged();
             }
         });
 
